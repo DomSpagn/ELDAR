@@ -226,7 +226,10 @@ bool check_int16_validity(string input)
         cout << "Wrong input..." << endl;
         return false;
     }
-    
+
+    if(!is_digits(input) || detected_sign_matter(input))
+        return false;
+
     if(value < INT16_MIN || value > INT16_MAX)
         return false;
 
@@ -247,7 +250,10 @@ bool check_int32_validity(string input)
         cout << "Wrong input..." << endl;
         return false;
     }
-    
+
+    if(!is_digits(input) || detected_sign_matter(input))
+        return false;
+
     if(value < INT32_MIN || value > INT32_MAX)
         return false;
 
@@ -269,6 +275,9 @@ bool check_int64_validity(string input)
         return false;
     }
     
+    if(!is_digits(input) || detected_sign_matter(input))
+        return false;
+
     if(value < INT64_MIN || value > INT64_MAX)
         return false;
 
