@@ -6,6 +6,7 @@ include_directories(include rapidjson)
 
 set(sources ${sources} 
     src/main.cpp
+    src/utility.cpp
     src/device_mgr.cpp
     src/json_mgr.cpp
 )

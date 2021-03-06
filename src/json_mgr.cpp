@@ -1,11 +1,11 @@
 #include "json_mgr.hpp"
 #include "const.hpp"
+#include "utility.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vector>
 #include <map>
-#include <dirent.h>
+
 
 using namespace std;
 using namespace rapidjson;
@@ -23,7 +23,7 @@ json_mgr::~json_mgr()
 }
 
 
-bool json_mgr::get_device_info(const Value& resistor_info, map<string, string>& meta_map)
+bool json_mgr::get_device_info(const Value &resistor_info, map<string, string> &meta_map)
 {
     for (Value::ConstMemberIterator  itr = resistor_info.MemberBegin(); itr != resistor_info.MemberEnd(); ++itr)
         meta_map[itr->name.GetString()] = itr->value.GetString();
@@ -31,7 +31,7 @@ bool json_mgr::get_device_info(const Value& resistor_info, map<string, string>& 
 }
 
 
-bool json_mgr::retrieve_device_metadata(const char *device, map<string, string>& meta_map)
+bool json_mgr::retrieve_device_metadata(const char *device, map<string, string> &meta_map)
 {   
     ifstream ifs(string(ROOT_FILE_PATH) + string(META_DEVICE_FILE));
     if(!ifs.is_open())
@@ -66,90 +66,74 @@ bool json_mgr::retrieve_device_metadata(const char *device, map<string, string>&
 }
 
 
-bool json_mgr::is_file_present(const char *path, string filename)
+bool json_mgr::load_device_info(map<string, string> &meta_map)
 {
-    bool ret = false;
-    DIR *dir; struct dirent *diread;
-    vector<string> files;
-
-    if ((dir = opendir(path)) != nullptr) 
+    string input;
+    for(auto info : meta_map)
     {
-        while ((diread = readdir(dir)) != nullptr)
-        {
-            if(diread->d_name[0] != '.' && diread->d_name[1] != '.')
-                files.push_back(diread->d_name);
-        }
-        closedir (dir);
-    } 
-    else 
-        return ret;
-
-    for (auto file : files) 
-    {        
-        if(file == filename)
-        {
-            ret = true;
-            break;
-        }
+        cout << endl << info.first << ": ";        
+        cin >> input;
+        if(info.second == "uint8")
+            if(!check_uint8_validity(input))
+                return false;
+        if(info.second == "uint16")
+            if(!check_uint16_validity(input))
+                return false;
+        if(info.second == "uint32")
+            if(!check_uint32_validity(input))
+                return false;
+        if(info.second == "uint64")
+            if(!check_int64_validity(input))
+                return false;
+        if(info.second == "int8")
+            if(!check_int8_validity(input))
+                return false;
+        if(info.second == "int16")
+            if(!check_int16_validity(input))
+                return false;
+        if(info.second == "int32")
+            if(!check_int32_validity(input))
+                return false;
+        if(info.second == "int64")
+            if(!check_int64_validity(input))
+                return false;
+        if(info.second == "float")
+            if(!check_float_validity(input))
+                return false;
+        if(info.second == "double")
+            if(!check_float_validity(input))
+                return false;
+        if(info.second == "string")
+            if(!check_string_validity(input))
+                return false;
     }
-    return ret;
-}   
-
-
-bool json_mgr::delete_json(string filename)
-{   
-    bool ret = false; 
-    string abs_filename = ROOT_FILE_PATH + filename;
-
-    if(!is_file_present(ROOT_FILE_PATH, filename))
-    {
-        cerr << "Cannot delete " << filename << "because it does not exist" << endl;
-        return ret;
-    }
-
-    if(remove(abs_filename.c_str()) == 0)
-        ret = true;
-    else
-        cerr << "Cannot delete " << filename << endl;
-
-    return ret;
-}
-
-
-bool json_mgr::create_new_json(string filename)
-{         
-    fstream file;
-    file.open(ROOT_FILE_PATH + filename, ios::out); 
-
-    if(!file)
-    {
-        cerr << "File " << filename << " has not been created..." << endl;
-        return false;
-    }
-
-    file.close();
-    return true;
-}
-
-
-bool json_mgr::create_resistor(map<string, string>& meta_map)
-{
-    if(!is_file_present(ROOT_FILE_PATH, RESISTOR_FILE))
-    {
-        if(!create_new_json(RESISTOR_FILE))
-            return false;
-    }
-
-    
     return false;
 }
 
 
-bool json_mgr::create_capacitor(map<string, string>& meta_map)
+bool json_mgr::create_resistor(map<string, string> &meta_map)
+{
+    if(!is_file_present(ROOT_FILE_PATH, RESISTOR_FILE))
+        if(!create_file(RESISTOR_FILE))
+            return false;
+
+    if(!load_device_info(meta_map))
+    {
+        cerr << "one of more inputs are unacceptable" << endl;
+        return false;
+    }
+    
+    //Bisogna aggiungere in append se il file già esiste
+
+    return false;
+}
+
+
+bool json_mgr::create_capacitor(map<string, string> &meta_map)
 {
     if(!is_file_present(ROOT_FILE_PATH, CAPACITOR_FILE))
     {
-        if(!create_new_json(CAPACITOR_FILE))
+        if(!create_file(CAPACITOR_FILE))
             return false;
     }
 
@@ -157,11 +141,11 @@ bool json_mgr::create_capacitor(map<string, string>& meta_map)
 }
 
 
-bool json_mgr::create_inductor(map<string, string>& meta_map)
+bool json_mgr::create_inductor(map<string, string> &meta_map)
 {
     if(!is_file_present(ROOT_FILE_PATH, INDUCTOR_FILE))
     {
-        if(!create_new_json(INDUCTOR_FILE))
+        if(!create_file(INDUCTOR_FILE))
             return false;
     }
 
@@ -169,7 +153,7 @@ bool json_mgr::create_inductor(map<string, string>& meta_map)
 }
 
 
-bool json_mgr::create_device(const char *device, map<string, string>& meta_map)
+bool json_mgr::create_device(const char *device, map<string, string> &meta_map)
 {
     if(string(device) == RESISTOR)
         return create_resistor(meta_map);

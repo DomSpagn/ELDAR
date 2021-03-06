@@ -1,3 +1,0 @@
-"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\eldar.dir/objects.a
-C:\Qt\Tools\mingw810_64\bin\ar.exe cr CMakeFiles\eldar.dir/objects.a @CMakeFiles\eldar.dir\objects1.rsp
-C:\Qt\Tools\mingw810_64\bin\x86_64-w64-mingw32-g++.exe -g -Wl,--whole-archive CMakeFiles\eldar.dir/objects.a -Wl,--no-whole-archive -o eldar.exe -Wl,--out-implib,libeldar.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\eldar.dir\linklibs.rsp

@@ -1,5 +1,6 @@
 #include "device_mgr.hpp"
 #include "const.hpp"
+#include "utility.hpp"
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -23,11 +24,8 @@ device_mgr::~device_mgr()
 
 bool device_mgr::list_types(void)
 {
-    if(!json_mgr.is_file_present(ROOT_FILE_PATH, DEVICE_TYPE_FILE))
-    {
-        cerr << DEVICE_TYPE_FILE << " is not present!" << endl;    
+    if(!is_file_present(ROOT_FILE_PATH, DEVICE_TYPE_FILE))
         return false;
-    }
 
     cout << "Select type among: " << endl << endl;
     fstream file;
@@ -44,6 +42,7 @@ bool device_mgr::list_types(void)
     while(getline(file, line))
         cout << "   - " << line << endl;
 
+    file.close();
     return true;
 }
 
