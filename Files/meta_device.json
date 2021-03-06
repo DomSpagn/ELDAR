@@ -1,0 +1,43 @@
+[
+    {
+        "device" : "resistor",
+        "code" : "string",
+        "manufacturer" : "string",
+        "value" : "float",
+        "sf" : "int8",
+        "size" : "string",
+        "power" : "float",
+        "mounting_type" : "string",
+        "quantity" : "uint16",
+        "image" : "string",
+        "description" : "string"
+    },
+    {
+        "device" : "capacitor",
+        "code" : "string",
+        "manufacturer" : "string",
+        "type" : "string",
+        "value" : "float",
+        "sf" : "int8",
+        "voltage" : "float",
+        "size" : "string",
+        "mounting_type" : "string",
+        "quantity" : "uint16",
+        "image" : "string",
+        "description" : "string"
+    },
+    {
+        "device" : "inductor",
+        "code" : "string",
+        "manufacturer" : "string",
+        "value" : "float",
+        "sf" : "int8",
+        "current_rating" : "float",
+        "current_saturation" : "float",
+        "size" : "string",
+        "mounting_type" : "string",
+        "quantity" : "uint16",
+        "image" : "string",
+        "description" : "string"
+    }
+]

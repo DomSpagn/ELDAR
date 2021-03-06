@@ -1,0 +1,17 @@
+[
+{
+  "directory": "C:/Users/mimmo/Documents/C++/ELDAR/build",
+  "command": "C:\\Qt\\Tools\\mingw810_64\\bin\\x86_64-w64-mingw32-g++.exe  @CMakeFiles/eldar.dir/includes_CXX.rsp -g -std=gnu++14 -o CMakeFiles\\eldar.dir\\src\\main.cpp.obj -c C:\\Users\\mimmo\\Documents\\C++\\ELDAR\\src\\main.cpp",
+  "file": "C:/Users/mimmo/Documents/C++/ELDAR/src/main.cpp"
+},
+{
+  "directory": "C:/Users/mimmo/Documents/C++/ELDAR/build",
+  "command": "C:\\Qt\\Tools\\mingw810_64\\bin\\x86_64-w64-mingw32-g++.exe  @CMakeFiles/eldar.dir/includes_CXX.rsp -g -std=gnu++14 -o CMakeFiles\\eldar.dir\\src\\device_mgr.cpp.obj -c C:\\Users\\mimmo\\Documents\\C++\\ELDAR\\src\\device_mgr.cpp",
+  "file": "C:/Users/mimmo/Documents/C++/ELDAR/src/device_mgr.cpp"
+},
+{
+  "directory": "C:/Users/mimmo/Documents/C++/ELDAR/build",
+  "command": "C:\\Qt\\Tools\\mingw810_64\\bin\\x86_64-w64-mingw32-g++.exe  @CMakeFiles/eldar.dir/includes_CXX.rsp -g -std=gnu++14 -o CMakeFiles\\eldar.dir\\src\\json_mgr.cpp.obj -c C:\\Users\\mimmo\\Documents\\C++\\ELDAR\\src\\json_mgr.cpp",
+  "file": "C:/Users/mimmo/Documents/C++/ELDAR/src/json_mgr.cpp"
+}
+]
