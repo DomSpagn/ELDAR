@@ -29,6 +29,8 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "dependsOn": ["make"]
+            "dependsOn": [
+                "make"
+            ]
         }
     ]}

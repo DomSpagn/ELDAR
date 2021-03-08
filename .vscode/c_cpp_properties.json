@@ -12,9 +12,7 @@
             ],
             "compilerPath": "C:\\Qt\\Tools\\mingw810_64\\bin\\gcc.exe",
             "cStandard": "gnu17",
-            "cppStandard": "gnu++14",
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "cppStandard": "gnu++17"
         }
     ],
     "version": 4

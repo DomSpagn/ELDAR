@@ -2,6 +2,7 @@
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 #include <map>
+#include <any>
 
 class json_mgr
 {
@@ -13,7 +14,7 @@ public:
 
 protected:    
     bool get_device_info(const rapidjson::Value &resistor_doc, std::map<std::string, std::string> &meta_map);    
-    bool load_device_info(std::map<std::string, std::string> &meta_map);
+    bool load_device_info(std::map<std::string, std::string> &meta_map, std::map<std::string, std::any> &device_map);
     bool create_resistor(std::map<std::string, std::string> &meta_map);
     bool create_capacitor(std::map<std::string, std::string> &meta_map);
     bool create_inductor(std::map<std::string, std::string> &meta_map);
