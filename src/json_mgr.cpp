@@ -1,5 +1,6 @@
 #include "json_mgr.hpp"
 #include "const.hpp"
+#include "ConsoleColor.hpp"
 #include "utility.hpp"
 #include <iostream>
 #include <fstream>
@@ -23,20 +24,28 @@ json_mgr::~json_mgr()
 }
 
 
-bool json_mgr::get_device_info(const Value &resistor_info, map<string, string> &meta_map)
+bool json_mgr::get_meta_info_from_json(const Value &device_info, map<uint16_t, pair<string, string>> &meta_map)
 {
-    for (Value::ConstMemberIterator  itr = resistor_info.MemberBegin(); itr != resistor_info.MemberEnd(); ++itr)
-        meta_map[itr->name.GetString()] = itr->value.GetString();
+    uint8_t index = 0;
+    pair<string, string> aux_pair;
+
+    for (Value::ConstMemberIterator itr = device_info.MemberBegin(); itr != device_info.MemberEnd(); ++itr)
+    {
+        aux_pair = make_pair(itr->name.GetString(), itr->value.GetString());
+        meta_map[index] = aux_pair;
+        index++;
+    }
+
     return meta_map.empty() ? false : true;
 }
 
 
-bool json_mgr::retrieve_device_metadata(const char *device, map<string, string> &meta_map)
+bool json_mgr::retrieve_device_metadata(const char *device, map<uint16_t, pair<string, string>> &meta_map)
 {   
     ifstream ifs(string(ROOT_FILE_PATH) + string(META_DEVICE_FILE));
     if(!ifs.is_open())
     {
-        cerr << "Cannot open " << META_DEVICE_FILE << " for reading" << endl;
+        cerr << red << "Cannot open " << META_DEVICE_FILE << " for reading" << white << endl;
         return false;
     }        
 
@@ -53,170 +62,208 @@ bool json_mgr::retrieve_device_metadata(const char *device, map<string, string> 
         assert(meta_doc[i].IsObject());
 
         if(string(device) == RESISTOR)
-            return get_device_info(meta_doc[i], meta_map);
+            return get_meta_info_from_json(meta_doc[i], meta_map);
         if(string(device) == CAPACITOR)
-            return get_device_info(meta_doc[i], meta_map);
+            return get_meta_info_from_json(meta_doc[i], meta_map);
         if(string(device) == INDUCTOR)
-            return get_device_info(meta_doc[i], meta_map);
+            return get_meta_info_from_json(meta_doc[i], meta_map);
     }
 
-    cerr << "Cannot retrieve device metadata" << endl;
+    cerr << red << "Cannot retrieve device metadata" << white << endl;
 
     return false;
 }
 
 
-bool json_mgr::load_device_info(map<string, string> &meta_map, map<string, any> &device_map)
+bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple)
 {
-    string input;
+    string input[meta_map.size()];
+    unsigned int i = 0;
+    tuple<string, string, any> aux_tuple;    
     
-    uint8_t *u8_value = nullptr;
-    uint16_t *u16_value = nullptr;
-    uint32_t *u32_value = nullptr;
-    uint64_t *u64_value = nullptr;
-    int8_t *i8_value = nullptr;
-    int16_t *i16_value = nullptr;
-    int32_t *i32_value = nullptr;
-    int64_t *i64_value = nullptr;
-    float *f_value = nullptr;
-    double *d_value = nullptr;
-    
+    uint8_t u8_value;
+    uint16_t u16_value;
+    uint32_t u32_value;
+    uint64_t u64_value;
+    int8_t i8_value;
+    int16_t i16_value;
+    int32_t i32_value;
+    int64_t i64_value;
+    float f_value;
+    double d_value;    
 
-    for(auto info : meta_map)
-    {
-        cout << endl << info.first << ": ";        
-        cin >> input;
-        if(info.second == "uint8")
-            if(!check_uint8_validity(input, u8_value))
-                return false;
-        else
+    cin.ignore();
+    cout << endl << blue << "Insert the following data (" << meta_map.size() - 1 << " data):" << white << endl << endl;
+    for(auto meta_elem : meta_map)
+    {        
+        if(meta_elem.second.second == RESISTOR)
         {
+            aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, string());
+            device_vector_tuple.push_back(aux_tuple);            
+        }
+        else
+        {            
+            cout << meta_elem.first << ") " << blue << meta_elem.second.first << ": " << white;            
+            getline(cin, input[i]);
+
+            if(meta_elem.second.second == "uint8")
+            {
+                if(!check_uint8_validity(input[i], u8_value))
+                    return false;
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, u8_value);                    
+            }
+            if(meta_elem.second.second == "uint16")
+            {
+                if(!check_uint16_validity(input[i], u16_value))
+                    return false;
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, u16_value);
+            }
+            if(meta_elem.second.second == "uint32")
+            {
+                if(!check_uint32_validity(input[i], u32_value))
+                    return false;
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, u32_value);                    
+            }
+            if(meta_elem.second.second == "uint64")
+            {
+                if(!check_uint64_validity(input[i], u64_value))
+                    return false;
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, u64_value);
+            }
+            if(meta_elem.second.second == "int8")
+            {        
+                if(!check_int8_validity(input[i], i8_value))
+                    return false;
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, i8_value);
+            }
+            if(meta_elem.second.second == "int16")
+            {
+                if(!check_int16_validity(input[i], i16_value))
+                    return false;
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, i16_value);
+            }
+            if(meta_elem.second.second == "int32")
+            {
+                if(!check_int32_validity(input[i], i32_value))
+                    return false;
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, i32_value);
+            }
+            if(meta_elem.second.second == "int64")
+            {
+                if(!check_int64_validity(input[i], i64_value))
+                    return false;
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, i64_value);
+            }
+            if(meta_elem.second.second == "float")
+            {
+                if(!check_float_validity(input[i], f_value))
+                    return false;
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, f_value);
+            }
+            if(meta_elem.second.second == "double")
+            {
+                if(!check_double_validity(input[i], d_value))
+                    return false;
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, d_value);
+            }
+            if(meta_elem.second.second == "string")
+            {
+                if(!check_string_validity(input[i]))
+                    return false;
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, input[i]);
+            }
             
-        }
-        if(info.second == "uint16")
-            if(!check_uint16_validity(input, u16_value))
-                return false;
-        else
-        {
-
-        }
-        if(info.second == "uint32")
-            if(!check_uint32_validity(input, u32_value))
-                return false;
-        else
-        {
-
-        }
-        if(info.second == "uint64")
-            if(!check_uint64_validity(input, u64_value))
-                return false;
-        else
-        {
-
-        }
-        if(info.second == "int8")
-            if(!check_int8_validity(input, i8_value))
-                return false;
-        else
-        {
-
-        }
-        if(info.second == "int16")
-            if(!check_int16_validity(input, i16_value))
-                return false;
-        else
-        {
-
-        }
-        if(info.second == "int32")
-            if(!check_int32_validity(input, i32_value))
-                return false;
-        else
-        {
-
-        }
-        if(info.second == "int64")
-            if(!check_int64_validity(input, i64_value))
-                return false;
-        else
-        {
-
-        }
-        if(info.second == "float")
-            if(!check_float_validity(input, f_value))
-                return false;
-        else
-        {
-
-        }
-        if(info.second == "double")
-            if(!check_double_validity(input, d_value))
-                return false;
-        else
-        {
-
-        }
-        if(info.second == "string")
-            if(!check_string_validity(input))
-                return false;
-        else
-        {
-
-        }
+            device_vector_tuple.push_back(aux_tuple);
+            i++;
+        }        
     }
-    return false;
+
+    return true;
 }
 
 
-bool json_mgr::create_resistor(map<string, string> &meta_map)
+bool json_mgr::add_resistor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &resistor_vector_tuple)
 {
-    map<string, any>resistor_map;
     if(!is_file_present(ROOT_FILE_PATH, RESISTOR_FILE))
         if(!create_file(RESISTOR_FILE))
             return false;
 
-    if(!load_device_info(meta_map, resistor_map))
+    if(!load_device_meta_info(meta_map, resistor_vector_tuple))
     {
-        cerr << "one of more inputs are unacceptable" << endl;
+        cerr << red << "one of more inputs are unacceptable" << white << endl;
         return false;
-    }
-    
-    //Bisogna aggiungere in append se il file già esiste
+    }        
 
-    return false;
+    //Clean meta and device maps
+    meta_map.clear();    
+
+    return true;
 }
 
 
-bool json_mgr::create_capacitor(map<string, string> &meta_map)
-{
-    map<string, any>capacitor_map;
+bool json_mgr::add_capacitor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &capacitor_vector_tuple)
+{    
     if(!is_file_present(ROOT_FILE_PATH, CAPACITOR_FILE))
         if(!create_file(CAPACITOR_FILE))
             return false;
 
-    return false;
+    if(!load_device_meta_info(meta_map, capacitor_vector_tuple))
+    {
+        cerr << red << "one of more inputs are unacceptable" << white << endl;
+        return false;
+    }        
+
+    //Clean meta and device maps
+    meta_map.clear();    
+
+    return true;
 }
 
 
-bool json_mgr::create_inductor(map<string, string> &meta_map)
+bool json_mgr::add_inductor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &inductor_vector_tuple)
 {
-    map<string, any>inductor_map;
     if(!is_file_present(ROOT_FILE_PATH, INDUCTOR_FILE))
         if(!create_file(INDUCTOR_FILE))
             return false;
 
-    return false;
+    if(!load_device_meta_info(meta_map, inductor_vector_tuple))
+    {
+        cerr << red << "one of more inputs are unacceptable" << white << endl;
+        return false;
+    }        
+
+    //Clean meta and device maps
+    meta_map.clear();
+
+    return true;
 }
 
 
-bool json_mgr::create_device(const char *device, map<string, string> &meta_map)
+bool json_mgr::add_device(const char *device, map<uint16_t, pair<string, string>> &meta_map)
 {
+    bool ret = false;
+    vector<tuple<string, string, any>>device_vector_tuple;
+
     if(string(device) == RESISTOR)
-        return create_resistor(meta_map);
+        ret = add_resistor(meta_map, device_vector_tuple);
     if(string(device) == CAPACITOR)
-        return create_capacitor(meta_map);
+        ret = add_capacitor(meta_map, device_vector_tuple);
     if(string(device) == INDUCTOR)
-        return create_inductor(meta_map);
+        ret = add_inductor(meta_map, device_vector_tuple);
+
+    if(!ret)
+        return false;
+
+    print_device_tuple_vector(device_vector_tuple);
+
+    if (is_validated())
+    {
+        //TODO: Write into RESISTOR DB (to be created if it does not exist yet)
+    }
+    else
+    {
+
+    }
 
     return false;
 }
