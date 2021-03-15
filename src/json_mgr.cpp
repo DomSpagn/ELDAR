@@ -259,11 +259,10 @@ bool json_mgr::add_device(const char *device, map<uint16_t, pair<string, string>
     if (is_validated())
     {
         //TODO: Write into RESISTOR DB (to be created if it does not exist yet)
+        ret = true;
     }
     else
-    {
+        ret = false;
 
-    }
-
-    return false;
+    return ret;
 }

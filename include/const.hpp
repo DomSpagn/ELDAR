@@ -1,5 +1,6 @@
 static constexpr const char *ROOT_FILE_PATH = "C:/Users/mimmo/Documents/C++/ELDAR/Files/";
 static constexpr const char *DEVICE_TYPE_FILE = "device_type.txt";
+static constexpr const char *RELEASE_NOTES_FILE = "release_notes.txt";
 static constexpr const char *META_DEVICE_FILE = "meta_device.json";
 static constexpr const char *RESISTOR = "resistor";
 static constexpr const char *RESISTOR_FILE = "resistor.json";

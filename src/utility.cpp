@@ -367,6 +367,9 @@ bool check_string_validity(string &input)
 }
 
 
+/***********************************************************************************************************/
+/*                                             Miscellaneous                                               */ 
+/***********************************************************************************************************/
 void print_device_tuple_vector(vector<tuple<string, string, any>> &device_vector_tuple)
 {
     cout << endl << green << "Inserted Data: " << endl << endl;
@@ -433,4 +436,25 @@ bool is_validated(void)
     while (!ret);    
     
     return ret;
+}
+
+
+bool load_software_info(void)
+{
+    fstream file;
+    file.open(string(ROOT_FILE_PATH) + string(RELEASE_NOTES_FILE), ios::in); 
+
+    if(!file)
+    {
+        cerr << red << "File " << RELEASE_NOTES_FILE << " cannot be opened!" << white << endl;
+        return false;
+    }
+
+    //Read line by line
+    string line;
+    while(getline(file, line))
+        cout << endl << white << line << white << endl;
+
+    file.close();
+    return true;
 }
