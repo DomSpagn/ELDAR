@@ -1,6 +1,6 @@
 project(ELDAR)
 cmake_minimum_required(VERSION 3.20)
-set (CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -11,6 +11,8 @@ set(sources ${sources}
     src/utility.cpp
     src/device_mgr.cpp
     src/json_mgr.cpp
+    sqlite3/sqlite3.c
 )
 
-add_executable(eldar ${sources})  
+add_executable(eldar ${sources})
+

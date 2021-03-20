@@ -1,0 +1,3 @@
+resistor (Ex.: code: P122682DKR-ND, manufacturer: Panasonic, value (in Ohm): 11500, size: 0603, power (in W): 0.05, mounting type: smd, quantity: 10, image: C:/Users/mimmo/Documents/DeviceImages/res.png, descritpion: ...)
+capacitor (Ex: code: 1276-1043-2-ND, manufacturer: Samsung, type: ceramic, value (in F): 0.0000001, voltage (in V): 25, size: 0402, mounting type: smd, quantity: 2, image: C:/Users/mimmo/Documents/DeviceImages/cap.png, descritpion: ...)
+inductor (Ex. code: 732-5517-2-ND, manufacturer: Wurth, value (in H): 0.0000047, current_rating (in A): 3, current_saturation (in A): 3.8, size: no standard, mounting type: smd, quantity: 10, image: C:/Users/mimmo/Documents/DeviceImages/res.png, descritpion: ...)

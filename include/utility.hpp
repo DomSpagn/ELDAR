@@ -3,9 +3,9 @@
 #include <tuple>
 #include <any>
 
-bool is_file_present(const char *path, std::string filename);   //filename is the relative file path
-bool delete_file(std::string filename);                         //filename is the relative file path
-bool create_file(std::string filename);                         //filename is the relative file path
+bool is_file_present(const char *path, std::string filename);
+bool delete_file(std::string filename);
+bool create_file(std::string root_path, std::string filename);
 
 bool detected_sign_matter(std::string &str);
 bool is_integer_digits(const std::string &str);

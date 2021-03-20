@@ -67,10 +67,10 @@ bool delete_file(string filename)
 }
 
 
-bool create_file(string filename)
+bool create_file(string ROOT_PATH, string filename)
 {         
     fstream file;
-    file.open(ROOT_FILE_PATH + filename, ios::out); 
+    file.open(ROOT_PATH + filename, ios::out); 
 
     if(!file)
     {

@@ -25,12 +25,12 @@ device_mgr::~device_mgr()
 
 bool device_mgr::list_types(void)
 {
-    if(!is_file_present(ROOT_FILE_PATH, DEVICE_TYPE_FILE))
+    if(!is_file_present(TXT_FILE_PATH, DEVICE_TYPE_FILE))
         return false;
 
     cout << blue << "Select component type among: " << white << endl << endl;
     fstream file;
-    file.open(string(ROOT_FILE_PATH) + string(DEVICE_TYPE_FILE), ios::in); 
+    file.open(string(TXT_FILE_PATH) + string(DEVICE_TYPE_FILE), ios::in); 
 
     if(!file)
     {
