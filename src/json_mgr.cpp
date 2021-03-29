@@ -6,14 +6,14 @@
 #include <fstream>
 #include <sstream>
 #include <map>
-#include <sqlite3.h>
 
 
 using namespace std;
 using namespace rapidjson;
 
 
-json_mgr::json_mgr()
+json_mgr::json_mgr() :
+        db_mgr(db_mgr)
 {
 
 }
@@ -41,7 +41,7 @@ bool json_mgr::get_meta_info_from_json(const Value &device_info, map<uint16_t, p
 }
 
 
-bool json_mgr::retrieve_device_metadata(const char *device, map<uint16_t, pair<string, string>> &meta_map)
+bool json_mgr::retrieve_device_metadata(const string_view &device, map<uint16_t, pair<string, string>> &meta_map)
 {   
     ifstream ifs(string(JSON_FILE_PATH) + string(META_DEVICE_FILE));
     if(!ifs.is_open())
@@ -183,7 +183,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
 }
 
 
-bool json_mgr::add_resistor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &resistor_vector_tuple)
+bool json_mgr::load_resistor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &resistor_vector_tuple)
 {
     if(!is_file_present(JSON_FILE_PATH, RESISTOR_FILE))
         if(!create_file(JSON_FILE_PATH, RESISTOR_FILE))
@@ -202,7 +202,7 @@ bool json_mgr::add_resistor(map<uint16_t, pair<string, string>> &meta_map, vecto
 }
 
 
-bool json_mgr::add_capacitor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &capacitor_vector_tuple)
+bool json_mgr::load_capacitor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &capacitor_vector_tuple)
 {    
     if(!is_file_present(JSON_FILE_PATH, CAPACITOR_FILE))
         if(!create_file(JSON_FILE_PATH, CAPACITOR_FILE))
@@ -221,7 +221,7 @@ bool json_mgr::add_capacitor(map<uint16_t, pair<string, string>> &meta_map, vect
 }
 
 
-bool json_mgr::add_inductor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &inductor_vector_tuple)
+bool json_mgr::load_inductor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &inductor_vector_tuple)
 {
     if(!is_file_present(JSON_FILE_PATH, INDUCTOR_FILE))
         if(!create_file(JSON_FILE_PATH, INDUCTOR_FILE))
@@ -240,40 +240,34 @@ bool json_mgr::add_inductor(map<uint16_t, pair<string, string>> &meta_map, vecto
 }
 
 
-bool json_mgr::add_device(const char *device, map<uint16_t, pair<string, string>> &meta_map)
+bool json_mgr::add_device(const string_view &device, map<uint16_t, pair<string, string>> &meta_map)
 {
-    bool ret = false;
+    bool ret = false;        
     vector<tuple<string, string, any>>device_vector_tuple;
 
-    if(string(device) == RESISTOR)
-        ret = add_resistor(meta_map, device_vector_tuple);
-    if(string(device) == CAPACITOR)
-        ret = add_capacitor(meta_map, device_vector_tuple);
-    if(string(device) == INDUCTOR)
-        ret = add_inductor(meta_map, device_vector_tuple);
+    if(device == RESISTOR)
+        ret = load_resistor(meta_map, device_vector_tuple);
+    if(device == CAPACITOR)
+        ret = load_capacitor(meta_map, device_vector_tuple);
+    if(device == INDUCTOR)
+        ret = load_inductor(meta_map, device_vector_tuple);
 
     if(!ret)
         return false;
 
     print_device_tuple_vector(device_vector_tuple);
 
-    if (!is_validated())
+    if (is_validated() == NOT_CONFIRMED)
         return false;
 
-    //TODO: Write into RESISTOR DB (to be created if it does not exist yet)
-    if(!is_file_present(DB_FILE_PATH, RESISTOR_DB))
-        if(!create_file(DB_FILE_PATH, RESISTOR_DB))
-            return false;
+    if(device == RESISTOR)
+        ret = db_mgr.add_resistor(device_vector_tuple);
 
-    sqlite3 *db;
-    int rc = sqlite3_open(RESISTOR_DB, &db);
+    if(device == CAPACITOR)
+        ret = db_mgr.add_capacitor(device_vector_tuple);
 
-    if(rc)
-    {
-        cerr << red << "Cannot open " << RESISTOR_DB << white << endl;
-        return false;
-    }
-    
-    sqlite3_close(db);
-    return true;
+    if(device == INDUCTOR)
+        ret = db_mgr.add_inductor(device_vector_tuple);
+
+    return ret;
 }

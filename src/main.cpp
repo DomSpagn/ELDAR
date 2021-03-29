@@ -61,7 +61,15 @@ int main(int argc, char **argv)
         }
 
         if(result)
+        {
+            cout << green << "Successfull Operation" << white << endl;
             break;
+        }
+        else
+        {
+            cout << yellow << "Still to be decided how to handle eldar..." << white << endl;
+            break;
+        }
     }
     return EXIT_SUCCESS;
 }

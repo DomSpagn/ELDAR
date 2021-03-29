@@ -362,8 +362,8 @@ bool check_double_validity(string &input, double &d_value)
 
 
 bool check_string_validity(string &input)
-{
-    return true;
+{    
+    return input.empty() ? false : true;
 }
 
 
@@ -412,10 +412,10 @@ void print_device_tuple_vector(vector<tuple<string, string, any>> &device_vector
 }
 
 
-bool is_validated(void)
-{
-    bool ret = false;
-    string input;
+answer is_validated(void)
+{    
+    string input;    
+    answer response;
 
     do
     {        
@@ -424,18 +424,20 @@ bool is_validated(void)
         switch(input[0])
         {
             case 'y':
-                ret = true;
+                response = CONFIRM;
             break;
 
-            case 'n':            
+            case 'n':
+                response = NOT_CONFIRMED;
+            break;            
             default:
-                ret = false;
+                response = UNKNOWN;
             break;            
         }
     } 
-    while (!ret);    
+    while (response == UNKNOWN);    
     
-    return ret;
+    return response;
 }
 
 

@@ -50,6 +50,7 @@ bool device_mgr::list_types(void)
 
 bool device_mgr::insert_mgr(void)
 {
+    bool ret = false;
     string device_type_in;
     vector<string> meta_structure;
     map<uint16_t, pair<string, string>> meta_map;
@@ -64,25 +65,25 @@ bool device_mgr::insert_mgr(void)
     {
         if(json_mgr.retrieve_device_metadata(RESISTOR, meta_map))
         {
-            json_mgr.add_device(RESISTOR, meta_map);
+            ret = json_mgr.add_device(RESISTOR, meta_map);
         }
     }
     else if(device_type_in == CAPACITOR)
     {
         if(json_mgr.retrieve_device_metadata(CAPACITOR, meta_map))
         {
-            json_mgr.add_device(CAPACITOR, meta_map);
+            ret = json_mgr.add_device(CAPACITOR, meta_map);
         }
     }    
     else if(device_type_in == INDUCTOR)
     {
         if(json_mgr.retrieve_device_metadata(INDUCTOR, meta_map))
         {
-            json_mgr.add_device(INDUCTOR, meta_map);
+            ret = json_mgr.add_device(INDUCTOR, meta_map);
         }
     }
     else
         cerr << red << "wrong choice..." << white << endl;
 
-    return false;
+    return ret;
 }

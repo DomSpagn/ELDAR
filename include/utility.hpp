@@ -1,7 +1,12 @@
+#pragma once
+
 #include <string>
 #include <vector>
 #include <tuple>
 #include <any>
+
+enum answer { CONFIRM, NOT_CONFIRMED, UNKNOWN };
+
 
 bool is_file_present(const char *path, std::string filename);
 bool delete_file(std::string filename);
@@ -23,5 +28,5 @@ bool check_double_validity(std::string &input, double &d_value);
 bool check_string_validity(std::string &input);
 
 void print_device_tuple_vector(std::vector<std::tuple<std::string, std::string, std::any>> &device_vector_tuple);
-bool is_validated(void);
+answer is_validated(void);
 bool load_software_info(void);
