@@ -21,6 +21,7 @@ db_mgr::~db_mgr()
 
 bool db_mgr::add_resistor(vector<tuple<string, string, any>>resistor_vector_tuple)
 {
+    string sql_cmd;
     if(!is_file_present(DB_FILE_PATH, RESISTOR_DB))
         if(!create_file(DB_FILE_PATH, RESISTOR_DB))
             return false;
@@ -38,7 +39,7 @@ bool db_mgr::add_resistor(vector<tuple<string, string, any>>resistor_vector_tupl
     }
     
     //Check if table exists otherwise it is created
-    string sql_cmd = create_table("RESISTOR", resistor_vector_tuple);
+    sql_cmd = create_table("RESISTOR", resistor_vector_tuple);
 
     rc = sqlite3_exec(db, sql_cmd.c_str(), NULL, NULL, &zErrMsg);
 
@@ -48,7 +49,18 @@ bool db_mgr::add_resistor(vector<tuple<string, string, any>>resistor_vector_tupl
         sqlite3_free(zErrMsg);
         return false;
     } 
-        
+
+    //Insert
+    sql_cmd = insert_row("RESISTOR", resistor_vector_tuple);
+    rc = sqlite3_exec(db, sql_cmd.c_str(), NULL, NULL, &zErrMsg);
+
+    if(rc != SQLITE_OK)
+    {        
+        cout << red << "SQL error: " << zErrMsg << white << endl;
+        sqlite3_free(zErrMsg);
+        return false;
+    } 
+
     sqlite3_close(db);
     return true;
 }
@@ -84,6 +96,17 @@ bool db_mgr::add_capacitor(vector<tuple<string, string, any>>capacitor_vector_tu
         return false;
     } 
         
+    //Insert
+    sql_cmd = insert_row("CAPACITOR", capacitor_vector_tuple);
+    rc = sqlite3_exec(db, sql_cmd.c_str(), NULL, NULL, &zErrMsg);
+
+    if(rc != SQLITE_OK)
+    {        
+        cout << red << "SQL error: " << zErrMsg << white << endl;
+        sqlite3_free(zErrMsg);
+        return false;
+    } 
+
     sqlite3_close(db);
     return true;
 }
@@ -118,7 +141,18 @@ bool db_mgr::add_inductor(vector<tuple<string, string, any>>inductor_vector_tupl
         sqlite3_free(zErrMsg);
         return false;
     } 
-        
+
+    //Insert
+    sql_cmd = insert_row("INDUCTOR", inductor_vector_tuple);
+    rc = sqlite3_exec(db, sql_cmd.c_str(), NULL, NULL, &zErrMsg);
+
+    if(rc != SQLITE_OK)
+    {        
+        cout << red << "SQL error: " << zErrMsg << white << endl;
+        sqlite3_free(zErrMsg);
+        return false;
+    } 
+
     sqlite3_close(db);
     return true;
 }
