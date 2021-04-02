@@ -183,51 +183,13 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
 }
 
 
-bool json_mgr::load_resistor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &resistor_vector_tuple)
+bool json_mgr::load_device(const string& DEVICE_FILE, map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple)
 {
-    if(!is_file_present(JSON_FILE_PATH, RESISTOR_FILE))
-        if(!create_file(JSON_FILE_PATH, RESISTOR_FILE))
+    if(!is_file_present(JSON_FILE_PATH, DEVICE_FILE))
+        if(!create_file(JSON_FILE_PATH, DEVICE_FILE))
             return false;
 
-    if(!load_device_meta_info(meta_map, resistor_vector_tuple))
-    {
-        cerr << red << "one of more inputs are unacceptable" << white << endl;
-        return false;
-    }        
-
-    //Clean meta and device maps
-    meta_map.clear();    
-
-    return true;
-}
-
-
-bool json_mgr::load_capacitor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &capacitor_vector_tuple)
-{    
-    if(!is_file_present(JSON_FILE_PATH, CAPACITOR_FILE))
-        if(!create_file(JSON_FILE_PATH, CAPACITOR_FILE))
-            return false;
-
-    if(!load_device_meta_info(meta_map, capacitor_vector_tuple))
-    {
-        cerr << red << "one of more inputs are unacceptable" << white << endl;
-        return false;
-    }        
-
-    //Clean meta and device maps
-    meta_map.clear();    
-
-    return true;
-}
-
-
-bool json_mgr::load_inductor(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &inductor_vector_tuple)
-{
-    if(!is_file_present(JSON_FILE_PATH, INDUCTOR_FILE))
-        if(!create_file(JSON_FILE_PATH, INDUCTOR_FILE))
-            return false;
-
-    if(!load_device_meta_info(meta_map, inductor_vector_tuple))
+    if(!load_device_meta_info(meta_map, device_vector_tuple))
     {
         cerr << red << "one of more inputs are unacceptable" << white << endl;
         return false;
@@ -240,17 +202,17 @@ bool json_mgr::load_inductor(map<uint16_t, pair<string, string>> &meta_map, vect
 }
 
 
-bool json_mgr::add_device(const string_view &device, map<uint16_t, pair<string, string>> &meta_map)
+bool json_mgr::add_device(const string &device, map<uint16_t, pair<string, string>> &meta_map)
 {
     bool ret = false;        
     vector<tuple<string, string, any>>device_vector_tuple;
 
     if(device == RESISTOR)
-        ret = load_resistor(meta_map, device_vector_tuple);
+        ret = load_device(RESISTOR_FILE, meta_map, device_vector_tuple);
     if(device == CAPACITOR)
-        ret = load_capacitor(meta_map, device_vector_tuple);
+        ret = load_device(CAPACITOR_FILE, meta_map, device_vector_tuple);
     if(device == INDUCTOR)
-        ret = load_inductor(meta_map, device_vector_tuple);
+        ret = load_device(INDUCTOR_FILE, meta_map, device_vector_tuple);
 
     if(!ret)
         return false;
@@ -261,13 +223,13 @@ bool json_mgr::add_device(const string_view &device, map<uint16_t, pair<string, 
         return false;
 
     if(device == RESISTOR)
-        ret = db_mgr.add_resistor(device_vector_tuple);
+        ret = db_mgr.insert_device(RESISTOR, RESISTOR_DB, device_vector_tuple);
 
     if(device == CAPACITOR)
-        ret = db_mgr.add_capacitor(device_vector_tuple);
+        ret = db_mgr.insert_device(CAPACITOR, CAPACITOR_DB, device_vector_tuple);
 
     if(device == INDUCTOR)
-        ret = db_mgr.add_inductor(device_vector_tuple);
+        ret = db_mgr.insert_device(INDUCTOR, INDUCTOR_DB, device_vector_tuple);
 
     return ret;
 }
