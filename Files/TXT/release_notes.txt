@@ -22,17 +22,19 @@ Software Description.
 
 ---------------------------------------------------
 
-Version: 0.0.1
+Version: 0.0.2
 Release Date: 02/04/2021
 Author: Domenico Spagnuolo (aka Mimmo)
 
 INFO:
 
-    - Implemented devices addition
+    - Implemented devices deletion
 
 
-Version: 0.0.2
-Release Date: 15/03/2021
+---------------------------------------------------
+
+Version: 0.0.1
+Release Date: 02/04/2021
 Author: Domenico Spagnuolo (aka Mimmo)
 
 INFO:

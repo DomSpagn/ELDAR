@@ -113,3 +113,21 @@ string insert_row(const string &device_name, vector<tuple<string, string, any>> 
     
     return ROOT + BODY + END;
 }
+
+
+std::string select_row_by_code(const std::string &DEVICE, const std::string &device_name)
+{
+    string BODY;
+    string ROOT = "SELECT * FROM " + DEVICE + SPACE + "WHERE CODE LIKE" + SINGLE_QUOTE + device_name + SINGLE_QUOTE;    
+
+    return ROOT + BODY + SEMICOLON;
+}
+
+
+string delete_row(const string &DEVICE, const string &device_name)
+{
+    string BODY;
+    string ROOT = "DELETE FROM " + DEVICE + SPACE + "WHERE CODE=" + SINGLE_QUOTE + device_name + SINGLE_QUOTE;    
+
+    return ROOT + BODY + SEMICOLON;
+}

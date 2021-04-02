@@ -12,8 +12,7 @@ using namespace std;
 using namespace rapidjson;
 
 
-json_mgr::json_mgr() :
-        db_mgr(db_mgr)
+json_mgr::json_mgr()
 {
 
 }
@@ -199,37 +198,4 @@ bool json_mgr::load_device(const string& DEVICE_FILE, map<uint16_t, pair<string,
     meta_map.clear();
 
     return true;
-}
-
-
-bool json_mgr::add_device(const string &device, map<uint16_t, pair<string, string>> &meta_map)
-{
-    bool ret = false;        
-    vector<tuple<string, string, any>>device_vector_tuple;
-
-    if(device == RESISTOR)
-        ret = load_device(RESISTOR_FILE, meta_map, device_vector_tuple);
-    if(device == CAPACITOR)
-        ret = load_device(CAPACITOR_FILE, meta_map, device_vector_tuple);
-    if(device == INDUCTOR)
-        ret = load_device(INDUCTOR_FILE, meta_map, device_vector_tuple);
-
-    if(!ret)
-        return false;
-
-    print_device_tuple_vector(device_vector_tuple);
-
-    if (is_validated() == NOT_CONFIRMED)
-        return false;
-
-    if(device == RESISTOR)
-        ret = db_mgr.insert_device(RESISTOR, RESISTOR_DB, device_vector_tuple);
-
-    if(device == CAPACITOR)
-        ret = db_mgr.insert_device(CAPACITOR, CAPACITOR_DB, device_vector_tuple);
-
-    if(device == INDUCTOR)
-        ret = db_mgr.insert_device(INDUCTOR, INDUCTOR_DB, device_vector_tuple);
-
-    return ret;
 }
