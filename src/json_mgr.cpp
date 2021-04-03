@@ -40,7 +40,7 @@ bool json_mgr::get_meta_info_from_json(const Value &device_info, map<uint16_t, p
 }
 
 
-bool json_mgr::retrieve_device_metadata(const string_view &device, map<uint16_t, pair<string, string>> &meta_map)
+bool json_mgr::retrieve_device_metadata(const string &device, map<uint16_t, pair<string, string>> &meta_map)
 {   
     ifstream ifs(string(JSON_FILE_PATH) + string(META_DEVICE_FILE));
     if(!ifs.is_open())
@@ -61,11 +61,11 @@ bool json_mgr::retrieve_device_metadata(const string_view &device, map<uint16_t,
     {
         assert(meta_doc[i].IsObject());
 
-        if(string(device) == RESISTOR)
+        if(device == RESISTOR)
             return get_meta_info_from_json(meta_doc[i], meta_map);
-        if(string(device) == CAPACITOR)
+        if(device == CAPACITOR)
             return get_meta_info_from_json(meta_doc[i], meta_map);
-        if(string(device) == INDUCTOR)
+        if(device == INDUCTOR)
             return get_meta_info_from_json(meta_doc[i], meta_map);
     }
 
@@ -182,10 +182,10 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
 }
 
 
-bool json_mgr::load_device(const string& DEVICE_FILE, map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple)
+bool json_mgr::load_device(const string& device_file, map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple)
 {
-    if(!is_file_present(JSON_FILE_PATH, DEVICE_FILE))
-        if(!create_file(JSON_FILE_PATH, DEVICE_FILE))
+    if(!is_file_present(JSON_FILE_PATH, device_file))
+        if(!create_file(JSON_FILE_PATH, device_file))
             return false;
 
     if(!load_device_meta_info(meta_map, device_vector_tuple))
@@ -197,5 +197,11 @@ bool json_mgr::load_device(const string& DEVICE_FILE, map<uint16_t, pair<string,
     //Clean meta and device maps
     meta_map.clear();
 
+    return true;
+}
+
+
+bool json_mgr::load_changes(const string& device_file, map<uint16_t, pair<string, string>> &meta_map, vector<pair<string, string>> &device_vector_pair)
+{
     return true;
 }

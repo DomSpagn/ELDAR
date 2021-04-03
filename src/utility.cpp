@@ -412,6 +412,17 @@ void print_device_tuple_vector(vector<tuple<string, string, any>> &device_vector
 }
 
 
+void print_device_pair_vector(vector<pair<string, string>> &device_change_pair)
+{
+    cout << endl << yellow << "Inserted Changes: " << endl << endl;
+
+    for (const auto& pair_elem : device_change_pair)
+        cout << yellow << pair_elem.first << ": " << white << pair_elem.second << endl;
+
+    cout << white;
+}
+
+
 answer is_validated(void)
 {    
     string input;    

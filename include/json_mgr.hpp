@@ -13,10 +13,13 @@ public:
     ~json_mgr();
 
     //Read from meta_device.json to build a meta map for each device
-    bool retrieve_device_metadata(const std::string_view &device, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map);    
+    bool retrieve_device_metadata(const std::string &device, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map);    
 
-    //Load device info and data    
-    bool load_device(const std::string& DEVICE_FILE, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map, std::vector<std::tuple<std::string, std::string, std::any>> &resistor_vector_tuple);
+    //Load device info and data
+    bool load_device(const std::string& device_file, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map, std::vector<std::tuple<std::string, std::string, std::any>> &device_vector_tuple);
+
+    //Load changed values
+    bool load_changes(const std::string& device_file, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map, std::vector<std::pair<std::string, std::string>> &device_vector_pair);
 
 protected:
     //Just fills the meta map

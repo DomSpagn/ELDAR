@@ -6,16 +6,19 @@
 using namespace std;
 
 
-string create_table(const string &device_name, vector<tuple<string, string, any>> &device_vector_tuple)
+/*******************************************************************************************************/
+/*                                          CREATE query                                               */ 
+/*******************************************************************************************************/
+string create_table(const string &table, vector<tuple<string, string, any>> &device_vector_tuple)
 {
     unsigned int index = 0;
-    string COLUMN_NAME;
-    string TYPE;
-    string BODY;    
+    string column_name;
+    string type;
+    string body;    
     
-    string ROOT = "CREATE TABLE IF NOT EXISTS " + device_name + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
+    string root = "CREATE TABLE IF NOT EXISTS " + table + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
     
-    //Each BODY in this loop is filled with its name, type and constraints
+    //Each body in this loop is filled with its name, type and constraints
     for (const auto& tuple_elem : device_vector_tuple)
     {
         ++index;
@@ -27,107 +30,130 @@ string create_table(const string &device_name, vector<tuple<string, string, any>
         else
         {
             transform(meta_name.begin(), meta_name.end(), meta_name.begin(), ::toupper);            
-            COLUMN_NAME = meta_name;
+            column_name = meta_name;
         }
 
         if (meta_type == "uint8" || meta_type == "uint16" || meta_type == "uint32" || meta_type == "uint64" || meta_type == "int8" || meta_type == "int16" || meta_type == "int32" || meta_type == "int64")
-            TYPE = "INTEGER";
+            type = "INTEGER";
         else if(meta_type == "float" || meta_type == "double")
-            TYPE = "REAL";
+            type = "REAL";
         else if(meta_type == "string")
-            TYPE = "TEXT";
+            type = "TEXT";
         
         if(index != device_vector_tuple.size())
         {
-            if(COLUMN_NAME == "CODE")
-                BODY += COLUMN_NAME + SPACE + TYPE + SPACE + NOT_NULL_CONSTRAINT + SPACE + UNIQUE_CONSTRAINT + COMMA + SPACE;
+            if(column_name == "CODE")
+                body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT + SPACE + UNIQUE_CONSTRAINT + COMMA + SPACE;
             else
-                BODY += COLUMN_NAME + SPACE + TYPE + SPACE + NOT_NULL_CONSTRAINT + COMMA + SPACE;
+                body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT + COMMA + SPACE;
         }
         else
         {
-            if(COLUMN_NAME == "CODE")
-                BODY += COLUMN_NAME + SPACE + TYPE + SPACE + NOT_NULL_CONSTRAINT + SPACE + UNIQUE_CONSTRAINT;
+            if(column_name == "CODE")
+                body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT + SPACE + UNIQUE_CONSTRAINT;
             else
-                BODY += COLUMN_NAME + SPACE + TYPE + SPACE + NOT_NULL_CONSTRAINT;
+                body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT;
         }
     }
     
-    return ROOT + BODY + END;
+    return root + body + END;
 }
 
 
-string insert_row(const string &device_name, vector<tuple<string, string, any>> &device_vector_tuple)
+/*******************************************************************************************************/
+/*                                          INSERT query                                               */ 
+/*******************************************************************************************************/
+string insert_row(const string &table, vector<tuple<string, string, any>> &device_vector_tuple)
 {
     unsigned int index = 0;
-    string BODY;
-    string VALUE;
+    string body;
+    string value;
     vector<string>value_array;
 
-    string ROOT = "INSERT INTO " + device_name + SPACE + "VALUES (NULL" + COMMA + SPACE;
+    string root = "INSERT INTO " + table + SPACE + "VALUES (NULL" + COMMA + SPACE;
 
     for (const auto& tuple_elem : device_vector_tuple)
     {
         ++index;
         string meta_name = get<0>(tuple_elem);
         string meta_type = get<1>(tuple_elem);
-        any value = get<2>(tuple_elem);
+        any value_in = get<2>(tuple_elem);
 
         if(meta_name == "device")
             continue;
 
         if (meta_type == "uint8")
-            VALUE = to_string(any_cast<uint8_t>(value));
+            value = to_string(any_cast<uint8_t>(value_in));
         else if (meta_type == "uint16")
-            VALUE = to_string(any_cast<uint16_t>(value));
+            value = to_string(any_cast<uint16_t>(value_in));
         else if (meta_type == "uint32")
-            VALUE = to_string(any_cast<uint32_t>(value));
+            value = to_string(any_cast<uint32_t>(value_in));
         else if (meta_type == "uint64")
-            VALUE = to_string(any_cast<uint64_t>(value));
+            value = to_string(any_cast<uint64_t>(value_in));
         else if (meta_type == "int8")
-            VALUE = to_string(any_cast<int8_t>(value));
+            value = to_string(any_cast<int8_t>(value_in));
         else if (meta_type == "int16")
-            VALUE = to_string(any_cast<int16_t>(value));
+            value = to_string(any_cast<int16_t>(value_in));
         else if (meta_type == "int32")
-            VALUE = to_string(any_cast<int32_t>(value));
+            value = to_string(any_cast<int32_t>(value_in));
         else if (meta_type == "int64")
-            VALUE = to_string(any_cast<int64_t>(value));
+            value = to_string(any_cast<int64_t>(value_in));
         else if (meta_type == "float")
-            VALUE = to_string(any_cast<float>(value));
+            value = to_string(any_cast<float>(value_in));
         else if (meta_type == "double")
-            VALUE = to_string(any_cast<double>(value));
+            value = to_string(any_cast<double>(value_in));
         else
-            VALUE = SINGLE_QUOTE + any_cast<string>(value) + SINGLE_QUOTE;
+            value = SINGLE_QUOTE + any_cast<string>(value_in) + SINGLE_QUOTE;
 
-        value_array.push_back(VALUE);
+        value_array.push_back(value);
     }
     
-    //Build the BODY
+    //Build the body
     for (auto &val : value_array)    
     {
         if(&val == &value_array.back())
-            BODY += val;
+            body += val;
         else
-            BODY += val + COMMA + SPACE;
+            body += val + COMMA + SPACE;
     }
     
-    return ROOT + BODY + END;
+    return root + body + END;
 }
 
 
-std::string select_row_by_code(const std::string &DEVICE, const std::string &device_name)
-{
-    string BODY;
-    string ROOT = "SELECT * FROM " + DEVICE + SPACE + "WHERE CODE LIKE" + SINGLE_QUOTE + device_name + SINGLE_QUOTE;    
+/*******************************************************************************************************/
+/*                                          SELECT query                                               */ 
+/*******************************************************************************************************/
+std::string select_row_by_code(const std::string &table, const std::string &code)
+{    
+    string root = "SELECT * FROM " + table + SPACE + "WHERE CODE LIKE";
+    string body = SINGLE_QUOTE + code + SINGLE_QUOTE;
 
-    return ROOT + BODY + SEMICOLON;
+    return root + body + SEMICOLON;
 }
 
 
-string delete_row(const string &DEVICE, const string &device_name)
-{
-    string BODY;
-    string ROOT = "DELETE FROM " + DEVICE + SPACE + "WHERE CODE=" + SINGLE_QUOTE + device_name + SINGLE_QUOTE;    
+/*******************************************************************************************************/
+/*                                          DELETE query                                               */ 
+/*******************************************************************************************************/
+string delete_row(const string &table, const string &code)
+{    
+    string root = "DELETE FROM " + table + SPACE + "WHERE CODE" + EQUAL;
+    string body = SINGLE_QUOTE + code + SINGLE_QUOTE;
 
-    return ROOT + BODY + SEMICOLON;
+    return root + body + SEMICOLON;
+}
+
+
+/*******************************************************************************************************/
+/*                                          UPDATE query                                               */ 
+/*******************************************************************************************************/
+string update_row(const string &table, vector<pair<string, string>> &device_change_pair)
+{
+    
+    string root = "UPDATE" + SPACE + table + SPACE + "SET" + SPACE;    
+
+    //string body = column_name + EQUAL + value_in + SPACE + "WHERE" + SPACE + "CODE" + EQUAL + code;
+    string body;
+    return root + body + SEMICOLON;
 }

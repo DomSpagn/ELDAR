@@ -28,5 +28,6 @@ bool check_double_validity(std::string &input, double &d_value);
 bool check_string_validity(std::string &input);
 
 void print_device_tuple_vector(std::vector<std::tuple<std::string, std::string, std::any>> &device_vector_tuple);
+void print_device_pair_vector(std::vector<std::pair<std::string, std::string>> &device_change_pair);
 answer is_validated(void);
 bool load_software_info(void);

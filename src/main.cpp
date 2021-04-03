@@ -41,9 +41,8 @@ int main(int argc, char **argv)
                 result = device.delete_mgr();
             break;
 
-            case 'e':
-                cout << yellow << "warning: not supported yet..." << white << endl;
-                result = false;
+            case 'e':                
+                result = device.edit_mgr();
             break;
 
             case 'i':                

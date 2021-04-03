@@ -12,6 +12,7 @@ public:
     //Select the component to be inserted
     bool insert_mgr(void);
     bool delete_mgr(void);
+    bool edit_mgr(void);
 
 protected:
     json_mgr &json_mgr;
@@ -23,4 +24,6 @@ protected:
     //Insert a device into related DB starting from its meta info
     bool add_device(const std::string &device, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map);
 
+    //Edit a device into related DB starting from its meta info
+    bool edit_device(const std::string &device, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map);
 };
