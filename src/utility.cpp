@@ -1,6 +1,6 @@
 #include "utility.hpp"
 #include "const.hpp"
-#include "ConsoleColor.hpp"
+#include "console_color.hpp"
 #include <dirent.h>
 #include <vector>
 #include <iostream>
@@ -370,7 +370,7 @@ bool check_string_validity(string &input)
 /***********************************************************************************************************/
 /*                                             Miscellaneous                                               */ 
 /***********************************************************************************************************/
-void print_device_tuple_vector(vector<tuple<string, string, any>> &device_vector_tuple)
+void print_device_tuple_vector(vector<tuple<string, string, any>> &device_vector_tuple, tuple_operation operation)
 {
     cout << endl << green << "Inserted Data: " << endl << endl;
 
@@ -384,40 +384,48 @@ void print_device_tuple_vector(vector<tuple<string, string, any>> &device_vector
             continue;
 
         cout << green << meta_name << ": " << white;
-        if(meta_type == "uint8")            
-            printf("%d\n", any_cast<uint8_t>(value));
-        if(meta_type == "int8")
-            printf("%d\n", any_cast<int8_t>(value));
-        if(meta_type == "uint16")
-            cout << any_cast<uint16_t>(value) << endl;
-        if(meta_type == "int16")
-            cout << any_cast<int16_t>(value) << endl;
-        if(meta_type == "uint32")
-            cout << any_cast<uint32_t>(value) << endl;
-        if(meta_type == "int32")
-            cout << any_cast<int32_t>(value) << endl;
-        if(meta_type == "uint64")
-            cout << any_cast<uint64_t>(value) << endl;
-        if(meta_type == "int64")
-            cout << any_cast<int64_t>(value) << endl;
-        if(meta_type == "float")
-            cout << any_cast<float>(value) << endl;
-        if(meta_type == "double")
-            cout << any_cast<double>(value) << endl;
-        if(meta_type == "string")
-            cout << any_cast<string>(value) << endl;
+
+        switch(operation)
+        {
+            case INSERT:
+            {
+                if(meta_type == "uint8")            
+                    printf("%d\n", any_cast<uint8_t>(value));
+                if(meta_type == "int8")
+                    printf("%d\n", any_cast<int8_t>(value));
+                if(meta_type == "uint16")
+                    cout << any_cast<uint16_t>(value) << endl;
+                if(meta_type == "int16")
+                    cout << any_cast<int16_t>(value) << endl;
+                if(meta_type == "uint32")
+                    cout << any_cast<uint32_t>(value) << endl;
+                if(meta_type == "int32")
+                    cout << any_cast<int32_t>(value) << endl;
+                if(meta_type == "uint64")
+                    cout << any_cast<uint64_t>(value) << endl;
+                if(meta_type == "int64")
+                    cout << any_cast<int64_t>(value) << endl;
+                if(meta_type == "float")
+                    cout << any_cast<float>(value) << endl;
+                if(meta_type == "double")
+                    cout << any_cast<double>(value) << endl;
+                if(meta_type == "string")
+                    cout << any_cast<string>(value) << endl;
+            }
+            break;
+
+            case UPDATE:
+            {
+                if(meta_type == "integer")            
+                    cout << any_cast<int64_t>(value) << endl;
+                if(meta_type == "real")
+                    cout << any_cast<double>(value) << endl;
+                if(meta_type == "text")
+                    cout << any_cast<string>(value) << endl;
+            }
+            break;
+        }
     }
-
-    cout << white;
-}
-
-
-void print_device_pair_vector(vector<pair<string, string>> &device_change_pair)
-{
-    cout << endl << yellow << "Inserted Changes: " << endl << endl;
-
-    for (const auto& pair_elem : device_change_pair)
-        cout << yellow << pair_elem.first << ": " << white << pair_elem.second << endl;
 
     cout << white;
 }

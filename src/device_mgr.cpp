@@ -1,6 +1,6 @@
 #include "device_mgr.hpp"
 #include "const.hpp"
-#include "ConsoleColor.hpp"
+#include "console_color.hpp"
 #include "utility.hpp"
 #include <string>
 #include <sstream>
@@ -76,19 +76,19 @@ bool device_mgr::add_device(const string &device, map<uint16_t, pair<string, str
     if(!ret)
         return false;
 
-    print_device_tuple_vector(device_vector_tuple);
+    print_device_tuple_vector(device_vector_tuple, INSERT);
 
     if (is_validated() == NOT_CONFIRMED)
         return false;
 
     if(device == RESISTOR)
-        ret = db_mgr.insert_device(RESISTOR, RESISTOR_DB, device_vector_tuple);
+        ret = db_mgr.insert_device(RESISTOR_DB, RESISTOR, device_vector_tuple);
 
     if(device == CAPACITOR)
-        ret = db_mgr.insert_device(CAPACITOR, CAPACITOR_DB, device_vector_tuple);
+        ret = db_mgr.insert_device(CAPACITOR_DB, CAPACITOR, device_vector_tuple);
 
     if(device == INDUCTOR)
-        ret = db_mgr.insert_device(INDUCTOR, INDUCTOR_DB, device_vector_tuple);
+        ret = db_mgr.insert_device(INDUCTOR_DB, INDUCTOR, device_vector_tuple);
 
     return ret;
 }
@@ -141,13 +141,13 @@ bool device_mgr::delete_mgr(void)
     cin >> device_type_in;    
 
     if(device_type_in == RESISTOR)
-        ret = db_mgr.delete_device(RESISTOR, RESISTOR_DB);
+        ret = db_mgr.delete_device(RESISTOR_DB, RESISTOR);
 
     else if(device_type_in == CAPACITOR)
-        ret = db_mgr.delete_device(CAPACITOR, CAPACITOR_DB);
+        ret = db_mgr.delete_device(CAPACITOR_DB, CAPACITOR);
 
     else if(device_type_in == INDUCTOR)
-        ret = db_mgr.delete_device(INDUCTOR, INDUCTOR_DB);
+        ret = db_mgr.delete_device(INDUCTOR_DB, INDUCTOR);
 
     else
         cerr << red << "wrong choice..." << white << endl;
@@ -159,36 +159,49 @@ bool device_mgr::delete_mgr(void)
 /*******************************************************************************************************/
 /*                                          EDIT section                                               */ 
 /*******************************************************************************************************/
-bool device_mgr::edit_device(const string &device, map<uint16_t, pair<string, string>> &meta_map)
+bool device_mgr::load_changes(vector<tuple<string, string, any>> &current_data, vector<tuple<string, string, any>> &new_data)
+{
+
+    return true;
+}
+
+
+bool device_mgr::edit_device(const string &device, const string &code)
 {
     bool ret = false;        
-    vector<pair<string, string>>device_change_pairs;
+    vector<tuple<string, string, any>> current_data;
+    vector<tuple<string, string, any>> new_data;
 
     if(device == RESISTOR)
-        ret = json_mgr.load_changes(RESISTOR_FILE, meta_map, device_change_pairs);
+        ret = db_mgr.retrieve_current_device_data(RESISTOR_DB, RESISTOR, code, current_data);
 
-    if(device == CAPACITOR)
-        ret = json_mgr.load_changes(CAPACITOR_FILE, meta_map, device_change_pairs);
+    else if(device == CAPACITOR)
+        ret = db_mgr.retrieve_current_device_data(CAPACITOR_DB, CAPACITOR, code, current_data);
 
-    if(device == INDUCTOR)
-        ret = json_mgr.load_changes(INDUCTOR_FILE, meta_map, device_change_pairs);
+    else if(device == INDUCTOR)
+        ret = db_mgr.retrieve_current_device_data(INDUCTOR_DB, INDUCTOR, code, current_data);
 
     if(!ret)
         return false;
 
-    print_device_pair_vector(device_change_pairs);
+    if(!load_changes(current_data, new_data))
+        return false;
+
+    /*
+    print_device_tuple_vector(new_data, UPDATE);
 
     if (is_validated() == NOT_CONFIRMED)
         return false;
 
     if(device == RESISTOR)
-        ret = db_mgr.update_device(RESISTOR, RESISTOR_DB, device_change_pairs);
+        ret = db_mgr.update_device(RESISTOR_DB, RESISTOR, code, new_data);
 
     if(device == CAPACITOR)
-        ret = db_mgr.update_device(CAPACITOR, CAPACITOR_DB, device_change_pairs);
+        ret = db_mgr.update_device(CAPACITOR_DB, CAPACITOR, code, new_data);
 
     if(device == INDUCTOR)
-        ret = db_mgr.update_device(INDUCTOR, INDUCTOR_DB, device_change_pairs);
+        ret = db_mgr.update_device(INDUCTOR_DB, INDUCTOR, code, new_data);
+    */
 
     return ret;
 }
@@ -198,7 +211,7 @@ bool device_mgr::edit_mgr(void)
 {
     bool ret = false;
     string device_type_in;
-    string code;
+    string code_in;
     vector<string> meta_structure;
     map<uint16_t, pair<string, string>> meta_map;
 
@@ -214,41 +227,38 @@ bool device_mgr::edit_mgr(void)
         return false;
     }        
 
-    cout << endl << blue << "Insert device code" << white << endl;
+    cout << endl << blue << "Insert device code to see the current info" << white << endl;
     cout << endl << white << "in: " << white;    
-    cin >> code;
+    cin >> code_in;
 
     if(device_type_in == RESISTOR)
     {
-        if(!db_mgr.select_device(code, RESISTOR_DB))
+        if(!db_mgr.select_device(RESISTOR_DB, RESISTOR, code_in))
             cerr << red << "device not found..." << white << endl;
         else
         {   
-            //db_mgr.show_device(code, RESISTOR_DB);
             if(json_mgr.retrieve_device_metadata(RESISTOR, meta_map))
-                ret = edit_device(RESISTOR, meta_map);
+                ret = edit_device(RESISTOR, code_in);
         }
     }
     else if(device_type_in == CAPACITOR)
     {
-        if(!db_mgr.select_device(code, CAPACITOR_DB))
+        if(!db_mgr.select_device(CAPACITOR_DB, CAPACITOR, code_in))
             cerr << red << "device not found..." << white << endl;
         else
         {
-            //db_mgr.show_device(code, CAPACITOR);
             if(json_mgr.retrieve_device_metadata(CAPACITOR, meta_map))
-                ret = edit_device(CAPACITOR, meta_map);
+                ret = edit_device(CAPACITOR, code_in);
         }
     }    
     else if(device_type_in == INDUCTOR)
     {
-        if(!db_mgr.select_device(code, INDUCTOR_DB))
+        if(!db_mgr.select_device(INDUCTOR_DB, INDUCTOR, code_in))
             cerr << red << "device not found..." << white << endl;
         else
         {
-            //db_mgr.show_device(code, INDUCTOR_DB);
             if(json_mgr.retrieve_device_metadata(INDUCTOR, meta_map))
-                ret = edit_device(INDUCTOR, meta_map);
+                ret = edit_device(INDUCTOR, code_in);
         }
     }
 

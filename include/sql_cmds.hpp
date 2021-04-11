@@ -19,4 +19,4 @@ std::string create_table(const std::string &table, std::vector<std::tuple<std::s
 std::string insert_row(const std::string &table, std::vector<std::tuple<std::string, std::string, std::any>> &device_vector_tuple);
 std::string select_row_by_code(const std::string &table, const std::string &code);
 std::string delete_row(const std::string &table, const std::string &code);
-std::string update_row(const std::string &table, std::vector<std::pair<std::string, std::string>> &device_change_pair);
+std::string update_row(const std::string &table, const std::string &code, std::vector<std::tuple<std::string, std::string, std::any>> &device_changes);

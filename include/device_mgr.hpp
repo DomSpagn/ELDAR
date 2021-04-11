@@ -24,6 +24,9 @@ protected:
     //Insert a device into related DB starting from its meta info
     bool add_device(const std::string &device, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map);
 
+    //Load new device data starting from the old ones
+    bool load_changes(std::vector<std::tuple<std::string, std::string, std::any>> &current_data, std::vector<std::tuple<std::string, std::string, std::any>> &new_data);
+
     //Edit a device into related DB starting from its meta info
-    bool edit_device(const std::string &device, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map);
+    bool edit_device(const std::string &device, const std::string &code);
 };

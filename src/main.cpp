@@ -1,6 +1,6 @@
 #include <iostream>
 #include "device_mgr.hpp"
-#include "ConsoleColor.hpp"
+#include "console_color.hpp"
 #include "utility.hpp"
 
 using namespace std;

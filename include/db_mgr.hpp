@@ -11,31 +11,31 @@ public:
     ~db_mgr();
 
     //Create (if it does not exist) a db and apply an INSERT to add new device record
-    bool insert_device(const std::string &device, const char *device_db, std::vector<std::tuple<std::string, std::string, std::any>>device_vector_tuple);
+    bool insert_device(const char *device_db, const std::string &table, std::vector<std::tuple<std::string, std::string, std::any>>device_vector_tuple);
 
     //Select a device record by code
-    bool select_device(const std::string &device, const char *device_db);
+    bool select_device(const char *device_db, const std::string &table, const std::string& code);
 
     //Delete a device record
-    bool delete_device(const std::string &device, const char *device_db);
+    bool delete_device(const char *device_db, const std::string &table);
+
+    //Get current device data starting from its code
+    bool retrieve_current_device_data(const char *device_db, const std::string &table, const std::string& code, std::vector<std::tuple<std::string, std::string, std::any>> &current_data);
 
     //Update an existing device record
-    bool update_device(const std::string &device, const char *device_db, std::vector<std::pair<std::string, std::string>>device_change_pair);
-
-    //Show device info and value stored into the related db
-    void show_device(const std::string &device, const char *device_db);
+    bool update_device(const char *device_db, const std::string &table, const std::string &code, std::vector<std::tuple<std::string, std::string, std::any>> &new_data);
 
 protected:
     sqlite3 *database_connection(const char *device_db);
-    
+    //ConsoleTable columns_name;
     /********************************************************************************************************/
     /*                                      CALLBACKS for SQLite                                            */
     /********************************************************************************************************/
-    //SELECT CALLBACK
+    //SELECT CALLBACK (NO PRINT)
     static int select_by_code(void *NotUsed, int argc, char **argv, char **azColName)
     {
         // Take the code
-        select_by_code_return = argv[1];       
+        select_by_code_return = argv[1];
         return 0;
     }
 };

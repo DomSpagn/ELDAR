@@ -6,6 +6,7 @@
 #include <any>
 
 enum answer { CONFIRM, NOT_CONFIRMED, UNKNOWN };
+enum tuple_operation { INSERT, UPDATE };
 
 
 bool is_file_present(const char *path, std::string filename);
@@ -27,7 +28,7 @@ bool check_float_validity(std::string &input, float &f_value);
 bool check_double_validity(std::string &input, double &d_value);
 bool check_string_validity(std::string &input);
 
-void print_device_tuple_vector(std::vector<std::tuple<std::string, std::string, std::any>> &device_vector_tuple);
-void print_device_pair_vector(std::vector<std::pair<std::string, std::string>> &device_change_pair);
+void print_device_tuple_vector(std::vector<std::tuple<std::string, std::string, std::any>> &device_vector_tuple, tuple_operation operation);
+
 answer is_validated(void);
 bool load_software_info(void);

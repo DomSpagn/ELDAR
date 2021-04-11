@@ -124,12 +124,12 @@ string insert_row(const string &table, vector<tuple<string, string, any>> &devic
 /*******************************************************************************************************/
 /*                                          SELECT query                                               */ 
 /*******************************************************************************************************/
-std::string select_row_by_code(const std::string &table, const std::string &code)
+std::string select_row_by_code(const string &table, const string &code)
 {    
-    string root = "SELECT * FROM " + table + SPACE + "WHERE CODE LIKE";
+    string root = "SELECT * FROM " + table + SPACE + "WHERE CODE LIKE" + SPACE;
     string body = SINGLE_QUOTE + code + SINGLE_QUOTE;
 
-    return root + body + SEMICOLON;
+    return root + body;
 }
 
 
@@ -141,19 +141,18 @@ string delete_row(const string &table, const string &code)
     string root = "DELETE FROM " + table + SPACE + "WHERE CODE" + EQUAL;
     string body = SINGLE_QUOTE + code + SINGLE_QUOTE;
 
-    return root + body + SEMICOLON;
+    return root + body;
 }
 
 
 /*******************************************************************************************************/
 /*                                          UPDATE query                                               */ 
 /*******************************************************************************************************/
-string update_row(const string &table, vector<pair<string, string>> &device_change_pair)
-{
-    
+string update_row(const string &table, const string& code, vector<tuple<string, string, any>> &new_data)
+{    
     string root = "UPDATE" + SPACE + table + SPACE + "SET" + SPACE;    
 
     //string body = column_name + EQUAL + value_in + SPACE + "WHERE" + SPACE + "CODE" + EQUAL + code;
     string body;
-    return root + body + SEMICOLON;
+    return root + body;
 }

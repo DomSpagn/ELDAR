@@ -1,6 +1,6 @@
 #include "json_mgr.hpp"
 #include "const.hpp"
-#include "ConsoleColor.hpp"
+#include "console_color.hpp"
 #include "utility.hpp"
 #include <iostream>
 #include <fstream>
@@ -197,11 +197,5 @@ bool json_mgr::load_device(const string& device_file, map<uint16_t, pair<string,
     //Clean meta and device maps
     meta_map.clear();
 
-    return true;
-}
-
-
-bool json_mgr::load_changes(const string& device_file, map<uint16_t, pair<string, string>> &meta_map, vector<pair<string, string>> &device_vector_pair)
-{
     return true;
 }

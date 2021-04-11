@@ -18,9 +18,6 @@ public:
     //Load device info and data
     bool load_device(const std::string& device_file, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map, std::vector<std::tuple<std::string, std::string, std::any>> &device_vector_tuple);
 
-    //Load changed values
-    bool load_changes(const std::string& device_file, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map, std::vector<std::pair<std::string, std::string>> &device_vector_pair);
-
 protected:
     //Just fills the meta map
     bool get_meta_info_from_json(const rapidjson::Value &device_info, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map);
