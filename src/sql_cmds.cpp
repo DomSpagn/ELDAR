@@ -150,9 +150,29 @@ string delete_row(const string &table, const string &code)
 /*******************************************************************************************************/
 string update_row(const string &table, const string& code, vector<tuple<string, string, any>> &new_data)
 {    
-    string root = "UPDATE" + SPACE + table + SPACE + "SET" + SPACE;    
-
-    //string body = column_name + EQUAL + value_in + SPACE + "WHERE" + SPACE + "CODE" + EQUAL + code;
+    string root = "UPDATE" + SPACE + table + SPACE + "SET" + SPACE;
     string body;
-    return root + body;
+    string value;
+
+    for(auto &updated_value : new_data)
+    {
+        string column_name = get<0>(updated_value);
+        string data_type = get<1>(updated_value);
+        any data_value = get<2>(updated_value);
+
+        if (data_type == "integer")
+            value = to_string(any_cast<int64_t>(data_value));
+        else if (data_type == "real")
+            value = to_string(any_cast<double>(data_value));
+        else
+            value = SINGLE_QUOTE + any_cast<string>(data_value) + SINGLE_QUOTE;
+
+        if(&updated_value == &new_data.back())        
+            body += column_name + EQUAL + value + SPACE;
+        else            
+            body += column_name + EQUAL + value + COMMA + SPACE;  
+    }
+    string condition = "WHERE" + SPACE + "CODE" + EQUAL + SINGLE_QUOTE + code + SINGLE_QUOTE;
+
+    return root + body + condition;
 }

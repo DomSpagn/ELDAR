@@ -161,6 +161,38 @@ bool device_mgr::delete_mgr(void)
 /*******************************************************************************************************/
 bool device_mgr::load_changes(vector<tuple<string, string, any>> &current_data, vector<tuple<string, string, any>> &new_data)
 {
+    cout << blue << "Insert new values or skip pressing 's':" << white << endl;    
+    string input[current_data.size()];
+    unsigned int i = 0;
+    tuple<string, string, any> aux_tuple;
+
+    int64_t int_value;
+    double real_value;    
+
+    cin.ignore();
+    for(auto data : current_data)
+    {
+        string key = get<0>(data);
+        string type = get<1>(data);
+        any value = get<2>(data);
+
+        cout << white << key << " (" << yellow << type << white << "): "; 
+        getline(cin, input[i]);        
+
+        if(input[i].length() == 0)
+            continue;
+        else if(type == "integer" && check_int64_validity(input[i], int_value))
+            aux_tuple = make_tuple(key, type, int_value);
+        else if(type == "real" && check_double_validity(input[i], real_value))
+            aux_tuple = make_tuple(key, type, real_value);
+        else if(type == "text" && check_string_validity(input[i]))
+            aux_tuple = make_tuple(key, type, input[i]);
+        else
+            return false;
+
+        new_data.push_back(aux_tuple);
+        i++;
+    }
 
     return true;
 }
@@ -186,8 +218,7 @@ bool device_mgr::edit_device(const string &device, const string &code)
 
     if(!load_changes(current_data, new_data))
         return false;
-
-    /*
+    
     print_device_tuple_vector(new_data, UPDATE);
 
     if (is_validated() == NOT_CONFIRMED)
@@ -200,8 +231,7 @@ bool device_mgr::edit_device(const string &device, const string &code)
         ret = db_mgr.update_device(CAPACITOR_DB, CAPACITOR, code, new_data);
 
     if(device == INDUCTOR)
-        ret = db_mgr.update_device(INDUCTOR_DB, INDUCTOR, code, new_data);
-    */
+        ret = db_mgr.update_device(INDUCTOR_DB, INDUCTOR, code, new_data);    
 
     return ret;
 }

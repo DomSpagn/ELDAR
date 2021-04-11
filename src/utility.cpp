@@ -372,7 +372,15 @@ bool check_string_validity(string &input)
 /***********************************************************************************************************/
 void print_device_tuple_vector(vector<tuple<string, string, any>> &device_vector_tuple, tuple_operation operation)
 {
-    cout << endl << green << "Inserted Data: " << endl << endl;
+    switch(operation)
+    {
+        case INSERT:
+            cout << endl << green << "Inserted Data: " << endl << endl;
+        break;
+        case UPDATE:
+            cout << endl << green << "Values to be updated: " << endl << endl;
+        break;
+    }
 
     for (const auto& tuple_elem : device_vector_tuple)
     {

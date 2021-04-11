@@ -79,7 +79,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
 {
     string input[meta_map.size()];
     unsigned int i = 0;
-    tuple<string, string, any> aux_tuple;    
+    tuple<string, string, any> aux_tuple;
     
     uint8_t u8_value;
     uint16_t u16_value;
@@ -110,7 +110,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
             {
                 if(!check_uint8_validity(input[i], u8_value))
                     return false;
-                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, u8_value);                    
+                aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, u8_value);
             }
             if(meta_elem.second.second == "uint16")
             {

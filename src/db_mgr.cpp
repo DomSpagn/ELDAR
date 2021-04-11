@@ -218,7 +218,7 @@ bool db_mgr::retrieve_current_device_data(const char *device_db, const std::stri
     return true;
 }
 
-//NEED Table name, code and pairs made of <changed columns name, type value, changed values>
+
 bool db_mgr::update_device(const char *device_db, const string& table, const string &code, vector<tuple<string, string, any>> &new_data)
 {   
     sqlite3 *db = nullptr;

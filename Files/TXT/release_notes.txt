@@ -22,6 +22,19 @@ Software Description.
 
 ---------------------------------------------------
 
+Version: 0.0.3
+Release Date: 11/04/2021
+Author: Domenico Spagnuolo (aka Mimmo)
+
+INFO:
+
+    - Implemented devices editing
+    - Added console table formatting
+
+
+
+---------------------------------------------------
+
 Version: 0.0.2
 Release Date: 02/04/2021
 Author: Domenico Spagnuolo (aka Mimmo)

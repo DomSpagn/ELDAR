@@ -7,7 +7,7 @@
 #include <sstream>
 #include <algorithm>
 
-#define TABLE_PADDIND 14                //Calibrate this value according to the adopted screen
+#define TABLE_PADDIND 12                //Calibrate this value according to the adopted screen
 #define TABLE_STYLE 0                   //Other values do not work on Windows
 
 class TableMgr 
