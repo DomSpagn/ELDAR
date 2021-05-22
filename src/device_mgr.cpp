@@ -33,13 +33,13 @@ bool device_mgr::add_device(const string &device, map<uint16_t, pair<string, str
     vector<tuple<string, string, any>>device_vector_tuple;
 
     if(device == RESISTOR)
-        ret = json_mgr.load_device(RESISTOR_FILE, meta_map, device_vector_tuple);
+        ret = json_mgr.load_device(meta_map, device_vector_tuple);
 
     if(device == CAPACITOR)
-        ret = json_mgr.load_device(CAPACITOR_FILE, meta_map, device_vector_tuple);
+        ret = json_mgr.load_device(meta_map, device_vector_tuple);
 
     if(device == INDUCTOR)
-        ret = json_mgr.load_device(INDUCTOR_FILE, meta_map, device_vector_tuple);
+        ret = json_mgr.load_device(meta_map, device_vector_tuple);
 
     if(!ret)
         return false;
@@ -132,7 +132,7 @@ bool device_mgr::delete_mgr(void)
 /*******************************************************************************************************/
 bool device_mgr::load_changes(vector<tuple<string, string, any>> &current_data, vector<tuple<string, string, any>> &new_data)
 {
-    cout << blue << "Insert new values or skip pressing 's':" << white << endl;    
+    cout << blue << "Insert new values or press ENTER to skip:" << white << endl;    
     string input[current_data.size()];
     unsigned int i = 0;
     tuple<string, string, any> aux_tuple;
@@ -190,6 +190,12 @@ bool device_mgr::edit_device(const string &device, const string &code)
     if(!load_changes(current_data, new_data))
         return false;
     
+    if(new_data.size() == 0)
+    {
+        cout << endl << yellow << "No data has been modified" << white << endl;
+        return true;
+    }
+
     print_device_tuple_vector(new_data, UPDATE);
 
     if (is_validated() == NOT_CONFIRMED)
@@ -233,10 +239,8 @@ bool device_mgr::edit_mgr(void)
     cin >> code_in;
 
     if(device_type_in == RESISTOR)
-    {
-        if(!db_mgr.select_device(RESISTOR_DB, RESISTOR, code_in))
-            cerr << red << "device not found..." << white << endl;
-        else
+    {        
+        if(db_mgr.select_device(RESISTOR_DB, RESISTOR, code_in))
         {   
             if(json_mgr.retrieve_device_metadata(RESISTOR, meta_map))
                 ret = edit_device(RESISTOR, code_in);
@@ -244,9 +248,7 @@ bool device_mgr::edit_mgr(void)
     }
     else if(device_type_in == CAPACITOR)
     {
-        if(!db_mgr.select_device(CAPACITOR_DB, CAPACITOR, code_in))
-            cerr << red << "device not found..." << white << endl;
-        else
+        if(db_mgr.select_device(CAPACITOR_DB, CAPACITOR, code_in))
         {
             if(json_mgr.retrieve_device_metadata(CAPACITOR, meta_map))
                 ret = edit_device(CAPACITOR, code_in);
@@ -254,9 +256,7 @@ bool device_mgr::edit_mgr(void)
     }    
     else if(device_type_in == INDUCTOR)
     {
-        if(!db_mgr.select_device(INDUCTOR_DB, INDUCTOR, code_in))
-            cerr << red << "device not found..." << white << endl;
-        else
+        if(db_mgr.select_device(INDUCTOR_DB, INDUCTOR, code_in))
         {
             if(json_mgr.retrieve_device_metadata(INDUCTOR, meta_map))
                 ret = edit_device(INDUCTOR, code_in);
@@ -299,6 +299,13 @@ bool device_mgr::search_by_type(void)
 bool device_mgr::search_by_code(void)
 {
     bool ret = false;
+    string code_in;
+    cout << endl;
+    cout << blue << "Digit code: " << endl << endl;
+
+    cout << endl << white << "in: " << white;
+    cin >> code_in;    
+
     return ret;
 }
 
@@ -306,6 +313,13 @@ bool device_mgr::search_by_code(void)
 bool device_mgr::search_by_manufacturer(void)
 {
     bool ret = false;
+    string manufacturer_in;
+    cout << endl;
+    cout << blue << "Digit manufacturer: " << endl << endl;
+
+    cout << endl << white << "in: " << white;
+    cin >> manufacturer_in;    
+
     return ret;
 }
 
@@ -313,6 +327,13 @@ bool device_mgr::search_by_manufacturer(void)
 bool device_mgr::search_by_mounting_type(void)
 {
     bool ret = false;
+    string mounting_type_in;
+    cout << endl;
+    cout << blue << "Digit mounting type: " << endl << endl;
+
+    cout << endl << white << "in: " << white;
+    cin >> mounting_type_in;    
+
     return ret;
 }
 

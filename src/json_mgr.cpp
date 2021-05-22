@@ -182,12 +182,8 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
 }
 
 
-bool json_mgr::load_device(const string& device_file, map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple)
+bool json_mgr::load_device(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple)
 {
-    if(!is_file_present(JSON_FILE_PATH, device_file))
-        if(!create_file(JSON_FILE_PATH, device_file))
-            return false;
-
     if(!load_device_meta_info(meta_map, device_vector_tuple))
     {
         cerr << red << "one of more inputs are unacceptable" << white << endl;

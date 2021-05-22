@@ -2,3 +2,4 @@
 *obj.d
 *.exe
 build/*
+Files/DB/*

@@ -16,7 +16,7 @@ public:
     bool retrieve_device_metadata(const std::string &device, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map);    
 
     //Load device info and data
-    bool load_device(const std::string& device_file, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map, std::vector<std::tuple<std::string, std::string, std::any>> &device_vector_tuple);
+    bool load_device(std::map<uint16_t, std::pair<std::string, std::string>> &meta_map, std::vector<std::tuple<std::string, std::string, std::any>> &device_vector_tuple);
 
 protected:
     //Just fills the meta map

@@ -8,7 +8,6 @@
         "power" : "float",
         "mounting_type" : "string",
         "quantity" : "uint16",
-        "image" : "string",
         "description" : "string"
     },
     {        
@@ -21,7 +20,6 @@
         "size" : "string",
         "mounting_type" : "string",
         "quantity" : "uint16",
-        "image" : "string",
         "description" : "string"
     },
     {        
@@ -34,7 +32,6 @@
         "size" : "string",
         "mounting_type" : "string",
         "quantity" : "uint16",
-        "image" : "string",
         "description" : "string"
     }
 ]

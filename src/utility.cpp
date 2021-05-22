@@ -413,7 +413,7 @@ void print_device_tuple_vector(vector<tuple<string, string, any>> &device_vector
             cout << endl << green << "Inserted Data: " << endl << endl;
         break;
         case UPDATE:
-            cout << endl << green << "Values to be updated: " << endl << endl;
+            cout << endl << green << "Values to be confirmed: " << endl << endl;
         break;
     }
 
@@ -506,7 +506,7 @@ answer is_validated(void)
 bool load_software_info(void)
 {
     fstream file;
-    file.open(string(ROOT_FILE_PATH) + string(RELEASE_NOTES_FILE), ios::in); 
+    file.open(string(TXT_FILE_PATH) + string(RELEASE_NOTES_FILE), ios::in); 
 
     if(!file)
     {

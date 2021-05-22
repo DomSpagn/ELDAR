@@ -12,8 +12,7 @@ set(sources ${sources}
     src/device_mgr.cpp
     src/json_mgr.cpp
     src/db_mgr.cpp
-    src/sql_cmds.cpp
-    src/table_mgr.cpp
+    src/sql_cmds.cpp    
 )
 
 add_library(sqlite3 SHARED sqlite3/sqlite3.c)

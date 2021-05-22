@@ -166,7 +166,7 @@ bool show_sql_device(const char *device_db, const string &table, const string &c
     string std_out_line;
     std::array<char, 128> buffer;   
 
-    string cmd = "sqlite3" + SPACE + DB_FILE_PATH + device_db + SPACE + "-cmd" + SPACE + "\".header on\"" + SPACE + "\".mode column\"" + SPACE + "\"SELECT * FROM" + SPACE + table + DOUBLE_QUOTE + SPACE + "WHERE CODE LIKE" + SPACE + code;
+    string cmd = "sqlite3" + SPACE + DB_FILE_PATH + device_db + SPACE + "-cmd" + SPACE + "\".header on\"" + SPACE + "\".mode column\"" + SPACE + "\"SELECT * FROM" + SPACE + table + SPACE + "WHERE CODE LIKE" + SPACE + SINGLE_QUOTE + code + SINGLE_QUOTE;
 
     FILE *fp = popen(cmd.c_str(), "r");
     if(fp == NULL)

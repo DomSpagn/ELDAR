@@ -27,6 +27,9 @@ public:
     //Show all components stored in a table
     bool show_table(const char *device_db, const std::string &table);
 
+    //Show one device info selected by code
+    bool show_device_by_code(const char *device_db, const std::string &table, const std::string &code);
+
 protected:
     sqlite3 *database_connection(const char *device_db);
     

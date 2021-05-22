@@ -1,6 +1,5 @@
 #include "db_mgr.hpp"
 #include "const.hpp"
-#include "table_mgr.hpp"
 #include "console_color.hpp"
 #include "sql_cmds.hpp"
 
@@ -125,6 +124,12 @@ bool db_mgr::show_table(const char *device_db, const string &table)
 }
 
 
+bool db_mgr::show_device_by_code(const char *device_db, const string &table, const string &code)
+{
+    return show_sql_device(device_db, table, code);
+}
+
+
 /*******************************************************************************************************/
 /*                                          DELETE section                                             */ 
 /*******************************************************************************************************/
@@ -211,14 +216,10 @@ bool db_mgr::retrieve_current_device_data(const char *device_db, const std::stri
 
     int step = sqlite3_step(stmt);
     int num_cols = sqlite3_column_count(stmt);    
-    
-    //Print current info of stored device    
+
+    //Retrieve current data to be modified    
     for(int i = 1; i < num_cols; i++)
         headers.push_back(sqlite3_column_name(stmt, i));
-
-    TableMgr device_info(headers);
-    device_info.setPadding(TABLE_PADDIND);
-    device_info.setStyle(TABLE_STYLE);
 
     vector<string> string_values;
     int i;
@@ -249,9 +250,11 @@ bool db_mgr::retrieve_current_device_data(const char *device_db, const std::stri
         }
         current_data.push_back(aux_tuple);
     }
-    device_info += {string_values};
-    cout << endl << device_info << endl;
-    
+
+    //Print current info of stored device    
+    if(!show_device_by_code(device_db, table, code))
+        return false;        
+   
     sqlite3_finalize(stmt);
     sqlite3_close(db);    
     return true;
