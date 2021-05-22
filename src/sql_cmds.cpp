@@ -1,7 +1,8 @@
 #include "sql_cmds.hpp"
 #include <algorithm>
 #include <iostream>
-
+#include "console_color.hpp"
+#include "const.hpp"
 
 using namespace std;
 
@@ -124,12 +125,73 @@ string insert_row(const string &table, vector<tuple<string, string, any>> &devic
 /*******************************************************************************************************/
 /*                                          SELECT query                                               */ 
 /*******************************************************************************************************/
-std::string select_row_by_code(const string &table, const string &code)
+string select_row_by_code(const string &table, const string &code)
 {    
     string root = "SELECT * FROM " + table + SPACE + "WHERE CODE LIKE" + SPACE;
     string body = SINGLE_QUOTE + code + SINGLE_QUOTE;
 
     return root + body;
+}
+
+
+bool show_sql_table(const char *device_db, const string &table)
+{
+    string std_out_line;
+    std::array<char, 128> buffer;   
+
+    string cmd = "sqlite3" + SPACE + DB_FILE_PATH + device_db + SPACE + "-cmd" + SPACE + "\".header on\"" + SPACE + "\".mode column\"" + SPACE + "\"SELECT * FROM" + SPACE + table + DOUBLE_QUOTE;
+
+    FILE *fp = popen(cmd.c_str(), "r");
+    if(fp == NULL)
+    {
+        cerr << red << "Cannot read" + SPACE + table << white << endl;
+        return false;
+    }
+
+    while (fgets(buffer.data(), 128, fp) != NULL) 
+        std_out_line += buffer.data();
+
+    if(pclose(fp) < 0)    
+    {
+        cerr << red << "popen error has been detected" << white << endl;
+        return false;
+    }
+    cout << endl << endl << green << std_out_line << endl;
+    return true;
+}
+
+
+bool show_sql_device(const char *device_db, const string &table, const string &code)
+{
+    string std_out_line;
+    std::array<char, 128> buffer;   
+
+    string cmd = "sqlite3" + SPACE + DB_FILE_PATH + device_db + SPACE + "-cmd" + SPACE + "\".header on\"" + SPACE + "\".mode column\"" + SPACE + "\"SELECT * FROM" + SPACE + table + DOUBLE_QUOTE + SPACE + "WHERE CODE LIKE" + SPACE + code;
+
+    FILE *fp = popen(cmd.c_str(), "r");
+    if(fp == NULL)
+    {
+        cerr << red << "Cannot read" + SPACE + table << white << endl;
+        return false;
+    }
+
+    while (fgets(buffer.data(), 128, fp) != NULL) 
+        std_out_line += buffer.data();
+
+    if(pclose(fp) < 0)    
+    {
+        cerr << red << "popen error has been detected" << white << endl;
+        return false;
+    }
+    cout << endl << endl << green << std_out_line << endl;
+    return true;
+}
+
+
+string table_size(const char *device_db, const string &table)
+{
+    string root = "SELECT COUNT(*) FROM " + table;    
+    return root;
 }
 
 

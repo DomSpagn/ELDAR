@@ -58,7 +58,7 @@ bool db_mgr::insert_device(const char *device_db, const string &table, vector<tu
 
     if(rc != SQLITE_OK)
     {        
-        cout << red << "SQL error: " << zErrMsg << white << endl;
+        cerr << red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return false;
     } 
@@ -69,7 +69,7 @@ bool db_mgr::insert_device(const char *device_db, const string &table, vector<tu
 
     if(rc != SQLITE_OK)
     {        
-        cout << red << "SQL error: " << zErrMsg << white << endl;
+        cerr << red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return false;
     } 
@@ -82,7 +82,7 @@ bool db_mgr::insert_device(const char *device_db, const string &table, vector<tu
 /*******************************************************************************************************/
 /*                                          SELECT section                                             */ 
 /*******************************************************************************************************/
-string select_by_code_return;
+string db_mgr::select_by_code_return = string();
 bool db_mgr::select_device(const char *device_db, const string &table, const string& code)
 {
     sqlite3 *db = nullptr;
@@ -95,17 +95,17 @@ bool db_mgr::select_device(const char *device_db, const string &table, const str
 
     //Check whether the component is present inside related table
     string sql_cmd = select_row_by_code(table, code);
-    int rc = sqlite3_exec(db, sql_cmd.c_str(), select_by_code, NULL, &zErrMsg);
+    int rc = sqlite3_exec(db, sql_cmd.c_str(), select_by_code, &select_by_code_return, &zErrMsg);
 
     if(rc != SQLITE_OK)
     {        
-        cout << red << "SQL error: " << zErrMsg << white << endl;
+        cerr << red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return false;
     }
     if(select_by_code_return == string())
     {
-        cout << red << "Not code found!" << white << endl;
+        cerr << red << "Not code found!" << white << endl;
         return false;
     }
 
@@ -114,9 +114,21 @@ bool db_mgr::select_device(const char *device_db, const string &table, const str
 }
 
 
+bool db_mgr::show_table(const char *device_db, const string &table)
+{
+    if(!is_file_present(DB_FILE_PATH, device_db))
+    {
+        cout << yellow << "The selected DB is currently empty" << white << endl;
+        return true;
+    }
+    return show_sql_table(device_db, table);
+}
+
+
 /*******************************************************************************************************/
 /*                                          DELETE section                                             */ 
 /*******************************************************************************************************/
+int db_mgr::table_count;
 bool db_mgr::delete_device(const char *device_db, const string &table)
 {
     sqlite3 *db = nullptr;
@@ -141,12 +153,32 @@ bool db_mgr::delete_device(const char *device_db, const string &table)
 
     if(rc != SQLITE_OK)
     {        
-        cout << red << "SQL error: " << zErrMsg << white << endl;
+        cerr << red << "SQL error - " << zErrMsg << white << endl;
+        sqlite3_free(zErrMsg);
+        return false;
+    }
+
+    //Delete db file whether the selected device was the last one
+    sql_cmd = table_size(device_db, table);
+    rc = sqlite3_exec(db, sql_cmd.c_str(), select_to_count, &table_count, &zErrMsg);
+    if (rc != SQLITE_OK) 
+    {
+        cerr << red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return false;
     } 
 
     sqlite3_close(db);
+
+    if(table_count == 0)
+    {
+        if(!delete_file(device_db))
+        {
+            cerr << red << "Cannot delete empty file: " << device_db << white << endl;
+            return false;
+        }
+    }
+    
     return true;
 }
 
@@ -166,10 +198,17 @@ bool db_mgr::retrieve_current_device_data(const char *device_db, const std::stri
     db = database_connection(device_db);
     if(db == nullptr)
         return false;
-
+    
     //Extract info column by column
     string sql_cmd = select_row_by_code(table, code);
-    sqlite3_prepare_v2(db, sql_cmd.c_str(), -1, &stmt, NULL);
+    int rc = sqlite3_prepare_v2(db, sql_cmd.c_str(), -1, &stmt, NULL);
+    if(rc != SQLITE_OK)
+    {
+        cerr << red << "SQL error - " << zErrMsg << white << endl;
+        sqlite3_free(zErrMsg);
+        return false;
+    }
+
     int step = sqlite3_step(stmt);
     int num_cols = sqlite3_column_count(stmt);    
     
@@ -239,7 +278,7 @@ bool db_mgr::update_device(const char *device_db, const string& table, const str
 
     if(rc != SQLITE_OK)
     {        
-        cout << red << "SQL error: " << zErrMsg << white << endl;
+        cerr << red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return false;
     } 

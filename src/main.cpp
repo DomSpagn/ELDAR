@@ -20,6 +20,7 @@ int main(int argc, char **argv)
         cout << blue << "\td: " << white << "delete device" << endl;
         cout << blue << "\te: " << white << "edit device" << endl;
         cout << blue << "\ti: " << white << "software info" << endl;
+        cout << blue << "\ts: " << white << "search device" << endl;
         cout << blue << "\tq: " << white << "quit" << endl;
 
         cout << endl << white << "in: ";
@@ -27,7 +28,7 @@ int main(int argc, char **argv)
         if(selection.size() > 1)
         {
             cerr << red << "Wrong input..." << white << endl;
-            return EXIT_FAILURE;
+            return false;
         }        
         cout << endl;
         
@@ -47,6 +48,10 @@ int main(int argc, char **argv)
 
             case 'i':                
                 result = load_software_info();
+            break;
+
+            case 's':
+                result = device.search_mgr();
             break;
 
             case 'q':

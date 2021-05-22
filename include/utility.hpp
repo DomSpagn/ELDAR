@@ -13,6 +13,8 @@ bool is_file_present(const char *path, std::string filename);
 bool delete_file(std::string filename);
 bool create_file(std::string root_path, std::string filename);
 
+bool list_types(bool load_example);
+
 bool detected_sign_matter(std::string &str);
 bool is_integer_digits(const std::string &str);
 bool is_float_digits(const std::string &str);

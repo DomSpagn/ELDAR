@@ -50,9 +50,9 @@ bool is_file_present(const char *path, string filename)
 bool delete_file(string filename)
 {   
     bool ret = false; 
-    string abs_filename = ROOT_FILE_PATH + filename;
+    string abs_filename = DB_FILE_PATH + filename;
 
-    if(!is_file_present(ROOT_FILE_PATH, filename))
+    if(!is_file_present(DB_FILE_PATH, filename))
     {
         cerr << red << "Cannot delete " << filename << "because it does not exist" << white << endl;
         return ret;
@@ -78,6 +78,41 @@ bool create_file(string ROOT_PATH, string filename)
         return false;
     }
 
+    file.close();
+    return true;
+}
+
+
+/***********************************************************************************************************/
+/*                                            Show device list                                             */ 
+/***********************************************************************************************************/
+bool list_types(bool load_example)
+{
+    if(!is_file_present(TXT_FILE_PATH, DEVICE_TYPE_FILE))
+        return false;
+
+    cout << blue << "Select component type among: " << white << endl << endl;
+    fstream file;
+    file.open(string(TXT_FILE_PATH) + string(DEVICE_TYPE_FILE), ios::in); 
+
+    if(!file)
+    {
+        cerr << red << "File " << DEVICE_TYPE_FILE << " cannot be opened!" << white << endl;
+        return false;
+    }
+
+    //Read line by line
+    string line;
+    if(load_example)
+    {
+        while(getline(file, line))
+            cout << white << "\t- " << blue << line.substr(0, line.find(" ")) << white << line.substr(line.find(" ")) << white << endl;
+    }
+    else
+    {
+        while(getline(file, line))
+            cout << white << "\t- " << blue << line.substr(0, line.find(" ")) << white << endl;
+    }
     file.close();
     return true;
 }

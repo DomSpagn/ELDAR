@@ -11,8 +11,8 @@ using namespace std;
 
 
 device_mgr::device_mgr() :
-    json_mgr(json_mgr),
-    db_mgr(db_mgr)
+        json_mgr(json_mgr),
+        db_mgr(db_mgr)
 {    
     
 }
@@ -21,38 +21,6 @@ device_mgr::device_mgr() :
 device_mgr::~device_mgr()
 {
 
-}
-
-
-bool device_mgr::list_types(bool load_example)
-{
-    if(!is_file_present(TXT_FILE_PATH, DEVICE_TYPE_FILE))
-        return false;
-
-    cout << blue << "Select component type among: " << white << endl << endl;
-    fstream file;
-    file.open(string(TXT_FILE_PATH) + string(DEVICE_TYPE_FILE), ios::in); 
-
-    if(!file)
-    {
-        cerr << red << "File " << DEVICE_TYPE_FILE << " cannot be opened!" << white << endl;
-        return false;
-    }
-
-    //Read line by line
-    string line;
-    if(load_example)
-    {
-        while(getline(file, line))
-            cout << white << "\t- " << blue << line.substr(0, line.find(" ")) << white << line.substr(line.find(" ")) << white << endl;
-    }
-    else
-    {
-        while(getline(file, line))
-            cout << white << "\t- " << blue << line.substr(0, line.find(" ")) << white << endl;
-    }
-    file.close();
-    return true;
 }
 
 
@@ -108,17 +76,20 @@ bool device_mgr::insert_mgr(void)
     cin >> device_type_in;    
 
     if(device_type_in == RESISTOR)
+    {
         if(json_mgr.retrieve_device_metadata(RESISTOR, meta_map))
             ret = add_device(RESISTOR, meta_map);
-
+    }
     else if(device_type_in == CAPACITOR)
+    {
         if(json_mgr.retrieve_device_metadata(CAPACITOR, meta_map))
             ret = add_device(CAPACITOR, meta_map);
-
+    }
     else if(device_type_in == INDUCTOR)
+    {
         if(json_mgr.retrieve_device_metadata(INDUCTOR, meta_map))
             ret = add_device(INDUCTOR, meta_map);
-
+    }
     else
         cerr << red << "wrong choice..." << white << endl;
 
@@ -290,6 +261,111 @@ bool device_mgr::edit_mgr(void)
             if(json_mgr.retrieve_device_metadata(INDUCTOR, meta_map))
                 ret = edit_device(INDUCTOR, code_in);
         }
+    }
+
+    return ret;
+}
+
+
+/*******************************************************************************************************/
+/*                                          SEARCH section                                             */ 
+/*******************************************************************************************************/
+bool device_mgr::search_by_type(void)
+{
+    bool ret = false;
+    string device_type_in;
+    cout << endl;
+    cout << blue << "Choose device type among: " << endl << endl;
+
+    if(!list_types(false))
+        return false;
+
+    cout << endl << white << "in: " << white;
+    cin >> device_type_in;    
+
+    if(device_type_in == RESISTOR)
+        ret = db_mgr.show_table(RESISTOR_DB, RESISTOR);
+    else if(device_type_in == CAPACITOR)
+        ret = db_mgr.show_table(CAPACITOR_DB, CAPACITOR);
+    else if(device_type_in == INDUCTOR)
+        ret = db_mgr.show_table(INDUCTOR_DB, INDUCTOR);
+    else
+        cerr << red << "wrong choice..." << white << endl;
+
+    return ret;
+}
+
+
+bool device_mgr::search_by_code(void)
+{
+    bool ret = false;
+    return ret;
+}
+
+
+bool device_mgr::search_by_manufacturer(void)
+{
+    bool ret = false;
+    return ret;
+}
+
+
+bool device_mgr::search_by_mounting_type(void)
+{
+    bool ret = false;
+    return ret;
+}
+
+bool device_mgr::search_mgr(void)
+{
+    bool ret = false;
+    string selection;
+
+    cout << endl;
+    cout << blue << "Digit related number to search by: " << endl << endl;
+    cout << blue << "\t1) " << white << "type" << endl;
+    cout << blue << "\t2) " << white << "code" << endl;
+    cout << blue << "\t3) " << white << "manufacturer" << endl;
+    cout << blue << "\t4) " << white << "mounting type" << endl;    
+
+    cout << endl << white << "in: ";
+    cin >> selection;
+    if(selection.size() > 1)
+    {
+        cerr << red << "Wrong input..." << white << endl;
+        return false;
+    }        
+    cout << endl;
+    
+    try
+    {
+        switch(stoul(selection, nullptr, 10))
+        {
+            case 1:
+                ret = search_by_type();
+            break;
+
+            case 2:
+                ret = search_by_code();
+            break;
+
+            case 3:                
+                ret = search_by_manufacturer();
+            break;
+
+            case 4:                
+                ret = search_by_mounting_type();
+            break;
+
+            default:
+                cerr << red << "Wrong input..." << white << endl;
+                ret = false;
+        }
+    }
+    catch(...)
+    {
+        cerr << red << "Wrong input..." << white << endl;
+        ret = false;
     }
 
     return ret;
