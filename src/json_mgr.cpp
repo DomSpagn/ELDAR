@@ -45,7 +45,7 @@ bool json_mgr::retrieve_device_metadata(const string &device, map<uint16_t, pair
     ifstream ifs(string(JSON_FILE_PATH) + string(META_DEVICE_FILE));
     if(!ifs.is_open())
     {
-        cerr << red << "Cannot open " << META_DEVICE_FILE << " for reading" << white << endl;
+        cerr << endl << red << "Cannot open " << META_DEVICE_FILE << " for reading" << white << endl;
         return false;
     }        
 
@@ -69,7 +69,7 @@ bool json_mgr::retrieve_device_metadata(const string &device, map<uint16_t, pair
             return get_meta_info_from_json(meta_doc[i], meta_map);
     }
 
-    cerr << red << "Cannot retrieve device metadata" << white << endl;
+    cerr << endl << red << "Cannot retrieve device metadata" << white << endl;
 
     return false;
 }

@@ -22,6 +22,21 @@ Software Description.
 
 ---------------------------------------------------
 
+Version: 0.0.4
+Release Date: 11/04/2021
+Author: Domenico Spagnuolo (aka Mimmo)
+
+INFO:
+
+    - Implemented devices searching
+    - Added SQLITE console formatting
+    - Managed main menu
+
+
+
+
+---------------------------------------------------
+
 Version: 0.0.3
 Release Date: 11/04/2021
 Author: Domenico Spagnuolo (aka Mimmo)

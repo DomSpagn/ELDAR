@@ -31,7 +31,7 @@ bool is_file_present(const char *path, string filename)
     } 
     else 
     {
-        cerr << red << "Cannot open directory..." << white << endl;
+        cerr << endl << red << "Cannot open directory..." << white << endl;
         return ret;
     }
 
@@ -54,14 +54,14 @@ bool delete_file(string filename)
 
     if(!is_file_present(DB_FILE_PATH, filename))
     {
-        cerr << red << "Cannot delete " << filename << "because it does not exist" << white << endl;
+        cerr << endl << red << "Cannot delete " << filename << "because it does not exist" << white << endl;
         return ret;
     }
 
     if(remove(abs_filename.c_str()) == 0)
         ret = true;
     else
-        cerr << red << "Cannot delete " << filename << white << endl;
+        cerr << endl << red << "Cannot delete " << filename << white << endl;
 
     return ret;
 }
@@ -74,7 +74,7 @@ bool create_file(string root_path, string filename)
 
     if(!file)
     {
-        cerr << red << "File " << filename << " has not been created..." << white << endl;
+        cerr << endl << red << "File " << filename << " has not been created..." << white << endl;
         return false;
     }
 
@@ -97,7 +97,7 @@ bool list_types(bool load_example)
 
     if(!file)
     {
-        cerr << red << "File " << DEVICE_TYPE_FILE << " cannot be opened!" << white << endl;
+        cerr << endl << red << "File " << DEVICE_TYPE_FILE << " cannot be opened!" << white << endl;
         return false;
     }
 
@@ -158,7 +158,7 @@ bool check_uint8_validity(string &input, uint8_t &u8_value)
     }
     catch(...)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         return false;
     }
     
@@ -181,7 +181,7 @@ bool check_uint16_validity(string &input, uint16_t &u16_value)
     }
     catch(...)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         return false;
     }
     
@@ -204,7 +204,7 @@ bool check_uint32_validity(string &input, uint32_t &u32_value)
     }
     catch(...)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         return false;
     }
     
@@ -227,7 +227,7 @@ bool check_uint64_validity(string &input, uint64_t &u64_value)
     }
     catch(...)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         return false;
     }
     
@@ -250,7 +250,7 @@ bool check_int8_validity(string &input, int8_t &i8_value)
     }
     catch(...)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         return false;
     }
     
@@ -276,7 +276,7 @@ bool check_int16_validity(string &input, int16_t &i16_value)
     }
     catch(...)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         return false;
     }
 
@@ -302,7 +302,7 @@ bool check_int32_validity(string &input, int32_t &i32_value)
     }
     catch(...)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         return false;
     }
 
@@ -328,7 +328,7 @@ bool check_int64_validity(string &input, int64_t &i64_value)
     }
     catch(...)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         return false;
     }
     
@@ -354,7 +354,7 @@ bool check_float_validity(string &input, float &f_value)
     }    
     catch(...)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         return false;
     }
     
@@ -380,7 +380,7 @@ bool check_double_validity(string &input, double &d_value)
     }    
     catch(...)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         return false;
     }
     
@@ -532,7 +532,7 @@ bool load_software_info(void)
 
     if(!file)
     {
-        cerr << red << "File " << RELEASE_NOTES_FILE << " cannot be opened!" << white << endl;
+        cerr << endl << red << "File " << RELEASE_NOTES_FILE << " cannot be opened!" << white << endl;
         return false;
     }
 

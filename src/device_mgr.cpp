@@ -97,7 +97,7 @@ bool device_mgr::insert_mgr(void)
             ret = add_device(INDUCTOR, meta_map);
     }
     else
-        cerr << red << "wrong choice..." << white << endl;
+        cerr << endl << red << "Wrong choice..." << white << endl;
 
     return ret;
 }
@@ -133,7 +133,7 @@ bool device_mgr::delete_mgr(void)
         ret = db_mgr.delete_device(INDUCTOR_DB, INDUCTOR);
 
     else
-        cerr << red << "wrong choice..." << white << endl;
+        cerr << endl << red << "Wrong choice..." << white << endl;
   
     return ret;
 }
@@ -144,7 +144,7 @@ bool device_mgr::delete_mgr(void)
 /*******************************************************************************************************/
 bool device_mgr::load_changes(vector<tuple<string, string, any>> &current_data, vector<tuple<string, string, any>> &new_data)
 {
-    cout << blue << "Insert new values or press ENTER to skip:" << white << endl;    
+    cout << endl << blue << "Insert new values or press ENTER to skip:" << white << endl;    
     string input[current_data.size()];
     unsigned int i = 0;
     tuple<string, string, any> aux_tuple;
@@ -254,7 +254,7 @@ bool device_mgr::edit_mgr(void)
 
     if(device_type_in != RESISTOR && device_type_in != CAPACITOR && device_type_in != INDUCTOR)
     {
-        cerr << red << "wrong choice..." << white << endl;
+        cerr << endl << red << "Wrong choice..." << white << endl;
         return false;
     }        
 
@@ -281,7 +281,7 @@ bool device_mgr::edit_mgr(void)
 
             case db_mgr::SEARCH_NOT_FOUND:
             {
-                cerr << yellow << "Not code found!" << white << endl;
+                cerr << endl << yellow << "Not code found!" << white << endl;
             }
             break;
         }
@@ -299,7 +299,7 @@ bool device_mgr::edit_mgr(void)
 
             case db_mgr::SEARCH_NOT_FOUND:
             {
-                cerr << yellow << "Not code found!" << white << endl;
+                cerr << endl << yellow << "Not code found!" << white << endl;
             }
             break;
         }
@@ -317,7 +317,7 @@ bool device_mgr::edit_mgr(void)
 
             case db_mgr::SEARCH_NOT_FOUND:
             {
-                cerr << yellow << "Not code found!" << white << endl;
+                cerr << endl << yellow << "Not code found!" << white << endl;
             }
             break;
         }
@@ -334,8 +334,8 @@ bool device_mgr::search_by_type(void)
 {
     bool ret = false;
     string device_type_in;
-    cout << endl;
-    cout << blue << "Choose device type among: " << endl << endl;
+    
+    cout << endl << blue << "Choose device type among: " << endl << endl;
 
     if(!list_types(false))
         return false;
@@ -356,7 +356,7 @@ bool device_mgr::search_by_type(void)
     else if(device_type_in == INDUCTOR)
         ret = db_mgr.show_table(INDUCTOR_DB, INDUCTOR);
     else
-        cerr << red << "wrong choice..." << white << endl;
+        cerr << endl << red << "Wrong choice..." << white << endl;
 
     return ret;
 }
@@ -371,10 +371,8 @@ bool device_mgr::search_by_code(void)
 
     if(!db_mgr.build_db_table_map(db_and_table_names))
         return ret;
-
-    cout << endl;
-    cout << blue << "Digit code" << endl;
-
+    
+    cout << endl << blue << "Digit code" << endl;
     cout << endl << white << "in: " << white;
     cin >> code_in;
 
@@ -404,9 +402,8 @@ bool device_mgr::search_by_manufacturer(void)
     if(!db_mgr.build_db_table_map(db_and_table_names))
         return ret;
 
-    cout << endl;
-    cout << blue << "Digit manufacturer" << endl;
-
+    
+    cout << endl << blue << "Digit manufacturer" << endl;
     cout << endl << white << "in: " << white;
     cin >> manufacturer_in;    
 
@@ -435,10 +432,8 @@ bool device_mgr::search_by_mounting_type(void)
 
     if(!db_mgr.build_db_table_map(db_and_table_names))
         return ret;
-
-    cout << endl;
-    cout << blue << "Digit mounting type" << endl;
-
+    
+    cout << endl << blue << "Digit mounting type" << endl;
     cout << endl << white << "in: " << white;
     cin >> mounting_type_in;    
 
@@ -467,10 +462,8 @@ bool device_mgr::search_by_description(void)
 
     if(!db_mgr.build_db_table_map(db_and_table_names))
         return ret;
-
-    cout << endl;
-    cout << blue << "Digit mounting type" << endl;
-
+    
+    cout << endl << blue << "Digit mounting type" << endl;
     cout << endl << white << "in: " << white;
     cin >> description_in;    
 
@@ -499,10 +492,8 @@ bool device_mgr::search_by_value(void)
 
     if(!db_mgr.build_db_table_map(db_and_table_names))
         return ret;
-
-    cout << endl;
-    cout << blue << "Digit value" << endl;
-
+    
+    cout << endl << blue << "Digit value" << endl;
     cout << endl << white << "in: " << white;
     cin >> value_in;    
 
@@ -541,7 +532,7 @@ bool device_mgr::search_mgr(void)
     
     if(selection.size() > 1)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         return false;
     }        
     cout << endl;
@@ -575,13 +566,13 @@ bool device_mgr::search_mgr(void)
             break;
 
             default:
-                cerr << red << "Wrong input..." << white << endl;
+                cerr << endl << red << "Wrong input..." << white << endl;
                 ret = false;
         }
     }
     catch(...)
     {
-        cerr << red << "Wrong input..." << white << endl;
+        cerr << endl << red << "Wrong input..." << white << endl;
         ret = false;
     }
 

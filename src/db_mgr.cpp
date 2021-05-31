@@ -27,7 +27,7 @@ sqlite3 *db_mgr::database_connection(const char *device_db)
 
     if(rc)
     {
-        cerr << red << "Cannot open " << device_db << " because of: " << sqlite3_errmsg(db) << white << endl;
+        cerr << endl << red << "Cannot open " << device_db << " because of: " << sqlite3_errmsg(db) << white << endl;
         db = nullptr;
     }
 
@@ -51,7 +51,7 @@ bool db_mgr::insert_device(const char *device_db, const string &table, vector<tu
     db = database_connection(device_db);
     if(db == nullptr)
     {
-        cerr << red << "Cannot connect to " << device_db << white << endl;
+        cerr << endl << red << "Cannot connect to " << device_db << white << endl;
         return false;
     }
   
@@ -61,7 +61,7 @@ bool db_mgr::insert_device(const char *device_db, const string &table, vector<tu
 
     if(rc != SQLITE_OK)
     {        
-        cerr << red << "SQL error - " << zErrMsg << white << endl;
+        cerr << endl << red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return false;
     } 
@@ -72,7 +72,7 @@ bool db_mgr::insert_device(const char *device_db, const string &table, vector<tu
 
     if(rc != SQLITE_OK)
     {        
-        cerr << red << "SQL error - " << zErrMsg << white << endl;
+        cerr << endl << red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return false;
     } 
@@ -95,7 +95,7 @@ db_mgr::SEARCH_RESULT db_mgr::select_device(const char *device_db, const string 
     db = database_connection(device_db);
     if(db == nullptr)
     {
-        cerr << red << "Cannot connect to " << device_db << white << endl;
+        cerr << endl << red << "Cannot connect to " << device_db << white << endl;
         return SEARCH_ERROR;
     }
 
@@ -105,7 +105,7 @@ db_mgr::SEARCH_RESULT db_mgr::select_device(const char *device_db, const string 
 
     if(rc != SQLITE_OK)
     {        
-        cerr << red << "SQL error - " << zErrMsg << white << endl;
+        cerr << endl << red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return SEARCH_ERROR;
     }
@@ -121,7 +121,7 @@ bool db_mgr::show_table(const char *device_db, const string &table)
 {
     if(!is_file_present(DB_FILE_PATH, device_db))
     {
-        cout << yellow << "The selected DB is currently empty" << white << endl;
+        cout << endl << yellow << "The selected DB is currently empty" << white << endl;
         return true;
     }
     return show_sql_table(device_db, table);
@@ -150,7 +150,7 @@ string db_mgr::get_table(const char *db_name)
     db = database_connection(db_name);
     if(db == nullptr)
     {
-        cerr << red << "Cannot connect to " << db_name << white << endl;
+        cerr << endl << red << "Cannot connect to " << db_name << white << endl;
         return string();
     }
 
@@ -168,7 +168,7 @@ bool db_mgr::build_db_table_map(map<string, string> &db_table_names)
     DIR *dir = opendir(DB_FILE_PATH);
     if(!dir)
     {
-        cerr << red << "Cannot open db file path..." << white << endl;        
+        cerr << endl << red << "Cannot open db file path..." << white << endl;        
         return ret;
     }
     else
@@ -192,7 +192,7 @@ bool db_mgr::build_db_table_map(map<string, string> &db_table_names)
         ret = true;
     else
     {
-        cout << yellow << "No DB is present!" << white << endl;
+        cout << endl << yellow << "No DB is present!" << white << endl;
         ret = false;
     }
 
@@ -233,13 +233,13 @@ bool db_mgr::delete_device(const char *device_db, const string &table)
     db = database_connection(device_db);
     if(db == nullptr)
     {
-        cerr << red << "Cannot connect to " << device_db << white << endl;
+        cerr << endl << red << "Cannot connect to " << device_db << white << endl;
         return false;
     }
 
     string code_in;
-    cout << endl << blue << "Insert device code" << white << endl << endl;
-    cout << white << "in: ";
+    cout << endl << blue << "Insert device code" << white << endl;
+    cout << endl << white << "in: ";
     cin >> code_in;    
 
     if(!check_input_validity(code_in, SIMPLE_ALPHA))
@@ -255,7 +255,7 @@ bool db_mgr::delete_device(const char *device_db, const string &table)
 
         case db_mgr::SEARCH_NOT_FOUND:
         {
-            cerr << yellow << "Not code found!" << white << endl;
+            cerr << endl << yellow << "Not code found!" << white << endl;
             return false;
         }
         break;
@@ -273,7 +273,7 @@ bool db_mgr::delete_device(const char *device_db, const string &table)
 
     if(rc != SQLITE_OK)
     {        
-        cerr << red << "SQL error - " << zErrMsg << white << endl;
+        cerr << endl << red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return false;
     }
@@ -283,7 +283,7 @@ bool db_mgr::delete_device(const char *device_db, const string &table)
     rc = sqlite3_exec(db, sql_cmd.c_str(), select_to_count, &table_count, &zErrMsg);
     if (rc != SQLITE_OK) 
     {
-        cerr << red << "SQL error - " << zErrMsg << white << endl;
+        cerr << endl << red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return false;
     } 
@@ -294,7 +294,7 @@ bool db_mgr::delete_device(const char *device_db, const string &table)
     {
         if(!delete_file(device_db))
         {
-            cerr << red << "Cannot delete empty file: " << device_db << white << endl;
+            cerr << endl << red << "Cannot delete empty file: " << device_db << white << endl;
             return false;
         }
     }
@@ -318,7 +318,7 @@ bool db_mgr::retrieve_current_device_data(const char *device_db, const string &t
     db = database_connection(device_db);
     if(db == nullptr)
     {
-        cerr << red << "Cannot connect to " << device_db << white << endl;
+        cerr << endl << red << "Cannot connect to " << device_db << white << endl;
         return false;
     }
     
@@ -327,7 +327,7 @@ bool db_mgr::retrieve_current_device_data(const char *device_db, const string &t
     int rc = sqlite3_prepare_v2(db, sql_cmd.c_str(), -1, &stmt, NULL);
     if(rc != SQLITE_OK)
     {
-        cerr << red << "SQL error - " << zErrMsg << white << endl;
+        cerr << endl <<  red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return false;
     }
@@ -393,7 +393,7 @@ bool db_mgr::update_device(const char *device_db, const string& table, const str
     db = database_connection(device_db);
     if(db == nullptr)
     {
-        cerr << red << "Cannot connect to " << device_db << white << endl;
+        cerr << endl << red << "Cannot connect to " << device_db << white << endl;
         return false;
     }
 
@@ -403,7 +403,7 @@ bool db_mgr::update_device(const char *device_db, const string& table, const str
 
     if(rc != SQLITE_OK)
     {        
-        cerr << red << "SQL error - " << zErrMsg << white << endl;
+        cerr << endl << red << "SQL error - " << zErrMsg << white << endl;
         sqlite3_free(zErrMsg);
         return false;
     } 

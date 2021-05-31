@@ -144,7 +144,7 @@ bool show_sql_table(const char *device_db, const string &table)
     FILE *fp = popen(cmd.c_str(), "r");
     if(fp == NULL)
     {
-        cerr << red << "Cannot read" + SPACE + table << white << endl;
+        cerr << endl << red << "Cannot read" + SPACE + table << white << endl;
         return false;
     }
 
@@ -153,7 +153,7 @@ bool show_sql_table(const char *device_db, const string &table)
 
     if(pclose(fp) < 0)    
     {
-        cerr << red << "popen error has been detected" << white << endl;
+        cerr << endl << red << "popen error has been detected" << white << endl;
         return false;
     }    
 
@@ -178,7 +178,7 @@ bool show_sql_device(const char *device_db, const string &table, const std::stri
     FILE *fp = popen(cmd.c_str(), "r");
     if(fp == NULL)
     {
-        cerr << red << "Cannot read" + SPACE + table << white << endl;
+        cerr << endl << red << "Cannot read" + SPACE + table << white << endl;
         return false;
     }
 
@@ -187,7 +187,7 @@ bool show_sql_device(const char *device_db, const string &table, const std::stri
 
     if(pclose(fp) < 0)    
     {
-        cerr << red << "popen error has been detected" << white << endl;
+        cerr << endl << red << "popen error has been detected" << white << endl;
         return false;
     }
 
@@ -217,7 +217,7 @@ bool get_table_from_db(const char *db, string &table_name)
     FILE *fp = popen(cmd.c_str(), "r");
     if(fp == NULL)
     {
-        cerr << red << "Cannot read" + SPACE + db << white << endl;
+        cerr << endl << red << "Cannot read" + SPACE + db << white << endl;
         return false;
     }
 
@@ -228,7 +228,7 @@ bool get_table_from_db(const char *db, string &table_name)
 
     if(pclose(fp) < 0)    
     {
-        cerr << red << "popen error has been detected" << white << endl;
+        cerr << endl << red << "popen error has been detected" << white << endl;
         return false;
     }
     return true;    

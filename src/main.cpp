@@ -16,18 +16,18 @@ int main(int argc, char **argv)
     {
         cout << endl;
         cout << blue << "Select action: " << endl << endl;
-        cout << blue << "\ta: " << white << "add device" << endl;
-        cout << blue << "\td: " << white << "delete device" << endl;
-        cout << blue << "\te: " << white << "edit device" << endl;
-        cout << blue << "\ti: " << white << "software info" << endl;
-        cout << blue << "\ts: " << white << "search device" << endl;
-        cout << blue << "\tq: " << white << "quit" << endl;
+        cout << blue << "\ta: " << white << "Add device" << endl;
+        cout << blue << "\td: " << white << "Delete device" << endl;
+        cout << blue << "\te: " << white << "Edit device" << endl;
+        cout << blue << "\ti: " << white << "Software info" << endl;
+        cout << blue << "\ts: " << white << "Search device" << endl;
+        cout << blue << "\tq: " << white << "Quit" << endl;
 
         cout << endl << white << "in: ";
         cin >> selection;
         if(selection.size() > 1)
         {
-            cerr << red << "Wrong input..." << white << endl;
+            cerr << endl << red << "Wrong input..." << white << endl;
             return false;
         }        
         cout << endl;
@@ -59,18 +59,38 @@ int main(int argc, char **argv)
             break;
 
             default:
-                cerr << red << "Wrong input..." << white << endl;
+                cerr << endl << red << "Wrong input..." << white << endl;
                 result = false;
+            break;
         }
 
-        if(result)
+        if(result && selection[0] != 'q')
         {
-            cout << green << "Successfull Operation" << white << endl;
-            break;
+            string key_in;
+            cin.ignore();
+            while(1)
+            {                
+                cout << endl << green << "Successfull Operation." << white << endl;
+                cout << endl << blue << "Press ENTER to go back to menu" << white << endl;
+                getline(cin, key_in);
+                if(key_in.length() == 0)
+                    break;
+            }
+        }
+        else if(!result)
+        {
+            string key_in;
+            cin.ignore();
+            while(1)
+            {                                
+                cout << endl << blue << "Press ENTER to go back to menu" << white << endl;
+                getline(cin, key_in);
+                if(key_in.length() == 0)
+                    break;
+            }
         }
         else
         {
-            cout << yellow << "Still to be decided how to handle eldar..." << white << endl;
             break;
         }
     }
