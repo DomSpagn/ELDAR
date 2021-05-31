@@ -67,10 +67,10 @@ bool delete_file(string filename)
 }
 
 
-bool create_file(string ROOT_PATH, string filename)
+bool create_file(string root_path, string filename)
 {         
     fstream file;
-    file.open(ROOT_PATH + filename, ios::out); 
+    file.open(root_path + filename, ios::out); 
 
     if(!file)
     {
@@ -136,13 +136,13 @@ bool detected_sign_matter(string &str)
 }
 
 
-bool is_integer_digits(const std::string &str)
+bool is_integer_digits(const string &str)
 {
     return str.find_first_not_of("-+0123456789") == string::npos;
 }
 
 
-bool is_float_digits(const std::string &str)
+bool is_float_digits(const string &str)
 {
     return str.find_first_not_of(".-+0123456789") == string::npos;
 }
@@ -399,6 +399,28 @@ bool check_double_validity(string &input, double &d_value)
 bool check_string_validity(string &input)
 {    
     return input.empty() ? false : true;
+}
+
+
+bool check_input_validity(string &input, input_validity validity_range)
+{   
+    string range;
+
+    switch(validity_range)
+    {
+        case NUMERIC:
+            range = "01234567890.-";   
+        break;
+
+        case SIMPLE_ALPHA:
+            range = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890_.-";
+        break;
+
+        case COMPLEX_ALPHA:            
+        break;
+    }
+
+    return input.find_first_not_of(range) != string::npos ? false : true;        
 }
 
 

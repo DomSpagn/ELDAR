@@ -43,14 +43,14 @@ string create_table(const string &table, vector<tuple<string, string, any>> &dev
         
         if(index != device_vector_tuple.size())
         {
-            if(column_name == "CODE")
+            if(column_name == CODE_PARAMETER)
                 body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT + SPACE + UNIQUE_CONSTRAINT + COMMA + SPACE;
             else
                 body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT + COMMA + SPACE;
         }
         else
         {
-            if(column_name == "CODE")
+            if(column_name == CODE_PARAMETER)
                 body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT + SPACE + UNIQUE_CONSTRAINT;
             else
                 body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT;
@@ -127,7 +127,7 @@ string insert_row(const string &table, vector<tuple<string, string, any>> &devic
 /*******************************************************************************************************/
 string select_row_by_code(const string &table, const string &code)
 {    
-    string root = "SELECT * FROM " + table + SPACE + "WHERE CODE LIKE" + SPACE;
+    string root = "SELECT * FROM " + table + SPACE + "WHERE CODE" + EQUAL + SPACE;
     string body = SINGLE_QUOTE + code + SINGLE_QUOTE;
 
     return root + body;
@@ -137,7 +137,7 @@ string select_row_by_code(const string &table, const string &code)
 bool show_sql_table(const char *device_db, const string &table)
 {
     string std_out_line;
-    std::array<char, 128> buffer;   
+    array<char, 128> buffer;   
 
     string cmd = "sqlite3" + SPACE + DB_FILE_PATH + device_db + SPACE + "-cmd" + SPACE + "\".header on\"" + SPACE + "\".mode column\"" + SPACE + "\"SELECT * FROM" + SPACE + table + DOUBLE_QUOTE;
 
@@ -155,18 +155,25 @@ bool show_sql_table(const char *device_db, const string &table)
     {
         cerr << red << "popen error has been detected" << white << endl;
         return false;
-    }
-    cout << endl << endl << green << std_out_line << endl;
+    }    
+
+    string aux_table = table;
+    transform(aux_table.begin(), aux_table.end(), aux_table.begin(), ::toupper);
+    cout << endl << endl << blue << aux_table << endl << green << std_out_line << endl;
     return true;
 }
 
 
-bool show_sql_device(const char *device_db, const string &table, const string &code)
+bool show_sql_device(const char *device_db, const string &table, const std::string &parameter, const string &parameter_value, bool exact, unsigned int &counter)
 {
     string std_out_line;
-    std::array<char, 128> buffer;   
-
-    string cmd = "sqlite3" + SPACE + DB_FILE_PATH + device_db + SPACE + "-cmd" + SPACE + "\".header on\"" + SPACE + "\".mode column\"" + SPACE + "\"SELECT * FROM" + SPACE + table + SPACE + "WHERE CODE LIKE" + SPACE + SINGLE_QUOTE + code + SINGLE_QUOTE;
+    array<char, 128> buffer;
+    string cmd;
+    
+    if(exact)
+        cmd = "sqlite3" + SPACE + DB_FILE_PATH + device_db + SPACE + "-cmd" + SPACE + "\".header on\"" + SPACE + "\".mode column\"" + SPACE + "\"SELECT * FROM" + SPACE + table + SPACE + "WHERE" + SPACE + parameter + SPACE + EQUAL + SPACE + SINGLE_QUOTE + parameter_value + SINGLE_QUOTE;
+    else
+        cmd = "sqlite3" + SPACE + DB_FILE_PATH + device_db + SPACE + "-cmd" + SPACE + "\".header on\"" + SPACE + "\".mode column\"" + SPACE + "\"SELECT * FROM" + SPACE + table + SPACE + "WHERE" + SPACE + parameter + SPACE + LIKE + SPACE + SINGLE_QUOTE + PERCENTAGE + parameter_value + PERCENTAGE + SINGLE_QUOTE;
 
     FILE *fp = popen(cmd.c_str(), "r");
     if(fp == NULL)
@@ -183,7 +190,14 @@ bool show_sql_device(const char *device_db, const string &table, const string &c
         cerr << red << "popen error has been detected" << white << endl;
         return false;
     }
-    cout << endl << endl << green << std_out_line << endl;
+
+    if(!std_out_line.empty())
+    {
+        counter++;
+        string aux_table = table;
+        transform(aux_table.begin(), aux_table.end(), aux_table.begin(), ::toupper);
+        cout << endl << endl << green << blue << aux_table << endl << green << std_out_line << endl;
+    }
     return true;
 }
 
@@ -192,6 +206,32 @@ string table_size(const char *device_db, const string &table)
 {
     string root = "SELECT COUNT(*) FROM " + table;    
     return root;
+}
+
+
+bool get_table_from_db(const char *db, string &table_name)
+{
+    array<char, 128> buffer;
+
+    string cmd = "sqlite3" + SPACE + DB_FILE_PATH + db + SPACE + "\".tables\"";
+    FILE *fp = popen(cmd.c_str(), "r");
+    if(fp == NULL)
+    {
+        cerr << red << "Cannot read" + SPACE + db << white << endl;
+        return false;
+    }
+
+    if(fgets(buffer.data(), 128, fp) != NULL) 
+        table_name += buffer.data();
+
+    table_name.erase(remove(table_name.begin(), table_name.end(), '\n'), table_name.end());
+
+    if(pclose(fp) < 0)    
+    {
+        cerr << red << "popen error has been detected" << white << endl;
+        return false;
+    }
+    return true;    
 }
 
 
@@ -234,7 +274,7 @@ string update_row(const string &table, const string& code, vector<tuple<string, 
         else            
             body += column_name + EQUAL + value + COMMA + SPACE;  
     }
-    string condition = "WHERE" + SPACE + "CODE" + EQUAL + SINGLE_QUOTE + code + SINGLE_QUOTE;
+    string condition = "WHERE" + SPACE + CODE_PARAMETER + EQUAL + SINGLE_QUOTE + code + SINGLE_QUOTE;
 
     return root + body + condition;
 }

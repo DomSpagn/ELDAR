@@ -75,6 +75,12 @@ bool device_mgr::insert_mgr(void)
     cout << endl << white << "in: " << white;
     cin >> device_type_in;    
 
+    if(!check_input_validity(device_type_in, SIMPLE_ALPHA))
+    {
+        cerr << endl << red << "Input not allowed..." << white << endl;
+        return false; 
+    }
+
     if(device_type_in == RESISTOR)
     {
         if(json_mgr.retrieve_device_metadata(RESISTOR, meta_map))
@@ -110,6 +116,12 @@ bool device_mgr::delete_mgr(void)
 
     cout << endl << white << "in: " << white;
     cin >> device_type_in;    
+
+    if(!check_input_validity(device_type_in, SIMPLE_ALPHA))
+    {
+        cerr << endl << red << "Input not allowed..." << white << endl;
+        return false; 
+    }
 
     if(device_type_in == RESISTOR)
         ret = db_mgr.delete_device(RESISTOR_DB, RESISTOR);
@@ -148,7 +160,13 @@ bool device_mgr::load_changes(vector<tuple<string, string, any>> &current_data, 
         any value = get<2>(data);
 
         cout << white << key << " (" << yellow << type << white << "): "; 
-        getline(cin, input[i]);        
+        getline(cin, input[i]);
+
+        if(!check_input_validity(input[i], SIMPLE_ALPHA))
+        {
+            cerr << endl << red << "Input not allowed..." << white << endl;
+            return false; 
+        }
 
         if(input[i].length() == 0)
             continue;
@@ -216,7 +234,7 @@ bool device_mgr::edit_device(const string &device, const string &code)
 
 bool device_mgr::edit_mgr(void)
 {
-    bool ret = false;
+    bool ret = false;    
     string device_type_in;
     string code_in;
     vector<string> meta_structure;
@@ -228,6 +246,12 @@ bool device_mgr::edit_mgr(void)
     cout << endl << white << "in: " << white;
     cin >> device_type_in;
 
+    if(!check_input_validity(device_type_in, SIMPLE_ALPHA))
+    {
+        cerr << endl << red << "Input not allowed..." << white << endl;
+        return false; 
+    }
+
     if(device_type_in != RESISTOR && device_type_in != CAPACITOR && device_type_in != INDUCTOR)
     {
         cerr << red << "wrong choice..." << white << endl;
@@ -238,28 +262,64 @@ bool device_mgr::edit_mgr(void)
     cout << endl << white << "in: " << white;    
     cin >> code_in;
 
+    if(!check_input_validity(code_in, SIMPLE_ALPHA))
+    {
+        cerr << endl << red << "Input not allowed..." << white << endl;
+        return false; 
+    }
+
     if(device_type_in == RESISTOR)
-    {        
-        if(db_mgr.select_device(RESISTOR_DB, RESISTOR, code_in))
-        {   
-            if(json_mgr.retrieve_device_metadata(RESISTOR, meta_map))
-                ret = edit_device(RESISTOR, code_in);
+    {           
+        switch(db_mgr.select_device(RESISTOR_DB, RESISTOR, code_in))
+        {
+            case db_mgr::SEARCH_FOUND:
+            {
+                if(json_mgr.retrieve_device_metadata(RESISTOR, meta_map))
+                    ret = edit_device(RESISTOR, code_in);
+            }
+            break;
+
+            case db_mgr::SEARCH_NOT_FOUND:
+            {
+                cerr << yellow << "Not code found!" << white << endl;
+            }
+            break;
         }
     }
     else if(device_type_in == CAPACITOR)
-    {
-        if(db_mgr.select_device(CAPACITOR_DB, CAPACITOR, code_in))
+    {        
+        switch(db_mgr.select_device(CAPACITOR_DB, CAPACITOR, code_in))
         {
-            if(json_mgr.retrieve_device_metadata(CAPACITOR, meta_map))
-                ret = edit_device(CAPACITOR, code_in);
+            case db_mgr::SEARCH_FOUND:
+            {
+                if(json_mgr.retrieve_device_metadata(CAPACITOR, meta_map))
+                    ret = edit_device(CAPACITOR, code_in);
+            }
+            break;
+
+            case db_mgr::SEARCH_NOT_FOUND:
+            {
+                cerr << yellow << "Not code found!" << white << endl;
+            }
+            break;
         }
     }    
     else if(device_type_in == INDUCTOR)
-    {
-        if(db_mgr.select_device(INDUCTOR_DB, INDUCTOR, code_in))
+    {        
+        switch(db_mgr.select_device(INDUCTOR_DB, INDUCTOR, code_in))
         {
-            if(json_mgr.retrieve_device_metadata(INDUCTOR, meta_map))
-                ret = edit_device(INDUCTOR, code_in);
+            case db_mgr::SEARCH_FOUND:
+            {
+                if(json_mgr.retrieve_device_metadata(INDUCTOR, meta_map))
+                    ret = edit_device(INDUCTOR, code_in);
+            }
+            break;
+
+            case db_mgr::SEARCH_NOT_FOUND:
+            {
+                cerr << yellow << "Not code found!" << white << endl;
+            }
+            break;
         }
     }
 
@@ -283,6 +343,12 @@ bool device_mgr::search_by_type(void)
     cout << endl << white << "in: " << white;
     cin >> device_type_in;    
 
+    if(!check_input_validity(device_type_in, SIMPLE_ALPHA))
+    {
+        cerr << endl << red << "Input not allowed..." << white << endl;
+        return false; 
+    }
+
     if(device_type_in == RESISTOR)
         ret = db_mgr.show_table(RESISTOR_DB, RESISTOR);
     else if(device_type_in == CAPACITOR)
@@ -299,12 +365,30 @@ bool device_mgr::search_by_type(void)
 bool device_mgr::search_by_code(void)
 {
     bool ret = false;
+    unsigned int counter = 0;
     string code_in;
+    map<string, string> db_and_table_names; 
+
+    if(!db_mgr.build_db_table_map(db_and_table_names))
+        return ret;
+
     cout << endl;
-    cout << blue << "Digit code: " << endl << endl;
+    cout << blue << "Digit code" << endl;
 
     cout << endl << white << "in: " << white;
-    cin >> code_in;    
+    cin >> code_in;
+
+    if(!check_input_validity(code_in, SIMPLE_ALPHA))
+    {
+        cerr << endl << red << "Input not allowed..." << white << endl;
+        return false; 
+    }
+
+    for(auto db_table_pair : db_and_table_names)
+        ret = db_mgr.show_device_by_parameter(db_table_pair.first.c_str(), db_table_pair.second, CODE_PARAMETER, code_in, false, counter);
+
+    if(counter == 0)
+        cout << endl << endl << yellow << "Code not found!" << white << endl;
 
     return ret;
 }
@@ -313,12 +397,30 @@ bool device_mgr::search_by_code(void)
 bool device_mgr::search_by_manufacturer(void)
 {
     bool ret = false;
+    unsigned int counter = 0;
     string manufacturer_in;
+    map<string, string> db_and_table_names; 
+
+    if(!db_mgr.build_db_table_map(db_and_table_names))
+        return ret;
+
     cout << endl;
-    cout << blue << "Digit manufacturer: " << endl << endl;
+    cout << blue << "Digit manufacturer" << endl;
 
     cout << endl << white << "in: " << white;
     cin >> manufacturer_in;    
+
+    if(!check_input_validity(manufacturer_in, SIMPLE_ALPHA))
+    {
+        cerr << endl << red << "Input not allowed..." << white << endl;
+        return false; 
+    }
+
+    for(auto db_table_pair : db_and_table_names)
+        ret = db_mgr.show_device_by_parameter(db_table_pair.first.c_str(), db_table_pair.second, MANUFACTURER_PARAMETER, manufacturer_in, false, counter);
+
+    if(counter == 0)
+        cout << endl << endl << yellow << "Manufacturer not found!" << white << endl;
 
     return ret;
 }
@@ -327,15 +429,98 @@ bool device_mgr::search_by_manufacturer(void)
 bool device_mgr::search_by_mounting_type(void)
 {
     bool ret = false;
+    unsigned int counter = 0;
     string mounting_type_in;
+    map<string, string> db_and_table_names; 
+
+    if(!db_mgr.build_db_table_map(db_and_table_names))
+        return ret;
+
     cout << endl;
-    cout << blue << "Digit mounting type: " << endl << endl;
+    cout << blue << "Digit mounting type" << endl;
 
     cout << endl << white << "in: " << white;
     cin >> mounting_type_in;    
 
+    if(!check_input_validity(mounting_type_in, SIMPLE_ALPHA))
+    {
+        cerr << endl << red << "Input not allowed..." << white << endl;
+        return false; 
+    }
+
+    for(auto db_table_pair : db_and_table_names)
+        ret = db_mgr.show_device_by_parameter(db_table_pair.first.c_str(), db_table_pair.second, MOUNTING_TYPE_PARAMETER, mounting_type_in, false, counter);
+
+    if(counter == 0)
+        cout << endl << endl << yellow << "Mounting type not found!" << white << endl;
+
     return ret;
 }
+
+
+bool device_mgr::search_by_description(void)
+{
+    bool ret = false;
+    unsigned int counter = 0;
+    string description_in;
+    map<string, string> db_and_table_names; 
+
+    if(!db_mgr.build_db_table_map(db_and_table_names))
+        return ret;
+
+    cout << endl;
+    cout << blue << "Digit mounting type" << endl;
+
+    cout << endl << white << "in: " << white;
+    cin >> description_in;    
+
+    if(!check_input_validity(description_in, SIMPLE_ALPHA))
+    {
+        cerr << endl << red << "Input not allowed..." << white << endl;
+        return false; 
+    }
+
+    for(auto db_table_pair : db_and_table_names)
+        ret = db_mgr.show_device_by_parameter(db_table_pair.first.c_str(), db_table_pair.second, DESCRIPTION_PARAMETER, description_in, false, counter);
+
+    if(counter == 0)
+        cout << endl << endl << yellow << "Description not found!" << white << endl;
+
+    return ret;
+}
+
+
+bool device_mgr::search_by_value(void)
+{
+    bool ret = false;
+    unsigned int counter = 0;
+    string value_in;
+    map<string, string> db_and_table_names; 
+
+    if(!db_mgr.build_db_table_map(db_and_table_names))
+        return ret;
+
+    cout << endl;
+    cout << blue << "Digit value" << endl;
+
+    cout << endl << white << "in: " << white;
+    cin >> value_in;    
+
+    if(!check_input_validity(value_in, NUMERIC))
+    {
+        cerr << endl << red << "Input not allowed..." << white << endl;
+        return false; 
+    }
+
+    for(auto db_table_pair : db_and_table_names)
+        ret = db_mgr.show_device_by_parameter(db_table_pair.first.c_str(), db_table_pair.second, VALUE_PARAMETER, value_in, false, counter);
+
+    if(counter == 0)
+        cout << endl << endl << yellow << "Description not found!" << white << endl;
+
+    return ret;
+}
+
 
 bool device_mgr::search_mgr(void)
 {
@@ -347,10 +532,13 @@ bool device_mgr::search_mgr(void)
     cout << blue << "\t1) " << white << "type" << endl;
     cout << blue << "\t2) " << white << "code" << endl;
     cout << blue << "\t3) " << white << "manufacturer" << endl;
-    cout << blue << "\t4) " << white << "mounting type" << endl;    
+    cout << blue << "\t4) " << white << "mounting type" << endl;
+    cout << blue << "\t5) " << white << "description" << endl;
+    cout << blue << "\t6) " << white << "value" << endl;
 
     cout << endl << white << "in: ";
     cin >> selection;
+    
     if(selection.size() > 1)
     {
         cerr << red << "Wrong input..." << white << endl;
@@ -370,12 +558,20 @@ bool device_mgr::search_mgr(void)
                 ret = search_by_code();
             break;
 
-            case 3:                
+            case 3:
                 ret = search_by_manufacturer();
             break;
 
-            case 4:                
+            case 4:
                 ret = search_by_mounting_type();
+            break;
+
+            case 5:
+                ret = search_by_description();
+            break;
+
+            case 6:
+                ret = search_by_value();
             break;
 
             default:

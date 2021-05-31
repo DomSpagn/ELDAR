@@ -36,7 +36,12 @@ protected:
     //Search by device manufacturer
     bool search_by_manufacturer(void);
 
-    //Search by device type
+    //Search by mounting type
     bool search_by_mounting_type(void);
 
+    //Search by description
+    bool search_by_description(void);
+    
+    //Search by value
+    bool search_by_value(void);
 };

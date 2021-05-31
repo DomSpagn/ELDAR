@@ -106,6 +106,12 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
             cout << meta_elem.first << ") " << blue << meta_elem.second.first << ": " << white;            
             getline(cin, input[i]);
 
+            if(!check_input_validity(input[i], SIMPLE_ALPHA))
+            {
+                cerr << endl << red << "Input not allowed..." << white << endl;
+                return false; 
+            }
+
             if(meta_elem.second.second == "uint8")
             {
                 if(!check_uint8_validity(input[i], u8_value))
@@ -186,7 +192,7 @@ bool json_mgr::load_device(map<uint16_t, pair<string, string>> &meta_map, vector
 {
     if(!load_device_meta_info(meta_map, device_vector_tuple))
     {
-        cerr << red << "one of more inputs are unacceptable" << white << endl;
+        cerr << endl << red << "One of more inputs are unacceptable..." << white << endl;
         return false;
     }        
 

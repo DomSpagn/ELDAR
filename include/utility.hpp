@@ -1,13 +1,14 @@
 #pragma once
 
 #include <string>
+#include <map>
 #include <vector>
 #include <tuple>
 #include <any>
 
 enum answer { CONFIRM, NOT_CONFIRMED, UNKNOWN };
 enum tuple_operation { INSERT, UPDATE };
-
+enum input_validity{ NUMERIC, SIMPLE_ALPHA, COMPLEX_ALPHA };
 
 bool is_file_present(const char *path, std::string filename);
 bool delete_file(std::string filename);
@@ -29,6 +30,7 @@ bool check_int64_validity(std::string &input, int64_t &i64_value);
 bool check_float_validity(std::string &input, float &f_value);
 bool check_double_validity(std::string &input, double &d_value);
 bool check_string_validity(std::string &input);
+bool check_input_validity(std::string &input, input_validity validity_range);
 
 void print_device_tuple_vector(std::vector<std::tuple<std::string, std::string, std::any>> &device_vector_tuple, tuple_operation operation);
 
