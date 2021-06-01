@@ -9,7 +9,7 @@
             "options": {
                 "cwd": "${workspaceFolder}/build/"
             },
-            "command": "cmake ${workspaceFolder} -G \"MinGW Makefiles\" -DCMAKE_BUILD_TYPE=Debug .."
+            "command": "cmake ${workspaceFolder} -G \"MinGW Makefiles\" -DCMAKE_BUILD_TYPE=Release .."
         },
         {
             "label": "make",
