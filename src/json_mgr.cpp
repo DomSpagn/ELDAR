@@ -24,13 +24,17 @@ json_mgr::~json_mgr()
 }
 
 
-bool json_mgr::get_meta_info_from_json(const Value &device_info, map<uint16_t, pair<string, string>> &meta_map)
+bool json_mgr::get_meta_info_from_json(const string &device, const Value &device_info, map<uint16_t, pair<string, string>> &meta_map)
 {
     uint8_t index = 0;
     pair<string, string> aux_pair;
+    Value::ConstMemberIterator itr = device_info.MemberBegin();
 
-    for (Value::ConstMemberIterator itr = device_info.MemberBegin(); itr != device_info.MemberEnd(); ++itr)
-    {
+    if(itr->value.GetString() != device)
+        return false;
+
+    for (itr = device_info.MemberBegin(); itr != device_info.MemberEnd(); ++itr)
+    {        
         aux_pair = make_pair(itr->name.GetString(), itr->value.GetString());
         meta_map[index] = aux_pair;
         index++;
@@ -41,7 +45,7 @@ bool json_mgr::get_meta_info_from_json(const Value &device_info, map<uint16_t, p
 
 
 bool json_mgr::retrieve_device_metadata(const string &device, map<uint16_t, pair<string, string>> &meta_map)
-{   
+{       
     ifstream ifs(string(JSON_FILE_PATH) + string(META_DEVICE_FILE));
     if(!ifs.is_open())
     {
@@ -56,21 +60,23 @@ bool json_mgr::retrieve_device_metadata(const string &device, map<uint16_t, pair
     Document meta_doc;
     meta_doc.Parse(metadata_json.str().c_str());
     assert(meta_doc.IsArray());
-        
+            
     for (SizeType i = 0; i < meta_doc.Size(); i++)
     {
         assert(meta_doc[i].IsObject());
 
         if(device == RESISTOR)
-            return get_meta_info_from_json(meta_doc[i], meta_map);
+            if(get_meta_info_from_json(device, meta_doc[i], meta_map))
+                return true;
         if(device == CAPACITOR)
-            return get_meta_info_from_json(meta_doc[i], meta_map);
+            if(get_meta_info_from_json(device, meta_doc[i], meta_map))
+                return true;
         if(device == INDUCTOR)
-            return get_meta_info_from_json(meta_doc[i], meta_map);
+            if(get_meta_info_from_json(device, meta_doc[i], meta_map))
+                return true;
     }
 
     cerr << endl << red << "Cannot retrieve device metadata" << white << endl;
-
     return false;
 }
 
@@ -96,7 +102,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
     cout << endl << blue << "Insert the following data (" << meta_map.size() - 1 << " data):" << white << endl << endl;
     for(auto meta_elem : meta_map)
     {        
-        if(meta_elem.second.second == RESISTOR)
+        if(meta_elem.second.first == "device")
         {
             aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, string());
             device_vector_tuple.push_back(aux_tuple);            
@@ -191,10 +197,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
 bool json_mgr::load_device(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple)
 {
     if(!load_device_meta_info(meta_map, device_vector_tuple))
-    {
-        cerr << endl << red << "One of more inputs are unacceptable..." << white << endl;
         return false;
-    }        
 
     //Clean meta and device maps
     meta_map.clear();

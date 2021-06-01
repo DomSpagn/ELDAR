@@ -3,6 +3,12 @@
 #include "console_color.hpp"
 #include "sql_cmds.hpp"
 #include <dirent.h>
+#include <list>
+#include <iostream>
+#include <fstream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <ctime>
 
 using namespace std;
 
@@ -410,4 +416,85 @@ bool db_mgr::update_device(const char *device_db, const string& table, const str
 
     sqlite3_close(db);
     return true;
+}
+
+
+/*******************************************************************************************************/
+/*                                          TRANSFER section                                           */ 
+/*******************************************************************************************************/
+bool db_mgr::copy_db_to_cloud(void)
+{
+    bool ret = false;
+    list<string> db_list;
+    DIR *dir = opendir(DB_FILE_PATH);
+    if(!dir)
+    {
+        cerr << endl << red << "Cannot open db file path..." << white << endl;        
+        return ret;
+    }
+    else
+    {
+        dirent *entry;
+        while((entry = readdir(dir)) != NULL) 
+        {
+            if(has_suffix(entry->d_name, ".db"))
+                db_list.push_back(entry->d_name);
+        }
+        closedir(dir);
+    }
+
+    if(db_list.empty())
+    {
+        cout << endl << yellow << "No DB files to be transfered!" << white << endl;
+        ret = true;
+    }
+    else
+    {
+        time_t t = time(NULL);
+        tm *tPtr = localtime(&t);
+        clock_t start, end;
+        start = clock();
+
+        string src_file;        
+        string dest_file;
+        string day = to_string(tPtr->tm_mday);
+        string month = to_string((tPtr->tm_mon) + 1);
+        string year = to_string((tPtr->tm_year) + 1900);            
+        string hour = to_string(tPtr->tm_hour);            
+        string minutes = to_string(tPtr->tm_min);
+        string seconds = to_string(tPtr->tm_sec);
+        string dest_folder = CLOUD_DB_PATH + day + "_" + month + "_" + year + "-" + hour + "_" + minutes + "_" + seconds + "/";
+
+        //Create folder
+        if (mkdir(dest_folder.c_str()) == -1)
+        {
+            cerr << endl << red << "Cannot create folder on cloud: " << strerror(errno) << white << endl;
+            ret = false;
+        }
+        else
+        {
+            for(auto db_name : db_list)
+            {
+                src_file = DB_FILE_PATH + db_name;
+
+                //Create files
+                dest_file = dest_folder + db_name;
+
+                ifstream src(src_file.c_str(), ios::binary);
+                ofstream dest(dest_file.c_str(), ios::binary);
+
+                dest << src.rdbuf();
+
+                src.close();
+                dest.close();
+            }
+        }
+        end = clock();
+        cout << endl << green << "Transfer completed in " << white << static_cast<double>(end - start) << green << " msec" << white << endl;
+        ret = true;
+    }
+
+
+
+    return ret;
 }

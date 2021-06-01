@@ -13,6 +13,7 @@ public:
     bool delete_mgr(void);
     bool edit_mgr(void);
     bool search_mgr(void);
+    bool transfer_mgr(void);
 
 protected:
     json_mgr &json_mgr;

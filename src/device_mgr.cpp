@@ -578,3 +578,12 @@ bool device_mgr::search_mgr(void)
 
     return ret;
 }
+
+
+bool device_mgr::transfer_mgr(void)
+{
+    bool ret = false;
+    string selection;
+
+    return db_mgr.copy_db_to_cloud();
+}

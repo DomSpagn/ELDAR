@@ -42,8 +42,11 @@ public:
     std::string get_table(const char *db_name);
     bool build_db_table_map(std::map<std::string, std::string> &db_and_table_names);
 
-    //Search a device by code among all available dbs and prints its info
+    //Search a device by code among all available db files and prints its info
     SEARCH_RESULT search_code_among_dbs(std::map<std::string, std::string> &db_and_table_names, const std::string &code);
+
+    //Transfer db files on cloud (OneDrive)
+    bool copy_db_to_cloud(void);
 
 protected:
     sqlite3 *database_connection(const char *device_db);

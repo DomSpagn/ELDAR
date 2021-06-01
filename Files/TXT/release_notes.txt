@@ -8,7 +8,8 @@ Software Description.
         - storing new components;
         - deleting components out of stock;
         - editing existing components;
-        - searching using multiple criteria (type, size, manufacturer, value, etc.) 
+        - searching using multiple criteria (code, manufacturer, value, etc.)
+        - copy DB files on personal cloud (OneDrive)
 
     Electronic devices currently supported:
         - resistors;
@@ -20,10 +21,20 @@ Software Description.
         - SQLite3    
 
 
----------------------------------------------------
+-------------------------------------------------------
+
+Version: 1.0.0
+Release Date: 01/06/2021
+Author: Domenico Spagnuolo (aka Mimmo)
+
+INFO:
+
+    - Implemented DB files trasfer onto personal cloud 
+
+-------------------------------------------------------
 
 Version: 0.0.4
-Release Date: 11/04/2021
+Release Date: 31/05/2021
 Author: Domenico Spagnuolo (aka Mimmo)
 
 INFO:
@@ -32,10 +43,7 @@ INFO:
     - Added SQLITE console formatting
     - Managed main menu
 
-
-
-
----------------------------------------------------
+-------------------------------------------------------
 
 Version: 0.0.3
 Release Date: 11/04/2021
@@ -46,9 +54,7 @@ INFO:
     - Implemented devices editing
     - Added console table formatting
 
-
-
----------------------------------------------------
+-------------------------------------------------------
 
 Version: 0.0.2
 Release Date: 02/04/2021
@@ -58,8 +64,7 @@ INFO:
 
     - Implemented devices deletion
 
-
----------------------------------------------------
+-------------------------------------------------------
 
 Version: 0.0.1
 Release Date: 02/04/2021

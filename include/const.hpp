@@ -16,3 +16,4 @@ static constexpr const char *CAPACITOR = "capacitor";
 static constexpr const char *CAPACITOR_DB = "capacitor.db";
 static constexpr const char *INDUCTOR = "inductor";
 static constexpr const char *INDUCTOR_DB = "inductor.db";
+static constexpr const char *CLOUD_DB_PATH = "C:/Users/mimmo/OneDrive/Software/ELDAR/";
