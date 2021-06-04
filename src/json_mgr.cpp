@@ -81,7 +81,7 @@ bool json_mgr::retrieve_device_metadata(const string &device, map<uint16_t, pair
 }
 
 
-bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple)
+bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple, const string &category)
 {
     string input[meta_map.size()];
     unsigned int i = 0;
@@ -99,7 +99,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
     double d_value;    
 
     cin.ignore();
-    cout << endl << blue << "Insert the following data (" << meta_map.size() - 1 << " data):" << white << endl << endl;
+    cout << endl << blue << "Insert the following data (" << meta_map.size() - 2 << " data):" << white << endl << endl;
     for(auto meta_elem : meta_map)
     {        
         if(meta_elem.second.first == "device")
@@ -107,12 +107,17 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
             aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, string());
             device_vector_tuple.push_back(aux_tuple);            
         }
+        else if(meta_elem.second.first == "category")
+        {
+            aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, category);
+            device_vector_tuple.push_back(aux_tuple);            
+        }
         else
         {            
             cout << meta_elem.first << ") " << blue << meta_elem.second.first << ": " << white;            
             getline(cin, input[i]);
 
-            if(!check_input_validity(input[i], SIMPLE_ALPHA))
+            if(!check_input_validity(input[i], SIMPLE_ALPHA) || input[i] == string())
             {
                 cerr << endl << red << "Input not allowed..." << white << endl;
                 return false; 
@@ -194,9 +199,9 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
 }
 
 
-bool json_mgr::load_device(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple)
+bool json_mgr::load_device(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple, const string &category)
 {
-    if(!load_device_meta_info(meta_map, device_vector_tuple))
+    if(!load_device_meta_info(meta_map, device_vector_tuple, category))
         return false;
 
     //Clean meta and device maps

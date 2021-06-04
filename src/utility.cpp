@@ -445,7 +445,7 @@ void print_device_tuple_vector(vector<tuple<string, string, any>> &device_vector
         string meta_type = get<1>(tuple_elem);
         any value = get<2>(tuple_elem);
 
-        if(meta_name == "device")
+        if(meta_name == "device" || meta_name == "category")
             continue;
 
         cout << green << meta_name << ": " << white;

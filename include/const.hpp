@@ -8,6 +8,7 @@ static constexpr const char *META_DEVICE_FILE = "meta_device.json";
 static constexpr const char *CODE_PARAMETER = "CODE";
 static constexpr const char *MANUFACTURER_PARAMETER = "MANUFACTURER";
 static constexpr const char *MOUNTING_TYPE_PARAMETER = "MOUNTING_TYPE";
+static constexpr const char *CATEGORY_PARAMETER = "CATEGORY";
 static constexpr const char *DESCRIPTION_PARAMETER = "DESCRIPTION";
 static constexpr const char *VALUE_PARAMETER = "VALUE";
 static constexpr const char *RESISTOR = "resistor";
@@ -17,3 +18,7 @@ static constexpr const char *CAPACITOR_DB = "capacitor.db";
 static constexpr const char *INDUCTOR = "inductor";
 static constexpr const char *INDUCTOR_DB = "inductor.db";
 static constexpr const char *CLOUD_DB_PATH = "C:/Users/mimmo/OneDrive/Software/ELDAR/";
+
+static constexpr const char *RESISTOR_CATEGORY = "passive";
+static constexpr const char *CAPACITOR_CATEGORY = "passive";
+static constexpr const char *INDUCTOR_CATEGORY = "passive";
