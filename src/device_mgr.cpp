@@ -33,13 +33,13 @@ bool device_mgr::add_device(const string &device, map<uint16_t, pair<string, str
     vector<tuple<string, string, any>>device_vector_tuple;
 
     if(device == RESISTOR)
-        ret = json_mgr.load_device(meta_map, device_vector_tuple);
+        ret = json_mgr.load_device(meta_map, device_vector_tuple, RESISTOR_CATEGORY);
 
     if(device == CAPACITOR)
-        ret = json_mgr.load_device(meta_map, device_vector_tuple);
+        ret = json_mgr.load_device(meta_map, device_vector_tuple, CAPACITOR_CATEGORY);
 
     if(device == INDUCTOR)
-        ret = json_mgr.load_device(meta_map, device_vector_tuple);
+        ret = json_mgr.load_device(meta_map, device_vector_tuple, INDUCTOR_CATEGORY);
 
     if(!ret)
         return false;
@@ -158,6 +158,9 @@ bool device_mgr::load_changes(vector<tuple<string, string, any>> &current_data, 
         string key = get<0>(data);
         string type = get<1>(data);
         any value = get<2>(data);
+
+        if(key == "CATEGORY")
+            continue;
 
         cout << white << key << " (" << yellow << type << white << "): "; 
         getline(cin, input[i]);
@@ -453,6 +456,36 @@ bool device_mgr::search_by_mounting_type(void)
 }
 
 
+bool device_mgr::search_by_category(void)
+{
+    bool ret = false;
+    unsigned int counter = 0;
+    string category_in;
+    map<string, string> db_and_table_names; 
+
+    if(!db_mgr.build_db_table_map(db_and_table_names))
+        return ret;
+    
+    cout << endl << blue << "Digit category" << endl;
+    cout << endl << white << "in: " << white;
+    cin >> category_in;    
+
+    if(!check_input_validity(category_in, SIMPLE_ALPHA))
+    {
+        cerr << endl << red << "Input not allowed..." << white << endl;
+        return false; 
+    }
+
+    for(auto db_table_pair : db_and_table_names)
+        ret = db_mgr.show_device_by_parameter(db_table_pair.first.c_str(), db_table_pair.second, CATEGORY_PARAMETER, category_in, false, counter);
+
+    if(counter == 0)
+        cout << endl << endl << yellow << "Category not found!" << white << endl;
+
+    return ret;
+}
+
+
 bool device_mgr::search_by_description(void)
 {
     bool ret = false;
@@ -524,8 +557,9 @@ bool device_mgr::search_mgr(void)
     cout << blue << "\t2) " << white << "code" << endl;
     cout << blue << "\t3) " << white << "manufacturer" << endl;
     cout << blue << "\t4) " << white << "mounting type" << endl;
-    cout << blue << "\t5) " << white << "description" << endl;
-    cout << blue << "\t6) " << white << "value" << endl;
+    cout << blue << "\t5) " << white << "category" << endl;
+    cout << blue << "\t6) " << white << "description" << endl;
+    cout << blue << "\t7) " << white << "value" << endl;
 
     cout << endl << white << "in: ";
     cin >> selection;
@@ -558,10 +592,14 @@ bool device_mgr::search_mgr(void)
             break;
 
             case 5:
-                ret = search_by_description();
+                ret = search_by_category();
             break;
 
             case 6:
+                ret = search_by_description();
+            break;
+
+            case 7:
                 ret = search_by_value();
             break;
 

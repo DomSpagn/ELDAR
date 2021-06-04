@@ -1,9 +1,10 @@
 [
     {           
-        "device" : "resistor",        
+        "device" : "resistor",
         "code" : "string",
+        "category" : "string",
         "manufacturer" : "string",
-        "value" : "double",        
+        "value" : "double",
         "size" : "string",
         "power" : "float",
         "mounting_type" : "string",
@@ -11,11 +12,12 @@
         "description" : "string"
     },
     {        
-        "device" : "capacitor",        
+        "device" : "capacitor",
         "code" : "string",
+        "category" : "string",
         "manufacturer" : "string",
         "type" : "string",
-        "value" : "double",        
+        "value" : "double",
         "voltage" : "float",
         "size" : "string",
         "mounting_type" : "string",
@@ -23,8 +25,9 @@
         "description" : "string"
     },
     {        
-        "device" : "inductor",        
+        "device" : "inductor",
         "code" : "string",
+        "category" : "string",
         "manufacturer" : "string",
         "value" : "double",
         "current_rating" : "float",

@@ -40,6 +40,9 @@ protected:
     //Search by mounting type
     bool search_by_mounting_type(void);
 
+    //Search by category
+    bool search_by_category(void);
+
     //Search by description
     bool search_by_description(void);
     

@@ -23,6 +23,16 @@ Software Description.
 
 -------------------------------------------------------
 
+Version: 1.0.1
+Release Date: 04/06/2021
+Author: Domenico Spagnuolo (aka Mimmo)
+
+INFO:
+
+    - Added category info
+
+-------------------------------------------------------
+
 Version: 1.0.0
 Release Date: 01/06/2021
 Author: Domenico Spagnuolo (aka Mimmo)
