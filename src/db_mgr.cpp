@@ -188,7 +188,10 @@ bool db_mgr::build_db_table_map(map<string, string> &db_table_names)
                 if(!table_name.empty())
                     db_table_names.insert(pair<string, string>(entry->d_name, table_name));
                 else
+                {
+                    closedir(dir);
                     return ret;
+                }
             }
         }
         closedir(dir);
@@ -297,13 +300,8 @@ bool db_mgr::delete_device(const char *device_db, const string &table)
     sqlite3_close(db);
 
     if(table_count == 0)
-    {
         if(!delete_file(device_db))
-        {
-            cerr << endl << red << "Cannot delete empty file: " << device_db << white << endl;
             return false;
-        }
-    }
     
     return true;
 }

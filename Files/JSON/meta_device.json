@@ -52,5 +52,20 @@
         "mounting_type" : "string",
         "quantity" : "uint16",
         "description" : "string"
+    },
+    {
+        "device" : "LED",
+        "code" : "string",
+        "category" : "string",
+        "color" : "string",
+        "manufacturer" : "string",
+        "max_dc_current_IFmax" : "float",
+        "mac_dc_voltage_VFmax" : "float",
+        "max_reverse_voltage_VR" : "float",
+        "total_power_dissipation_Ptot" : "float",
+        "peak_wavelength_Lp" : "double",
+        "mounting_type" : "string",
+        "quantity" : "uint16",
+        "description" : "string"
     }
 ]

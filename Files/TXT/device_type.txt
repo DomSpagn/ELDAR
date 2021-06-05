@@ -1,4 +1,5 @@
-resistor (Ex.: code: P122682DKR-ND, manufacturer: Panasonic, value (in Ohm): 11500, size: 0603, power (in W): 0.05, mounting type: smd, quantity: 10, descritpion: ...)
-capacitor (Ex: code: 1276-1043-2-ND, manufacturer: Samsung, type: ceramic, value (in F): 0.0000001, voltage (in V): 25, size: 0402, mounting type: smd, quantity: 2, descritpion: ...)
-inductor (Ex. code: 732-5517-2-ND, manufacturer: Wurth, value (in H): 0.0000047, IR (in A): 3, ISAT (in A): 3.8, size: no standard, mounting type: smd, quantity: 10, descritpion: ...)
+resistor (Ex.: code: ERJ-1GNF1152C, manufacturer: Panasonic, value (in Ohm): 11500, size: 0603, power (in W): 0.05, mounting type: smd, quantity: 10, descritpion: ...)
+capacitor (Ex: code: CL05A104KA5NNNC, manufacturer: Samsung, type: ceramic, value (in F): 0.0000001, voltage (in V): 25, size: 0402, mounting type: smd, quantity: 2, descritpion: ...)
+inductor (Ex. code: 74404054047, manufacturer: Wurth, value (in H): 0.0000047, IR (in A): 3, ISAT (in A): 3.8, size: no standard, mounting type: smd, quantity: 10, descritpion: ...)
 diode (Ex. code: 1N5817, type: Schottky, manufacturer: Vishy, IFmax (in A): 1, VFmax (in V): 0.75, Ptot (in W): -, Cj (in F): 0.000000000001, VZ (in V): -, IZ (in A): -, mounting type: through hole, quantity: 1, descritpion: ...)
+LED (Ex. code: TLUR6400, color: red, manufacturer: Vishy, IFmax (in A): 0.02, VFmax (in V): 2, VR (in V): 6, Ptot (in W): 0.06, Lp (in m): 0.000000640, mounting type: through hole, quantity: 1, descritpion: ...)
