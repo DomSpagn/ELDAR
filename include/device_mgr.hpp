@@ -44,8 +44,5 @@ protected:
     bool search_by_category(void);
 
     //Search by description
-    bool search_by_description(void);
-    
-    //Search by value
-    bool search_by_value(void);
+    bool search_by_description(void);    
 };

@@ -9,12 +9,7 @@ public:
     db_mgr();
     ~db_mgr();
 
-    enum SEARCH_RESULT
-    {
-        SEARCH_ERROR,
-        SEARCH_NOT_FOUND,
-        SEARCH_FOUND
-    };
+    enum SEARCH_RESULT{ SEARCH_ERROR, SEARCH_NOT_FOUND, SEARCH_FOUND };
 
     //Create (if it does not exist) a db and apply an INSERT to add new device record
     bool insert_device(const char *device_db, const std::string &table, std::vector<std::tuple<std::string, std::string, std::any>>device_vector_tuple);
