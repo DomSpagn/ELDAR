@@ -67,5 +67,21 @@
         "mounting_type" : "string",
         "quantity" : "uint16",
         "description" : "string"
-    }
+    },
+    {
+        "device" : "BJT",
+        "code" : "string",
+        "category" : "string",
+        "type" : "string",
+        "manufacturer" : "string",
+        "max_collector_emitter_voltage_VCEOmax" : "float",
+        "max_collector_base_voltage_VCBOmax" : "float",
+        "max_emitter_base_voltage_VEBOmax" : "float",
+        "max_dc_collector_current_ICmax" : "float",
+        "total_power_dissipation_Ptot" : "float",
+        "dc_current_gain_hFEmax" : "float",        
+        "mounting_type" : "string",
+        "quantity" : "uint16",
+        "description" : "string"
+    }    
 ]

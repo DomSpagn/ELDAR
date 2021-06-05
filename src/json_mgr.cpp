@@ -80,6 +80,9 @@ bool json_mgr::retrieve_device_metadata(const string &device, map<uint16_t, pair
         if(device == LED)
             if(get_meta_info_from_json(device, meta_doc[i], meta_map))
                 return true;
+        if(device == BJT)
+            if(get_meta_info_from_json(device, meta_doc[i], meta_map))
+                return true;
     }
 
     cerr << endl << red << "Cannot retrieve device metadata" << white << endl;

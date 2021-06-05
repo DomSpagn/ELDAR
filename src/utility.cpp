@@ -47,26 +47,6 @@ bool is_file_present(const char *path, string filename)
 }   
 
 
-bool delete_file(string filename)
-{   
-    bool ret = false; 
-    string abs_filename = DB_FILE_PATH + filename;
-
-    if(!is_file_present(DB_FILE_PATH, filename))
-    {
-        cerr << endl << red << "Cannot delete " << filename << "because it does not exist" << white << endl;
-        return ret;
-    }
-
-    if(remove(abs_filename.c_str()) == 0)
-        ret = true;
-    else
-        cerr << endl << red << "Cannot delete " << filename << white << endl;
-
-    return ret;
-}
-
-
 bool create_file(string root_path, string filename)
 {         
     fstream file;

@@ -297,12 +297,7 @@ bool db_mgr::delete_device(const char *device_db, const string &table)
         return false;
     } 
 
-    sqlite3_close(db);
-
-    if(table_count == 0)
-        if(!delete_file(device_db))
-            return false;
-    
+    sqlite3_close(db);   
     return true;
 }
 
