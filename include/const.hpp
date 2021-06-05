@@ -20,6 +20,8 @@ static constexpr const char *DIODE = "diode";
 static constexpr const char *DIODE_DB = "diode.db";
 static constexpr const char *LED = "LED";
 static constexpr const char *LED_DB = "LED.db";
+static constexpr const char *BJT = "BJT";
+static constexpr const char *BJT_DB = "BJT.db";
 static constexpr const char *CLOUD_DB_PATH = "C:/Users/mimmo/OneDrive/Software/ELDAR/";
 
 static constexpr const char *RESISTOR_CATEGORY = "resistors";
@@ -27,3 +29,4 @@ static constexpr const char *CAPACITOR_CATEGORY = "capacitors";
 static constexpr const char *INDUCTOR_CATEGORY = "inductors_coils_transformers";
 static constexpr const char *DIODE_CATEGORY = "diodes";
 static constexpr const char *LED_CATEGORY = "optoelectronics";
+static constexpr const char *BJT_CATEGORY = "transistors";

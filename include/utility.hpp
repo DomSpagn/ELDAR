@@ -11,7 +11,6 @@ enum tuple_operation { INSERT, UPDATE };
 enum input_validity{ NUMERIC, SIMPLE_ALPHA, COMPLEX_ALPHA };
 
 bool is_file_present(const char *path, std::string filename);
-bool delete_file(std::string filename);
 bool create_file(std::string root_path, std::string filename);
 
 bool list_types(bool load_example);

@@ -34,18 +34,16 @@ bool device_mgr::add_device(const string &device, map<uint16_t, pair<string, str
 
     if(device == RESISTOR)
         ret = json_mgr.load_device(meta_map, device_vector_tuple, RESISTOR_CATEGORY);
-
     if(device == CAPACITOR)
         ret = json_mgr.load_device(meta_map, device_vector_tuple, CAPACITOR_CATEGORY);
-
     if(device == INDUCTOR)
         ret = json_mgr.load_device(meta_map, device_vector_tuple, INDUCTOR_CATEGORY);
-
     if(device == DIODE)
         ret = json_mgr.load_device(meta_map, device_vector_tuple, DIODE_CATEGORY);
-
     if(device == LED)
         ret = json_mgr.load_device(meta_map, device_vector_tuple, LED_CATEGORY);
+    if(device == BJT)
+        ret = json_mgr.load_device(meta_map, device_vector_tuple, BJT_CATEGORY);
 
     if(!ret)
         return false;
@@ -57,18 +55,16 @@ bool device_mgr::add_device(const string &device, map<uint16_t, pair<string, str
 
     if(device == RESISTOR)
         ret = db_mgr.insert_device(RESISTOR_DB, RESISTOR, device_vector_tuple);
-
     if(device == CAPACITOR)
         ret = db_mgr.insert_device(CAPACITOR_DB, CAPACITOR, device_vector_tuple);
-
     if(device == INDUCTOR)
         ret = db_mgr.insert_device(INDUCTOR_DB, INDUCTOR, device_vector_tuple);
-
     if(device == DIODE)
         ret = db_mgr.insert_device(DIODE_DB, DIODE, device_vector_tuple);
-
     if(device == LED)
         ret = db_mgr.insert_device(LED_DB, LED, device_vector_tuple);
+    if(device == BJT)
+        ret = db_mgr.insert_device(BJT_DB, BJT, device_vector_tuple);
 
     return ret;
 }
@@ -118,6 +114,11 @@ bool device_mgr::insert_mgr(void)
         if(json_mgr.retrieve_device_metadata(LED, meta_map))
             ret = add_device(LED, meta_map);
     }
+    else if(device_type_in == BJT)
+    {
+        if(json_mgr.retrieve_device_metadata(BJT, meta_map))
+            ret = add_device(BJT, meta_map);
+    }
     else
         cerr << endl << red << "Wrong choice..." << white << endl;
 
@@ -155,6 +156,8 @@ bool device_mgr::delete_mgr(void)
         ret = db_mgr.delete_device(DIODE_DB, DIODE);
     else if(device_type_in == LED)
         ret = db_mgr.delete_device(LED_DB, LED);
+    else if(device_type_in == BJT)
+        ret = db_mgr.delete_device(BJT_DB, BJT);
     else
         cerr << endl << red << "Wrong choice..." << white << endl;
   
@@ -229,6 +232,8 @@ bool device_mgr::edit_device(const string &device, const string &code)
         ret = db_mgr.retrieve_current_device_data(DIODE_DB, DIODE, code, current_data);
     else if(device == LED)
         ret = db_mgr.retrieve_current_device_data(LED_DB, LED, code, current_data);
+    else if(device == BJT)
+        ret = db_mgr.retrieve_current_device_data(BJT_DB, BJT, code, current_data);
 
     if(!ret)
         return false;
@@ -257,6 +262,8 @@ bool device_mgr::edit_device(const string &device, const string &code)
         ret = db_mgr.update_device(DIODE_DB, DIODE, code, new_data);    
     if(device == LED)
         ret = db_mgr.update_device(LED_DB, LED, code, new_data);    
+    if(device == BJT)
+        ret = db_mgr.update_device(BJT_DB, BJT, code, new_data);    
 
     return ret;
 }
@@ -286,7 +293,8 @@ bool device_mgr::edit_mgr(void)
        device_type_in != CAPACITOR && 
        device_type_in != INDUCTOR && 
        device_type_in != DIODE &&
-       device_type_in != LED)
+       device_type_in != LED &&
+       device_type_in != BJT)
     {
         cerr << endl << red << "Wrong choice..." << white << endl;
         return false;
@@ -392,6 +400,24 @@ bool device_mgr::edit_mgr(void)
             break;
         }
     }
+    else if(device_type_in == BJT)
+    {        
+        switch(db_mgr.select_device(BJT_DB, BJT, code_in))
+        {
+            case db_mgr::SEARCH_FOUND:
+            {
+                if(json_mgr.retrieve_device_metadata(BJT, meta_map))
+                    ret = edit_device(BJT, code_in);
+            }
+            break;
+
+            case db_mgr::SEARCH_NOT_FOUND:
+            {
+                cerr << endl << yellow << "Not code found!" << white << endl;
+            }
+            break;
+        }
+    }
 
     return ret;
 }
@@ -429,6 +455,8 @@ bool device_mgr::search_by_type(void)
         ret = db_mgr.show_table(DIODE_DB, DIODE);
     else if(device_type_in == LED)
         ret = db_mgr.show_table(LED_DB, LED);
+    else if(device_type_in == BJT)
+        ret = db_mgr.show_table(BJT_DB, BJT);
     else
         cerr << endl << red << "Wrong choice..." << white << endl;
 

@@ -17,11 +17,22 @@ Software Description.
         - inductors
         - diodes
         - LEDs
+        - bipolar transistors
 
     Adopted technologies:
         - C++17
         - SQLite3    
 
+
+-------------------------------------------------------
+
+Version: 1.0.4
+Release Date: 05/06/2021
+Author: Domenico Spagnuolo (aka Mimmo)
+
+INFO:
+
+    - Implemented BJTs management
 
 -------------------------------------------------------
 
