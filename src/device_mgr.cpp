@@ -41,6 +41,9 @@ bool device_mgr::add_device(const string &device, map<uint16_t, pair<string, str
     if(device == INDUCTOR)
         ret = json_mgr.load_device(meta_map, device_vector_tuple, INDUCTOR_CATEGORY);
 
+    if(device == DIODE)
+        ret = json_mgr.load_device(meta_map, device_vector_tuple, DIODE_CATEGORY);
+
     if(!ret)
         return false;
 
@@ -57,6 +60,9 @@ bool device_mgr::add_device(const string &device, map<uint16_t, pair<string, str
 
     if(device == INDUCTOR)
         ret = db_mgr.insert_device(INDUCTOR_DB, INDUCTOR, device_vector_tuple);
+
+    if(device == DIODE)
+        ret = db_mgr.insert_device(DIODE_DB, DIODE, device_vector_tuple);
 
     return ret;
 }
@@ -96,6 +102,11 @@ bool device_mgr::insert_mgr(void)
         if(json_mgr.retrieve_device_metadata(INDUCTOR, meta_map))
             ret = add_device(INDUCTOR, meta_map);
     }
+    else if(device_type_in == DIODE)
+    {
+        if(json_mgr.retrieve_device_metadata(DIODE, meta_map))
+            ret = add_device(DIODE, meta_map);
+    }
     else
         cerr << endl << red << "Wrong choice..." << white << endl;
 
@@ -131,6 +142,9 @@ bool device_mgr::delete_mgr(void)
 
     else if(device_type_in == INDUCTOR)
         ret = db_mgr.delete_device(INDUCTOR_DB, INDUCTOR);
+
+    else if(device_type_in == DIODE)
+        ret = db_mgr.delete_device(DIODE_DB, DIODE);
 
     else
         cerr << endl << red << "Wrong choice..." << white << endl;
@@ -173,11 +187,11 @@ bool device_mgr::load_changes(vector<tuple<string, string, any>> &current_data, 
 
         if(input[i].length() == 0)
             continue;
-        else if(type == "integer" && check_int64_validity(input[i], int_value))
+        else if(type == "integer" && check_int64_validity(input[i], int_value) == VALID)
             aux_tuple = make_tuple(key, type, int_value);
-        else if(type == "real" && check_double_validity(input[i], real_value))
+        else if(type == "real" && check_double_validity(input[i], real_value) == VALID)
             aux_tuple = make_tuple(key, type, real_value);
-        else if(type == "text" && check_string_validity(input[i]))
+        else if(type == "text" && check_string_validity(input[i]) == VALID)
             aux_tuple = make_tuple(key, type, input[i]);
         else
             return false;
@@ -205,6 +219,9 @@ bool device_mgr::edit_device(const string &device, const string &code)
     else if(device == INDUCTOR)
         ret = db_mgr.retrieve_current_device_data(INDUCTOR_DB, INDUCTOR, code, current_data);
 
+    else if(device == DIODE)
+        ret = db_mgr.retrieve_current_device_data(DIODE_DB, DIODE, code, current_data);
+
     if(!ret)
         return false;
 
@@ -231,6 +248,9 @@ bool device_mgr::edit_device(const string &device, const string &code)
     if(device == INDUCTOR)
         ret = db_mgr.update_device(INDUCTOR_DB, INDUCTOR, code, new_data);    
 
+    if(device == DIODE)
+        ret = db_mgr.update_device(DIODE_DB, DIODE, code, new_data);    
+
     return ret;
 }
 
@@ -255,7 +275,7 @@ bool device_mgr::edit_mgr(void)
         return false; 
     }
 
-    if(device_type_in != RESISTOR && device_type_in != CAPACITOR && device_type_in != INDUCTOR)
+    if(device_type_in != RESISTOR && device_type_in != CAPACITOR && device_type_in != INDUCTOR && device_type_in != DIODE)
     {
         cerr << endl << red << "Wrong choice..." << white << endl;
         return false;
@@ -325,6 +345,24 @@ bool device_mgr::edit_mgr(void)
             break;
         }
     }
+    else if(device_type_in == DIODE)
+    {        
+        switch(db_mgr.select_device(DIODE_DB, DIODE, code_in))
+        {
+            case db_mgr::SEARCH_FOUND:
+            {
+                if(json_mgr.retrieve_device_metadata(DIODE, meta_map))
+                    ret = edit_device(DIODE, code_in);
+            }
+            break;
+
+            case db_mgr::SEARCH_NOT_FOUND:
+            {
+                cerr << endl << yellow << "Not code found!" << white << endl;
+            }
+            break;
+        }
+    }
 
     return ret;
 }
@@ -358,6 +396,8 @@ bool device_mgr::search_by_type(void)
         ret = db_mgr.show_table(CAPACITOR_DB, CAPACITOR);
     else if(device_type_in == INDUCTOR)
         ret = db_mgr.show_table(INDUCTOR_DB, INDUCTOR);
+    else if(device_type_in == DIODE)
+        ret = db_mgr.show_table(DIODE_DB, DIODE);
     else
         cerr << endl << red << "Wrong choice..." << white << endl;
 
@@ -516,36 +556,6 @@ bool device_mgr::search_by_description(void)
 }
 
 
-bool device_mgr::search_by_value(void)
-{
-    bool ret = false;
-    unsigned int counter = 0;
-    string value_in;
-    map<string, string> db_and_table_names; 
-
-    if(!db_mgr.build_db_table_map(db_and_table_names))
-        return ret;
-    
-    cout << endl << blue << "Digit value" << endl;
-    cout << endl << white << "in: " << white;
-    cin >> value_in;    
-
-    if(!check_input_validity(value_in, NUMERIC))
-    {
-        cerr << endl << red << "Input not allowed..." << white << endl;
-        return false; 
-    }
-
-    for(auto db_table_pair : db_and_table_names)
-        ret = db_mgr.show_device_by_parameter(db_table_pair.first.c_str(), db_table_pair.second, VALUE_PARAMETER, value_in, false, counter);
-
-    if(counter == 0)
-        cout << endl << endl << yellow << "Description not found!" << white << endl;
-
-    return ret;
-}
-
-
 bool device_mgr::search_mgr(void)
 {
     bool ret = false;
@@ -558,8 +568,7 @@ bool device_mgr::search_mgr(void)
     cout << blue << "\t3) " << white << "manufacturer" << endl;
     cout << blue << "\t4) " << white << "mounting type" << endl;
     cout << blue << "\t5) " << white << "category" << endl;
-    cout << blue << "\t6) " << white << "description" << endl;
-    cout << blue << "\t7) " << white << "value" << endl;
+    cout << blue << "\t6) " << white << "description" << endl;    
 
     cout << endl << white << "in: ";
     cin >> selection;
@@ -597,10 +606,6 @@ bool device_mgr::search_mgr(void)
 
             case 6:
                 ret = search_by_description();
-            break;
-
-            case 7:
-                ret = search_by_value();
             break;
 
             default:

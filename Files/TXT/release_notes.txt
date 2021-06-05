@@ -15,10 +15,22 @@ Software Description.
         - resistors;
         - capacitors;
         - inductors
+        - diodes
 
     Adopted technologies:
         - C++17
         - SQLite3    
+
+
+-------------------------------------------------------
+
+Version: 1.0.2
+Release Date: 05/06/2021
+Author: Domenico Spagnuolo (aka Mimmo)
+
+INFO:
+
+    - Implemented diodes management
 
 
 -------------------------------------------------------

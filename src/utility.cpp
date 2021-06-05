@@ -148,8 +148,11 @@ bool is_float_digits(const string &str)
 }
 
 
-bool check_uint8_validity(string &input, uint8_t &u8_value)
+VALIDITY check_uint8_validity(string &input, uint8_t &u8_value)
 {
+    if(input == string())
+        return SKIPPED;
+
     //uint8_t = char (1 byte)
     unsigned long value;
     try
@@ -159,20 +162,23 @@ bool check_uint8_validity(string &input, uint8_t &u8_value)
     catch(...)
     {
         cerr << endl << red << "Wrong input..." << white << endl;
-        return false;
+        return NOT_VALID;
     }
     
     if(value > UINT8_MAX)
-        return false;
+        return NOT_VALID;
 
     u8_value = (uint8_t)value;    
 
-    return true;
+    return VALID;
 }
 
 
-bool check_uint16_validity(string &input, uint16_t &u16_value)
+VALIDITY check_uint16_validity(string &input, uint16_t &u16_value)
 {
+    if(input == string())
+        return SKIPPED;
+
     //uint16_t = unsigned short (2 bytes)
     unsigned long value;
     try
@@ -182,20 +188,23 @@ bool check_uint16_validity(string &input, uint16_t &u16_value)
     catch(...)
     {
         cerr << endl << red << "Wrong input..." << white << endl;
-        return false;
+        return NOT_VALID;
     }
     
     if(value > UINT16_MAX)
-        return false;
+        return NOT_VALID;
 
     u16_value = (uint16_t)value;
 
-    return true;
+    return VALID;
 }
 
 
-bool check_uint32_validity(string &input, uint32_t &u32_value)
+VALIDITY check_uint32_validity(string &input, uint32_t &u32_value)
 {
+    if(input == string())
+        return SKIPPED;
+
     //uint32_t = unsigned int (4 bytes)
     unsigned long value;
     try
@@ -205,20 +214,23 @@ bool check_uint32_validity(string &input, uint32_t &u32_value)
     catch(...)
     {
         cerr << endl << red << "Wrong input..." << white << endl;
-        return false;
+        return NOT_VALID;
     }
     
     if(value > UINT32_MAX)
-        return false;
+        return NOT_VALID;
 
     u32_value = (uint32_t)value;    
 
-    return true;
+    return VALID;
 }
 
 
-bool check_uint64_validity(string &input, uint64_t &u64_value)
+VALIDITY check_uint64_validity(string &input, uint64_t &u64_value)
 {
+    if(input == string())
+        return SKIPPED;
+
     //uint64_t = unsigned long long (8 bytes)
     unsigned long long value;
     try
@@ -228,20 +240,23 @@ bool check_uint64_validity(string &input, uint64_t &u64_value)
     catch(...)
     {
         cerr << endl << red << "Wrong input..." << white << endl;
-        return false;
+        return NOT_VALID;
     }
     
     if(value > UINT64_MAX)
-        return false;
+        return NOT_VALID;
 
     u64_value = (uint64_t)value;    
 
-    return true;
+    return VALID;
 }
 
 
-bool check_int8_validity(string &input, int8_t &i8_value)
+VALIDITY check_int8_validity(string &input, int8_t &i8_value)
 {
+    if(input == string())
+        return SKIPPED;
+
     //int8_t = signed char (1 byte)
     int value;
     try
@@ -251,23 +266,26 @@ bool check_int8_validity(string &input, int8_t &i8_value)
     catch(...)
     {
         cerr << endl << red << "Wrong input..." << white << endl;
-        return false;
+        return NOT_VALID;
     }
     
     if(!is_integer_digits(input) || detected_sign_matter(input))
-        return false;
+        return NOT_VALID;
 
     if(value < INT8_MIN || value > INT8_MAX)
-        return false;
+        return NOT_VALID;
 
     i8_value = (int8_t)value;    
 
-    return true;
+    return VALID;
 }
 
 
-bool check_int16_validity(string &input, int16_t &i16_value)
+VALIDITY check_int16_validity(string &input, int16_t &i16_value)
 {
+    if(input == string())
+        return SKIPPED;
+
     //int16_t = short (2 bytes)
     int value;
     try
@@ -277,23 +295,26 @@ bool check_int16_validity(string &input, int16_t &i16_value)
     catch(...)
     {
         cerr << endl << red << "Wrong input..." << white << endl;
-        return false;
+        return NOT_VALID;
     }
 
     if(!is_integer_digits(input) || detected_sign_matter(input))
-        return false;
+        return NOT_VALID;
 
     if(value < INT16_MIN || value > INT16_MAX)
-        return false;
+        return NOT_VALID;
 
     i16_value = (int16_t)value;
 
-    return true;
+    return VALID;
 }
 
 
-bool check_int32_validity(string &input, int32_t &i32_value)
+VALIDITY check_int32_validity(string &input, int32_t &i32_value)
 {
+    if(input == string())
+        return SKIPPED;
+
     //int32_t = int (4 bytes)
     int value;
     try
@@ -303,23 +324,26 @@ bool check_int32_validity(string &input, int32_t &i32_value)
     catch(...)
     {
         cerr << endl << red << "Wrong input..." << white << endl;
-        return false;
+        return NOT_VALID;
     }
 
     if(!is_integer_digits(input) || detected_sign_matter(input))
-        return false;
+        return NOT_VALID;
 
     if(value < INT32_MIN || value > INT32_MAX)
-        return false;
+        return NOT_VALID;
 
     i32_value = (int32_t)value;
 
-    return true;
+    return VALID;
 }
 
 
-bool check_int64_validity(string &input, int64_t &i64_value)
+VALIDITY check_int64_validity(string &input, int64_t &i64_value)
 {
+    if(input == string())
+        return SKIPPED;
+
     //int64_t = long long (8 bytes)
     long long value;
     try
@@ -329,23 +353,26 @@ bool check_int64_validity(string &input, int64_t &i64_value)
     catch(...)
     {
         cerr << endl << red << "Wrong input..." << white << endl;
-        return false;
+        return NOT_VALID;
     }
     
     if(!is_integer_digits(input) || detected_sign_matter(input))
-        return false;
+        return NOT_VALID;
 
     if(value < INT64_MIN || value > INT64_MAX)
-        return false;
+        return NOT_VALID;
 
     i64_value = (int64_t)value;    
 
-    return true;
+    return VALID;
 }
 
 
-bool check_float_validity(string &input, float &f_value)
+VALIDITY check_float_validity(string &input, float &f_value)
 {
+    if(input == string())
+        return SKIPPED;
+
     float value;
 
     try
@@ -355,23 +382,26 @@ bool check_float_validity(string &input, float &f_value)
     catch(...)
     {
         cerr << endl << red << "Wrong input..." << white << endl;
-        return false;
+        return NOT_VALID;
     }
     
     if(!is_float_digits(input) || detected_sign_matter(input))
-        return false;
+        return NOT_VALID;
 
     if(value < -FLT_MAX || value > FLT_MAX)
-        return false;
+        return NOT_VALID;
 
     f_value = value;
 
-    return true;    
+    return VALID;    
 }
 
 
-bool check_double_validity(string &input, double &d_value)
+VALIDITY check_double_validity(string &input, double &d_value)
 {
+    if(input == string())
+        return SKIPPED;
+
     double value;
 
     try
@@ -381,24 +411,31 @@ bool check_double_validity(string &input, double &d_value)
     catch(...)
     {
         cerr << endl << red << "Wrong input..." << white << endl;
-        return false;
+        return NOT_VALID;
     }
     
     if(!is_float_digits(input) || detected_sign_matter(input))
-        return false;
+        return NOT_VALID;
 
     if(value < -DBL_MAX || value > DBL_MAX)
-        return false;
+        return NOT_VALID;
 
     d_value = value;
 
-    return true;    
+    return VALID;    
 }
 
 
-bool check_string_validity(string &input)
-{    
-    return input.empty() ? false : true;
+VALIDITY check_string_validity(string &input)
+{   
+    VALIDITY ret = NOT_VALID;
+
+    if(input == string())
+        ret = SKIPPED;
+    else
+        ret = VALID;
+
+    return ret;
 }
 
 
