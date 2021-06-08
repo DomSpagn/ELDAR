@@ -27,23 +27,14 @@ Software Description.
 
 -------------------------------------------------------
 
-Version: 1.0.6
+Version: 1.0.5
 Release Date: 09/06/2021
 Author: Domenico Spagnuolo (aka Mimmo)
 
 INFO:
 
-    - Introduced glossary for supported devices
-
--------------------------------------------------------
-
-Version: 1.0.5
-Release Date: 06/06/2021
-Author: Domenico Spagnuolo (aka Mimmo)
-
-INFO:
-
     - Implemented MOSFET management
+    - Introduced glossary for supported devices
 
 -------------------------------------------------------
 
