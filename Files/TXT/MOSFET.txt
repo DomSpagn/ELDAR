@@ -1,0 +1,8 @@
+VDSmax: Max. Drain-Source Voltage
+VGSmin: Min. Gate-Source Voltage
+VGSmax: Max. Gate-Source Voltage
+IDmax: Max. DC Drain Current
+PD: Total Power Dissipation
+VGSth_min: Min. Gate-Source Threshold Voltage
+VGSth_typ: Typical Gate-Source Threshold Voltage
+VGSth_max: Max. Gate-Source Threshold Voltage

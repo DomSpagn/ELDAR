@@ -1,0 +1,5 @@
+IFmax: Max. DC Forward Current
+VFmax: Max. Forward Voltage
+VRmax: Max. Reverse Voltage
+PD: Power Dissipation
+Lp: Peak Wavelength
