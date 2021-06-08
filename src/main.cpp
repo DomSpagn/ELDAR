@@ -19,6 +19,7 @@ int main(int argc, char **argv)
         cout << blue << "\ta: " << white << "Add device" << endl;
         cout << blue << "\td: " << white << "Delete device" << endl;
         cout << blue << "\te: " << white << "Edit device" << endl;
+        cout << blue << "\tg: " << white << "Read glossary" << endl;
         cout << blue << "\ti: " << white << "Software info" << endl;
         cout << blue << "\ts: " << white << "Search device" << endl;
         cout << blue << "\tt: " << white << "Transfer DB files on cloud" << endl;
@@ -46,6 +47,10 @@ int main(int argc, char **argv)
 
                 case 'e':                
                     result = device.edit_mgr();
+                break;
+
+                case 'g':                
+                    result = device.glossary_mgr();
                 break;
 
                 case 'i':                

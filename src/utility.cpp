@@ -561,3 +561,56 @@ bool load_software_info(void)
     file.close();
     return true;
 }
+
+
+bool print_glossary(const char *filename)
+{
+    bool ret = false;
+    DIR *dir; struct dirent *diread;
+    vector<string> files;
+
+    if ((dir = opendir(TXT_FILE_PATH)) != nullptr) 
+    {
+        while ((diread = readdir(dir)) != nullptr)
+        {
+            if(diread->d_name[0] != '.' && diread->d_name[1] != '.')
+                files.push_back(diread->d_name);
+        }
+        closedir (dir);
+    } 
+    else 
+    {
+        cerr << endl << red << "Cannot open directory..." << white << endl;
+        return ret;
+    }
+
+    for (auto file : files) 
+    {        
+        if(file == filename)
+        {
+            fstream file;
+            file.open(string(TXT_FILE_PATH) + string(filename), ios::in); 
+
+            if(!file)
+            {
+                cerr << endl << red << "File " << DEVICE_TYPE_FILE << " cannot be opened!" << white << endl;
+                ret = false;
+            }
+            else
+            {
+                //Read line by line
+                string line;
+                while(getline(file, line))
+                    cout << blue << line.substr(0, line.find(" ")) << white << line.substr(line.find(" ")) << white << endl;
+            }
+            file.close();
+            ret = true;
+            break;
+        }
+    }
+
+    if(!ret)
+        cout << endl << red << "Glossary file is not present..." << white << endl;
+
+    return ret;
+}
