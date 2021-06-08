@@ -1,0 +1,6 @@
+IFmax: Max. Forward Current
+VFmax: Max. Forward Voltage
+PD: Power Dissipation
+Cj: Junction Capacitance
+VZ: Zener Voltage
+IZ: Zener Current

@@ -1,0 +1,3 @@
+L: Inductance
+IR: Rated Current
+ISAT: Saturation Current

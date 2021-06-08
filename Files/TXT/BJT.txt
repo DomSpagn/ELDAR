@@ -1,0 +1,6 @@
+VCEOmax: Max. Collector-Emitter Voltage (Open Base)
+VCBOmax: Max. Collector-Base Voltage (Open Emitter)
+VEBOmax: Max. Emitter-Base Voltage (Open Collector)
+ICmax: Max. DC Collector current_rating_IR
+PD: Total Power Dissipation
+hFEmax: Max. DC Current Gain

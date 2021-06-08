@@ -1,0 +1,4 @@
+C: Capacitance
+V: Rated Voltage
+Tolmin: Min. Tolerance
+Tolmax: Max. Tolerance
