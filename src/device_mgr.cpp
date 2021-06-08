@@ -44,6 +44,8 @@ bool device_mgr::add_device(const string &device, map<uint16_t, pair<string, str
         ret = json_mgr.load_device(meta_map, device_vector_tuple, LED_CATEGORY);
     if(device == BJT)
         ret = json_mgr.load_device(meta_map, device_vector_tuple, BJT_CATEGORY);
+    if(device == MOSFET)
+        ret = json_mgr.load_device(meta_map, device_vector_tuple, MOSFET_CATEGORY);
 
     if(!ret)
         return false;
@@ -65,6 +67,8 @@ bool device_mgr::add_device(const string &device, map<uint16_t, pair<string, str
         ret = db_mgr.insert_device(LED_DB, LED, device_vector_tuple);
     if(device == BJT)
         ret = db_mgr.insert_device(BJT_DB, BJT, device_vector_tuple);
+    if(device == MOSFET)
+        ret = db_mgr.insert_device(MOSFET_DB, MOSFET, device_vector_tuple);
 
     return ret;
 }
@@ -119,6 +123,11 @@ bool device_mgr::insert_mgr(void)
         if(json_mgr.retrieve_device_metadata(BJT, meta_map))
             ret = add_device(BJT, meta_map);
     }
+    else if(device_type_in == MOSFET)
+    {
+        if(json_mgr.retrieve_device_metadata(MOSFET, meta_map))
+            ret = add_device(MOSFET, meta_map);
+    }
     else
         cerr << endl << red << "Wrong choice..." << white << endl;
 
@@ -158,6 +167,8 @@ bool device_mgr::delete_mgr(void)
         ret = db_mgr.delete_device(LED_DB, LED);
     else if(device_type_in == BJT)
         ret = db_mgr.delete_device(BJT_DB, BJT);
+    else if(device_type_in == MOSFET)
+        ret = db_mgr.delete_device(MOSFET_DB, MOSFET);
     else
         cerr << endl << red << "Wrong choice..." << white << endl;
   
@@ -234,6 +245,8 @@ bool device_mgr::edit_device(const string &device, const string &code)
         ret = db_mgr.retrieve_current_device_data(LED_DB, LED, code, current_data);
     else if(device == BJT)
         ret = db_mgr.retrieve_current_device_data(BJT_DB, BJT, code, current_data);
+    else if(device == MOSFET)
+        ret = db_mgr.retrieve_current_device_data(MOSFET_DB, MOSFET, code, current_data);
 
     if(!ret)
         return false;
@@ -264,6 +277,8 @@ bool device_mgr::edit_device(const string &device, const string &code)
         ret = db_mgr.update_device(LED_DB, LED, code, new_data);    
     if(device == BJT)
         ret = db_mgr.update_device(BJT_DB, BJT, code, new_data);    
+    if(device == MOSFET)
+        ret = db_mgr.update_device(MOSFET_DB, MOSFET, code, new_data);    
 
     return ret;
 }
@@ -294,7 +309,8 @@ bool device_mgr::edit_mgr(void)
        device_type_in != INDUCTOR && 
        device_type_in != DIODE &&
        device_type_in != LED &&
-       device_type_in != BJT)
+       device_type_in != BJT &&
+       device_type_in != MOSFET)
     {
         cerr << endl << red << "Wrong choice..." << white << endl;
         return false;
@@ -418,6 +434,24 @@ bool device_mgr::edit_mgr(void)
             break;
         }
     }
+    else if(device_type_in == MOSFET)
+    {        
+        switch(db_mgr.select_device(MOSFET_DB, MOSFET, code_in))
+        {
+            case db_mgr::SEARCH_FOUND:
+            {
+                if(json_mgr.retrieve_device_metadata(MOSFET, meta_map))
+                    ret = edit_device(MOSFET, code_in);
+            }
+            break;
+
+            case db_mgr::SEARCH_NOT_FOUND:
+            {
+                cerr << endl << yellow << "Not code found!" << white << endl;
+            }
+            break;
+        }
+    }
 
     return ret;
 }
@@ -457,6 +491,8 @@ bool device_mgr::search_by_type(void)
         ret = db_mgr.show_table(LED_DB, LED);
     else if(device_type_in == BJT)
         ret = db_mgr.show_table(BJT_DB, BJT);
+    else if(device_type_in == MOSFET)
+        ret = db_mgr.show_table(MOSFET_DB, MOSFET);
     else
         cerr << endl << red << "Wrong choice..." << white << endl;
 
@@ -684,8 +720,76 @@ bool device_mgr::search_mgr(void)
 
 bool device_mgr::transfer_mgr(void)
 {
+    return db_mgr.copy_db_to_cloud();
+}
+
+
+/*******************************************************************************************************/
+/*                                          GLOSSARY section                                           */ 
+/*******************************************************************************************************/
+bool device_mgr::glossary_mgr(void)
+{
     bool ret = false;
     string selection;
 
-    return db_mgr.copy_db_to_cloud();
+    cout << endl;
+    cout << blue << "Digit correct number to select device glossary: " << endl << endl;
+    cout << blue << "\t1) " << white << "resistor" << endl;
+    cout << blue << "\t2) " << white << "capacitor" << endl;
+    cout << blue << "\t3) " << white << "inductor" << endl;
+    cout << blue << "\t4) " << white << "diode" << endl;
+    cout << blue << "\t5) " << white << "LED" << endl;
+    cout << blue << "\t6) " << white << "BJT" << endl;    
+    cout << blue << "\t7) " << white << "MOSFET" << endl;    
+
+    cout << endl << white << "in: ";
+    cin >> selection;
+    
+
+    cout << endl;
+    
+    try
+    {
+        switch(stoul(selection, nullptr, 10))
+        {
+            case 1:
+                ret = print_glossary(RESISTOR_GLOSSARY);
+            break;
+
+            case 2:
+                ret = print_glossary(CAPACITOR_GLOSSARY);
+            break;
+
+            case 3:
+                ret = print_glossary(INDUCTOR_GLOSSARY);
+            break;
+
+            case 4:
+                ret = print_glossary(DIODE_GLOSSARY);
+            break;
+
+            case 5:
+                ret = print_glossary(LED_GLOSSARY);
+            break;
+
+            case 6:
+                ret = print_glossary(BJT_GLOSSARY);
+            break;
+
+            case 7:
+                ret = print_glossary(MOSFET_GLOSSARY);
+            break;
+
+            default:
+                cerr << endl << red << "Wrong input..." << white << endl;
+                ret = false;
+        }
+    }
+    catch(...)
+    {
+        cerr << endl << red << "Wrong input..." << white << endl;
+        ret = false;
+    }
+
+    return ret;
 }

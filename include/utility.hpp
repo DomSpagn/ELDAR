@@ -38,3 +38,4 @@ void print_device_tuple_vector(std::vector<std::tuple<std::string, std::string, 
 
 answer is_validated(void);
 bool load_software_info(void);
+bool print_glossary(const char *device);

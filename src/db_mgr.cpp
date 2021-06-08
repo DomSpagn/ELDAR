@@ -127,9 +127,10 @@ bool db_mgr::show_table(const char *device_db, const string &table)
 {
     if(!is_file_present(DB_FILE_PATH, device_db))
     {
-        cout << endl << yellow << "The selected DB is currently empty" << white << endl;
-        return true;
+        cout << endl << red << "The selected DB is not present" << white << endl;
+        return false;
     }
+
     return show_sql_table(device_db, table);
 }
 

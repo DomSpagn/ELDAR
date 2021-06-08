@@ -18,6 +18,7 @@ Software Description.
         - diodes
         - LEDs
         - bipolar transistors
+        - mos transistors
 
     Adopted technologies:
         - C++17
@@ -26,8 +27,18 @@ Software Description.
 
 -------------------------------------------------------
 
+Version: 1.0.5
+Release Date: 06/06/2021
+Author: Domenico Spagnuolo (aka Mimmo)
+
+INFO:
+
+    - Implemented MOSFET management
+
+-------------------------------------------------------
+
 Version: 1.0.4
-Release Date: 05/06/2021
+Release Date: 06/06/2021
 Author: Domenico Spagnuolo (aka Mimmo)
 
 INFO:
