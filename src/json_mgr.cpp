@@ -140,6 +140,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
                 switch(check_uint8_validity(input[i], u8_value))
                 {
                     case NOT_VALID:
+                        cerr << endl << red << "Wrong value..." << white << endl;
                         return false;
                     break;
 
@@ -157,6 +158,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
                 switch(check_uint16_validity(input[i], u16_value))
                 {
                     case NOT_VALID:
+                        cerr << endl << red << "Wrong value..." << white << endl;
                         return false;
                     break;
 
@@ -174,6 +176,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
                 switch(check_uint32_validity(input[i], u32_value))
                 {
                     case NOT_VALID:
+                        cerr << endl << red << "Wrong value..." << white << endl;
                         return false;
                     break;
 
@@ -191,6 +194,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
                 switch(check_uint64_validity(input[i], u64_value))
                 {
                     case NOT_VALID:
+                        cerr << endl << red << "Wrong value..." << white << endl;
                         return false;
                     break;
 
@@ -208,6 +212,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
                 switch(check_int8_validity(input[i], i8_value))
                 {
                     case NOT_VALID:
+                        cerr << endl << red << "Wrong value..." << white << endl;
                         return false;
                     break;
 
@@ -225,6 +230,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
                 switch(check_int16_validity(input[i], i16_value))
                 {
                     case NOT_VALID:
+                        cerr << endl << red << "Wrong value..." << white << endl;
                         return false;
                     break;
 
@@ -242,6 +248,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
                 switch(check_int32_validity(input[i], i32_value))
                 {
                     case NOT_VALID:
+                        cerr << endl << red << "Wrong value..." << white << endl;
                         return false;
                     break;
 
@@ -259,6 +266,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
                 switch(check_int64_validity(input[i], i64_value))
                 {
                     case NOT_VALID:
+                        cerr << endl << red << "Wrong value..." << white << endl;
                         return false;
                     break;
 
@@ -276,6 +284,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
                 switch(check_float_validity(input[i], f_value))
                 {
                     case NOT_VALID:
+                        cerr << endl << red << "Wrong value..." << white << endl;
                         return false;
                     break;
 
@@ -293,6 +302,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
                 switch(check_double_validity(input[i], d_value))
                 {
                     case NOT_VALID:
+                        cerr << endl << red << "Wrong value..." << white << endl;
                         return false;
                     break;
 
@@ -310,6 +320,7 @@ bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_m
                 switch(check_string_validity(input[i]))
                 {
                     case NOT_VALID:
+                        cerr << endl << red << "Wrong value..." << white << endl;
                         return false;
                     break;
 
