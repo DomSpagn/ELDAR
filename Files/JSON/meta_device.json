@@ -5,7 +5,7 @@
         "category" : "string",
         "manufacturer" : "string",
         "R" : "double",
-        "P" : "float",
+        "PD" : "float",
         "Tolmin" : "int16",
         "Tolmax" : "int16",
         "size" : "string",        

@@ -1,4 +1,4 @@
 R: Resistance
-P: Rated Power
+PD: Rated Power
 Tolmin: Min. Tolerance
 Tolmax: Max. Tolerance
