@@ -30,45 +30,30 @@ device_mgr::~device_mgr()
 bool device_mgr::add_device(const string &device, map<uint16_t, pair<string, string>> &meta_map)
 {
     bool ret = false;        
-    vector<tuple<string, string, any>>device_vector_tuple;
+    vector<pair<string, string>> input_data;
 
-    if(device == RESISTOR)
-        ret = json_mgr.load_device(meta_map, device_vector_tuple, RESISTOR_CATEGORY);
-    if(device == CAPACITOR)
-        ret = json_mgr.load_device(meta_map, device_vector_tuple, CAPACITOR_CATEGORY);
-    if(device == INDUCTOR)
-        ret = json_mgr.load_device(meta_map, device_vector_tuple, INDUCTOR_CATEGORY);
-    if(device == DIODE)
-        ret = json_mgr.load_device(meta_map, device_vector_tuple, DIODE_CATEGORY);
-    if(device == LED)
-        ret = json_mgr.load_device(meta_map, device_vector_tuple, LED_CATEGORY);
-    if(device == BJT)
-        ret = json_mgr.load_device(meta_map, device_vector_tuple, BJT_CATEGORY);
-    if(device == MOSFET)
-        ret = json_mgr.load_device(meta_map, device_vector_tuple, MOSFET_CATEGORY);
-
-    if(!ret)
+    if(!json_mgr.load_device(meta_map, input_data))
         return false;
 
-    print_device_tuple_vector(device_vector_tuple, INSERT);
+    print_device_info_to_be_confirmed(input_data, INSERT);
 
     if (is_validated() == NOT_CONFIRMED)
         return false;
 
     if(device == RESISTOR)
-        ret = db_mgr.insert_device(RESISTOR_DB, RESISTOR, device_vector_tuple);
+        ret = db_mgr.insert_device(RESISTOR_DB, RESISTOR, input_data);
     if(device == CAPACITOR)
-        ret = db_mgr.insert_device(CAPACITOR_DB, CAPACITOR, device_vector_tuple);
+        ret = db_mgr.insert_device(CAPACITOR_DB, CAPACITOR, input_data);
     if(device == INDUCTOR)
-        ret = db_mgr.insert_device(INDUCTOR_DB, INDUCTOR, device_vector_tuple);
+        ret = db_mgr.insert_device(INDUCTOR_DB, INDUCTOR, input_data);
     if(device == DIODE)
-        ret = db_mgr.insert_device(DIODE_DB, DIODE, device_vector_tuple);
+        ret = db_mgr.insert_device(DIODE_DB, DIODE, input_data);
     if(device == LED)
-        ret = db_mgr.insert_device(LED_DB, LED, device_vector_tuple);
+        ret = db_mgr.insert_device(LED_DB, LED, input_data);
     if(device == BJT)
-        ret = db_mgr.insert_device(BJT_DB, BJT, device_vector_tuple);
+        ret = db_mgr.insert_device(BJT_DB, BJT, input_data);
     if(device == MOSFET)
-        ret = db_mgr.insert_device(MOSFET_DB, MOSFET, device_vector_tuple);
+        ret = db_mgr.insert_device(MOSFET_DB, MOSFET, input_data);
 
     return ret;
 }
@@ -77,56 +62,27 @@ bool device_mgr::add_device(const string &device, map<uint16_t, pair<string, str
 bool device_mgr::insert_mgr(void)
 {
     bool ret = false;
+    list<string> device_list;
     string device_type_in;
     vector<string> meta_structure;
     map<uint16_t, pair<string, string>> meta_map;
 
-    if(!list_types(true))
+    if(!list_devices(device_list, true))
         return false;
 
     cout << endl << white << "in: " << white;
     cin >> device_type_in;    
 
-    if(!check_input_validity(device_type_in, SIMPLE_ALPHA))
+    if(!check_range_validity(device_type_in, ALPHANUMERIC))
     {
         cerr << endl << red << "Input not allowed..." << white << endl;
         return false; 
     }
 
-    if(device_type_in == RESISTOR)
+    if(find(begin(device_list), end(device_list), device_type_in) != end(device_list))
     {
-        if(json_mgr.retrieve_device_metadata(RESISTOR, meta_map))
-            ret = add_device(RESISTOR, meta_map);
-    }
-    else if(device_type_in == CAPACITOR)
-    {
-        if(json_mgr.retrieve_device_metadata(CAPACITOR, meta_map))
-            ret = add_device(CAPACITOR, meta_map);
-    }
-    else if(device_type_in == INDUCTOR)
-    {
-        if(json_mgr.retrieve_device_metadata(INDUCTOR, meta_map))
-            ret = add_device(INDUCTOR, meta_map);
-    }
-    else if(device_type_in == DIODE)
-    {
-        if(json_mgr.retrieve_device_metadata(DIODE, meta_map))
-            ret = add_device(DIODE, meta_map);
-    }
-    else if(device_type_in == LED)
-    {
-        if(json_mgr.retrieve_device_metadata(LED, meta_map))
-            ret = add_device(LED, meta_map);
-    }
-    else if(device_type_in == BJT)
-    {
-        if(json_mgr.retrieve_device_metadata(BJT, meta_map))
-            ret = add_device(BJT, meta_map);
-    }
-    else if(device_type_in == MOSFET)
-    {
-        if(json_mgr.retrieve_device_metadata(MOSFET, meta_map))
-            ret = add_device(MOSFET, meta_map);
+        if(json_mgr.retrieve_device_metadata(device_type_in, meta_map))
+            ret = add_device(device_type_in, meta_map);
     }
     else
         cerr << endl << red << "Wrong choice..." << white << endl;
@@ -141,15 +97,16 @@ bool device_mgr::insert_mgr(void)
 bool device_mgr::delete_mgr(void)
 {
     bool ret = false;
+    list<string> device_list;
     string device_type_in;
 
-    if(!list_types(false))
+    if(!list_devices(device_list, false))
         return false;
 
     cout << endl << white << "in: " << white;
     cin >> device_type_in;    
 
-    if(!check_input_validity(device_type_in, SIMPLE_ALPHA))
+    if(!check_range_validity(device_type_in, ALPHANUMERIC))
     {
         cerr << endl << red << "Input not allowed..." << white << endl;
         return false; 
@@ -179,47 +136,31 @@ bool device_mgr::delete_mgr(void)
 /*******************************************************************************************************/
 /*                                          EDIT section                                               */ 
 /*******************************************************************************************************/
-bool device_mgr::load_changes(vector<tuple<string, string, any>> &current_data, vector<tuple<string, string, any>> &new_data)
+bool device_mgr::load_changes(vector<pair<string, string>> &current_info, vector<pair<string, string>> &new_data)
 {
-    cout << endl << blue << "Insert new values or press ENTER to skip:" << white << endl;    
-    string input[current_data.size()];
+    cout << endl << blue << "Insert new values (press ENTER to skip):" << white << endl;    
+    string input[current_info.size()];
     unsigned int i = 0;
-    tuple<string, string, any> aux_tuple;
-
-    int64_t int_value;
-    double real_value;    
 
     cin.ignore();
-    for(auto data : current_data)
+    for(auto data : current_info)
     {
-        string key = get<0>(data);
-        string type = get<1>(data);
-        any value = get<2>(data);
+        string key = data.first;
+        string validity_type = data.second;        
 
         if(key == "CATEGORY")
             continue;
 
-        cout << white << key << " (" << yellow << type << white << "): "; 
+        cout << white << key << ": ";
         getline(cin, input[i]);
-
-        if(!check_input_validity(input[i], SIMPLE_ALPHA))
-        {
-            cerr << endl << red << "Input not allowed..." << white << endl;
-            return false; 
-        }
 
         if(input[i].length() == 0)
             continue;
-        else if(type == "integer" && check_int64_validity(input[i], int_value) == VALID)
-            aux_tuple = make_tuple(key, type, int_value);
-        else if(type == "real" && check_double_validity(input[i], real_value) == VALID)
-            aux_tuple = make_tuple(key, type, real_value);
-        else if(type == "text" && check_string_validity(input[i]) == VALID)
-            aux_tuple = make_tuple(key, type, input[i]);
-        else
+        
+        std::pair<string, string> aux_pair = make_pair(key, validity_type);
+        if(!is_input_data_correct(aux_pair, input[i], new_data))
             return false;
 
-        new_data.push_back(aux_tuple);
         i++;
     }
 
@@ -227,11 +168,12 @@ bool device_mgr::load_changes(vector<tuple<string, string, any>> &current_data, 
 }
 
 
-bool device_mgr::edit_device(const string &device, const string &code)
+bool device_mgr::edit_device(const string &device, map<uint16_t, pair<string, string>> &meta_map, const string &code)
 {
     bool ret = false;        
-    vector<tuple<string, string, any>> current_data;
-    vector<tuple<string, string, any>> new_data;
+    vector<pair<string, string>> current_data;
+    vector<pair<string, string>> new_data;
+    vector<pair<string, string>> current_info;
 
     if(device == RESISTOR)
         ret = db_mgr.retrieve_current_device_data(RESISTOR_DB, RESISTOR, code, current_data);
@@ -251,7 +193,10 @@ bool device_mgr::edit_device(const string &device, const string &code)
     if(!ret)
         return false;
 
-    if(!load_changes(current_data, new_data))
+    for(auto meta_pair : meta_map)
+        current_info.push_back(make_pair(meta_pair.second.first, meta_pair.second.second));
+
+    if(!load_changes(current_info, new_data))
         return false;
     
     if(new_data.size() == 0)
@@ -260,7 +205,7 @@ bool device_mgr::edit_device(const string &device, const string &code)
         return true;
     }
 
-    print_device_tuple_vector(new_data, UPDATE);
+    print_device_info_to_be_confirmed(new_data, UPDATE);
 
     if (is_validated() == NOT_CONFIRMED)
         return false;
@@ -287,18 +232,19 @@ bool device_mgr::edit_device(const string &device, const string &code)
 bool device_mgr::edit_mgr(void)
 {
     bool ret = false;    
+    list<string> device_list;
     string device_type_in;
     string code_in;
     vector<string> meta_structure;
     map<uint16_t, pair<string, string>> meta_map;
 
-    if(!list_types(false))
+    if(!list_devices(device_list, false))
         return false;
 
     cout << endl << white << "in: " << white;
     cin >> device_type_in;
 
-    if(!check_input_validity(device_type_in, SIMPLE_ALPHA))
+    if(!check_range_validity(device_type_in, ALPHANUMERIC))
     {
         cerr << endl << red << "Input not allowed..." << white << endl;
         return false; 
@@ -320,7 +266,7 @@ bool device_mgr::edit_mgr(void)
     cout << endl << white << "in: " << white;    
     cin >> code_in;
 
-    if(!check_input_validity(code_in, SIMPLE_ALPHA))
+    if(!check_range_validity(code_in, ALPHANUMERIC))
     {
         cerr << endl << red << "Input not allowed..." << white << endl;
         return false; 
@@ -333,7 +279,7 @@ bool device_mgr::edit_mgr(void)
             case db_mgr::SEARCH_FOUND:
             {
                 if(json_mgr.retrieve_device_metadata(RESISTOR, meta_map))
-                    ret = edit_device(RESISTOR, code_in);
+                    ret = edit_device(RESISTOR, meta_map, code_in);
             }
             break;
 
@@ -351,7 +297,7 @@ bool device_mgr::edit_mgr(void)
             case db_mgr::SEARCH_FOUND:
             {
                 if(json_mgr.retrieve_device_metadata(CAPACITOR, meta_map))
-                    ret = edit_device(CAPACITOR, code_in);
+                    ret = edit_device(CAPACITOR, meta_map, code_in);
             }
             break;
 
@@ -369,7 +315,7 @@ bool device_mgr::edit_mgr(void)
             case db_mgr::SEARCH_FOUND:
             {
                 if(json_mgr.retrieve_device_metadata(INDUCTOR, meta_map))
-                    ret = edit_device(INDUCTOR, code_in);
+                    ret = edit_device(INDUCTOR, meta_map, code_in);
             }
             break;
 
@@ -387,7 +333,7 @@ bool device_mgr::edit_mgr(void)
             case db_mgr::SEARCH_FOUND:
             {
                 if(json_mgr.retrieve_device_metadata(DIODE, meta_map))
-                    ret = edit_device(DIODE, code_in);
+                    ret = edit_device(DIODE, meta_map, code_in);
             }
             break;
 
@@ -405,7 +351,7 @@ bool device_mgr::edit_mgr(void)
             case db_mgr::SEARCH_FOUND:
             {
                 if(json_mgr.retrieve_device_metadata(LED, meta_map))
-                    ret = edit_device(LED, code_in);
+                    ret = edit_device(LED, meta_map, code_in);
             }
             break;
 
@@ -423,7 +369,7 @@ bool device_mgr::edit_mgr(void)
             case db_mgr::SEARCH_FOUND:
             {
                 if(json_mgr.retrieve_device_metadata(BJT, meta_map))
-                    ret = edit_device(BJT, code_in);
+                    ret = edit_device(BJT, meta_map, code_in);
             }
             break;
 
@@ -441,7 +387,7 @@ bool device_mgr::edit_mgr(void)
             case db_mgr::SEARCH_FOUND:
             {
                 if(json_mgr.retrieve_device_metadata(MOSFET, meta_map))
-                    ret = edit_device(MOSFET, code_in);
+                    ret = edit_device(MOSFET, meta_map, code_in);
             }
             break;
 
@@ -463,17 +409,18 @@ bool device_mgr::edit_mgr(void)
 bool device_mgr::search_by_type(void)
 {
     bool ret = false;
+    list<string> device_list;
     string device_type_in;
     
     cout << endl << blue << "Choose device type among: " << endl << endl;
 
-    if(!list_types(false))
+    if(!list_devices(device_list, false))
         return false;
 
     cout << endl << white << "in: " << white;
     cin >> device_type_in;    
 
-    if(!check_input_validity(device_type_in, SIMPLE_ALPHA))
+    if(!check_range_validity(device_type_in, ALPHANUMERIC))
     {
         cerr << endl << red << "Input not allowed..." << white << endl;
         return false; 
@@ -514,7 +461,7 @@ bool device_mgr::search_by_code(void)
     cout << endl << white << "in: " << white;
     cin >> code_in;
 
-    if(!check_input_validity(code_in, SIMPLE_ALPHA))
+    if(!check_range_validity(code_in, ALPHANUMERIC))
     {
         cerr << endl << red << "Input not allowed..." << white << endl;
         return false; 
@@ -545,7 +492,7 @@ bool device_mgr::search_by_manufacturer(void)
     cout << endl << white << "in: " << white;
     cin >> manufacturer_in;    
 
-    if(!check_input_validity(manufacturer_in, SIMPLE_ALPHA))
+    if(!check_range_validity(manufacturer_in, ALPHANUMERIC))
     {
         cerr << endl << red << "Input not allowed..." << white << endl;
         return false; 
@@ -575,7 +522,7 @@ bool device_mgr::search_by_mounting_type(void)
     cout << endl << white << "in: " << white;
     cin >> mounting_type_in;    
 
-    if(!check_input_validity(mounting_type_in, SIMPLE_ALPHA))
+    if(!check_range_validity(mounting_type_in, ALPHANUMERIC))
     {
         cerr << endl << red << "Input not allowed..." << white << endl;
         return false; 
@@ -605,7 +552,7 @@ bool device_mgr::search_by_category(void)
     cout << endl << white << "in: " << white;
     cin >> category_in;    
 
-    if(!check_input_validity(category_in, SIMPLE_ALPHA))
+    if(!check_range_validity(category_in, ALPHANUMERIC))
     {
         cerr << endl << red << "Input not allowed..." << white << endl;
         return false; 
@@ -635,7 +582,7 @@ bool device_mgr::search_by_description(void)
     cout << endl << white << "in: " << white;
     cin >> description_in;    
 
-    if(!check_input_validity(description_in, SIMPLE_ALPHA))
+    if(!check_range_validity(description_in, ALPHANUMERIC))
     {
         cerr << endl << red << "Input not allowed..." << white << endl;
         return false; 

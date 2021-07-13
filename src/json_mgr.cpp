@@ -24,16 +24,12 @@ json_mgr::~json_mgr()
 }
 
 
-bool json_mgr::get_meta_info_from_json(const string &device, const Value &device_info, map<uint16_t, pair<string, string>> &meta_map)
+bool json_mgr::get_meta_info_from_json(const Value &device_info, map<uint16_t, pair<string, string>> &meta_map)
 {
     uint8_t index = 0;
     pair<string, string> aux_pair;
-    Value::ConstMemberIterator itr = device_info.MemberBegin();
 
-    if(itr->value.GetString() != device)
-        return false;
-
-    for (itr = device_info.MemberBegin(); itr != device_info.MemberEnd(); ++itr)
+    for (Value::ConstMemberIterator itr = device_info.MemberBegin(); itr != device_info.MemberEnd(); ++itr)
     {        
         aux_pair = make_pair(itr->name.GetString(), itr->value.GetString());
         meta_map[index] = aux_pair;
@@ -64,28 +60,11 @@ bool json_mgr::retrieve_device_metadata(const string &device, map<uint16_t, pair
     for (SizeType i = 0; i < meta_doc.Size(); i++)
     {
         assert(meta_doc[i].IsObject());
-
-        if(device == RESISTOR)
-            if(get_meta_info_from_json(device, meta_doc[i], meta_map))
+        if(meta_doc[i].HasMember(device.c_str()))
+        {            
+            if(get_meta_info_from_json(meta_doc[i][device.c_str()], meta_map))
                 return true;
-        if(device == CAPACITOR)
-            if(get_meta_info_from_json(device, meta_doc[i], meta_map))
-                return true;
-        if(device == INDUCTOR)
-            if(get_meta_info_from_json(device, meta_doc[i], meta_map))
-                return true;
-        if(device == DIODE)
-            if(get_meta_info_from_json(device, meta_doc[i], meta_map))
-                return true;
-        if(device == LED)
-            if(get_meta_info_from_json(device, meta_doc[i], meta_map))
-                return true;
-        if(device == BJT)
-            if(get_meta_info_from_json(device, meta_doc[i], meta_map))
-                return true;
-        if(device == MOSFET)
-            if(get_meta_info_from_json(device, meta_doc[i], meta_map))
-                return true;
+        }
     }
 
     cerr << endl << red << "Cannot retrieve device metadata" << white << endl;
@@ -93,264 +72,34 @@ bool json_mgr::retrieve_device_metadata(const string &device, map<uint16_t, pair
 }
 
 
-bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple, const string &category)
+bool json_mgr::load_device_meta_info(map<uint16_t, pair<string, string>> &meta_map, vector<pair<string, string>> &input_data)
 {
     string input[meta_map.size()];
     unsigned int i = 0;
-    tuple<string, string, any> aux_tuple;
-    
-    uint8_t u8_value;
-    uint16_t u16_value;
-    uint32_t u32_value;
-    uint64_t u64_value;
-    int8_t i8_value;
-    int16_t i16_value;
-    int32_t i32_value;
-    int64_t i64_value;
-    float f_value;
-    double d_value;    
 
     cin.ignore();
-    cout << endl << blue << "Insert the following data (press ENTER to leave an empty field):" << white << endl << endl;
+    cout << endl << blue << "Insert the following data (press ENTER to skip):" << white << endl << endl;
     for(auto meta_elem : meta_map)
     {        
-        if(meta_elem.second.first == "device")
-        {
-            aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, string());
-            device_vector_tuple.push_back(aux_tuple);            
-        }
-        else if(meta_elem.second.first == "category")
-        {
-            aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, category);
-            device_vector_tuple.push_back(aux_tuple);            
-        }
+        if(meta_elem.second.first == "category")
+            input_data.push_back(make_pair(meta_elem.second.first, meta_elem.second.second));            
         else
         {            
             cout << meta_elem.first << ") " << blue << meta_elem.second.first << ": " << white;            
             getline(cin, input[i]);
-
-            if(!check_input_validity(input[i], SIMPLE_ALPHA))
-            {
-                cerr << endl << red << "Input not allowed..." << white << endl;
-                return false; 
-            }
-
-            if(meta_elem.second.second == "uint8")
-            {
-                switch(check_uint8_validity(input[i], u8_value))
-                {
-                    case NOT_VALID:
-                        cerr << endl << red << "Wrong value..." << white << endl;
-                        return false;
-                    break;
-
-                    case VALID:
-                        aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, u8_value);
-                    break;
-
-                    case SKIPPED:
-                        aux_tuple = make_tuple(meta_elem.second.first, "string", string("-"));
-                    break;
-                }
-            }
-            if(meta_elem.second.second == "uint16")
-            {
-                switch(check_uint16_validity(input[i], u16_value))
-                {
-                    case NOT_VALID:
-                        cerr << endl << red << "Wrong value..." << white << endl;
-                        return false;
-                    break;
-
-                    case VALID:
-                        aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, u16_value);
-                    break;
-
-                    case SKIPPED:
-                        aux_tuple = make_tuple(meta_elem.second.first, "string", string("-"));
-                    break;
-                }
-            }
-            if(meta_elem.second.second == "uint32")
-            {
-                switch(check_uint32_validity(input[i], u32_value))
-                {
-                    case NOT_VALID:
-                        cerr << endl << red << "Wrong value..." << white << endl;
-                        return false;
-                    break;
-
-                    case VALID:
-                        aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, u32_value);                    
-                    break;
-
-                    case SKIPPED:
-                        aux_tuple = make_tuple(meta_elem.second.first, "string", string("-"));
-                    break;
-                }
-            }
-            if(meta_elem.second.second == "uint64")
-            {
-                switch(check_uint64_validity(input[i], u64_value))
-                {
-                    case NOT_VALID:
-                        cerr << endl << red << "Wrong value..." << white << endl;
-                        return false;
-                    break;
-
-                    case VALID:
-                        aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, u64_value);
-                    break;
-
-                    case SKIPPED:
-                        aux_tuple = make_tuple(meta_elem.second.first, "string", string("-"));
-                    break;
-                }
-            }
-            if(meta_elem.second.second == "int8")
-            {        
-                switch(check_int8_validity(input[i], i8_value))
-                {
-                    case NOT_VALID:
-                        cerr << endl << red << "Wrong value..." << white << endl;
-                        return false;
-                    break;
-
-                    case VALID:
-                        aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, i8_value);
-                    break;
-
-                    case SKIPPED:
-                        aux_tuple = make_tuple(meta_elem.second.first, "string", string("-"));
-                    break;
-                }
-            }
-            if(meta_elem.second.second == "int16")
-            {
-                switch(check_int16_validity(input[i], i16_value))
-                {
-                    case NOT_VALID:
-                        cerr << endl << red << "Wrong value..." << white << endl;
-                        return false;
-                    break;
-
-                    case VALID:
-                        aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, i16_value);
-                    break;
-
-                    case SKIPPED:                        
-                        aux_tuple = make_tuple(meta_elem.second.first, "string", string("-"));
-                    break;
-                }
-            }
-            if(meta_elem.second.second == "int32")
-            {
-                switch(check_int32_validity(input[i], i32_value))
-                {
-                    case NOT_VALID:
-                        cerr << endl << red << "Wrong value..." << white << endl;
-                        return false;
-                    break;
-
-                    case VALID:
-                        aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, i32_value);
-                    break;
-
-                    case SKIPPED:
-                        aux_tuple = make_tuple(meta_elem.second.first, "string", string("-"));
-                    break;
-                }
-            }
-            if(meta_elem.second.second == "int64")
-            {
-                switch(check_int64_validity(input[i], i64_value))
-                {
-                    case NOT_VALID:
-                        cerr << endl << red << "Wrong value..." << white << endl;
-                        return false;
-                    break;
-
-                    case VALID:
-                        aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, i64_value);
-                    break;
-
-                    case SKIPPED:
-                        aux_tuple = make_tuple(meta_elem.second.first, "string", string("-"));
-                    break;
-                }                
-            }
-            if(meta_elem.second.second == "float")
-            {
-                switch(check_float_validity(input[i], f_value))
-                {
-                    case NOT_VALID:
-                        cerr << endl << red << "Wrong value..." << white << endl;
-                        return false;
-                    break;
-
-                    case VALID:
-                        aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, f_value);
-                    break;
-
-                    case SKIPPED:                        
-                        aux_tuple = make_tuple(meta_elem.second.first, "string", string("-"));
-                    break;
-                }
-            }
-            if(meta_elem.second.second == "double")
-            {
-                switch(check_double_validity(input[i], d_value))
-                {
-                    case NOT_VALID:
-                        cerr << endl << red << "Wrong value..." << white << endl;
-                        return false;
-                    break;
-
-                    case VALID:
-                        aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, d_value);
-                    break;
-
-                    case SKIPPED:
-                        aux_tuple = make_tuple(meta_elem.second.first, "string", string("-"));
-                    break;
-                }                
-            }
-            if(meta_elem.second.second == "string")
-            {
-                switch(check_string_validity(input[i]))
-                {
-                    case NOT_VALID:
-                        cerr << endl << red << "Wrong value..." << white << endl;
-                        return false;
-                    break;
-
-                    case VALID:
-                        aux_tuple = make_tuple(meta_elem.second.first, meta_elem.second.second, input[i]);
-                    break;
-
-                    case SKIPPED:
-                        if(meta_elem.second.first == "code")
-                        {
-                            cerr << endl << red << "This field cannot be empty..." << white << endl;
-                            return false;
-                        }
-                        aux_tuple = make_tuple(meta_elem.second.first, "string", string("-"));
-                    break;
-                }                
-            }
-            
-            device_vector_tuple.push_back(aux_tuple);
+            std::pair<string, string> aux_pair = make_pair(meta_elem.second.first, meta_elem.second.second);
+            if(!is_input_data_correct(aux_pair, input[i], input_data))
+                return false;
             i++;
         }        
     }
-
     return true;
 }
 
 
-bool json_mgr::load_device(map<uint16_t, pair<string, string>> &meta_map, vector<tuple<string, string, any>> &device_vector_tuple, const string &category)
+bool json_mgr::load_device(map<uint16_t, pair<string, string>> &meta_map, vector<pair<string, string>> &input_data)
 {
-    if(!load_device_meta_info(meta_map, device_vector_tuple, category))
+    if(!load_device_meta_info(meta_map, input_data))
         return false;
 
     //Clean meta and device maps

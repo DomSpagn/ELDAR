@@ -10,7 +10,7 @@ using namespace std;
 /*******************************************************************************************************/
 /*                                          CREATE query                                               */ 
 /*******************************************************************************************************/
-string create_table(const string &table, vector<tuple<string, string, any>> &device_vector_tuple)
+string create_table(const string &table, vector<pair<string, string>> &device_info)
 {
     unsigned int index = 0;
     string column_name;
@@ -20,40 +20,27 @@ string create_table(const string &table, vector<tuple<string, string, any>> &dev
     string root = "CREATE TABLE IF NOT EXISTS " + table + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
     
     //Each body in this loop is filled with its name, type and constraints
-    for (const auto& tuple_elem : device_vector_tuple)
+    for (const auto& elem_pair : device_info)
     {
         ++index;
-        string meta_name = get<0>(tuple_elem);
-        string meta_type = get<1>(tuple_elem);
+        string meta_name = elem_pair.first;        
 
-        if(meta_name == "device")
-            continue;
-        else
-        {
-            transform(meta_name.begin(), meta_name.end(), meta_name.begin(), ::toupper);            
-            column_name = meta_name;
-        }
-
-        if (meta_type == "uint8" || meta_type == "uint16" || meta_type == "uint32" || meta_type == "uint64" || meta_type == "int8" || meta_type == "int16" || meta_type == "int32" || meta_type == "int64")
-            type = "INTEGER";
-        else if(meta_type == "float" || meta_type == "double")
-            type = "REAL";
-        else if(meta_type == "string")
-            type = "TEXT";
-        
-        if(index != device_vector_tuple.size())
+        transform(meta_name.begin(), meta_name.end(), meta_name.begin(), ::toupper);            
+        column_name = meta_name;
+       
+        if(index != device_info.size())
         {
             if(column_name == CODE_PARAMETER)
-                body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT + SPACE + UNIQUE_CONSTRAINT + COMMA + SPACE;
+                body += column_name + SPACE + TEXT + SPACE + NOT_NULL_CONSTRAINT + SPACE + UNIQUE_CONSTRAINT + COMMA + SPACE;
             else
-                body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT + COMMA + SPACE;
+                body += column_name + SPACE + TEXT + SPACE + NOT_NULL_CONSTRAINT + COMMA + SPACE;
         }
         else
         {
             if(column_name == CODE_PARAMETER)
-                body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT + SPACE + UNIQUE_CONSTRAINT;
+                body += column_name + SPACE + TEXT + SPACE + NOT_NULL_CONSTRAINT + SPACE + UNIQUE_CONSTRAINT;
             else
-                body += column_name + SPACE + type + SPACE + NOT_NULL_CONSTRAINT;
+                body += column_name + SPACE + TEXT + SPACE + NOT_NULL_CONSTRAINT;
         }
     }
     
@@ -64,7 +51,7 @@ string create_table(const string &table, vector<tuple<string, string, any>> &dev
 /*******************************************************************************************************/
 /*                                          INSERT query                                               */ 
 /*******************************************************************************************************/
-string insert_row(const string &table, vector<tuple<string, string, any>> &device_vector_tuple)
+string insert_row(const string &table, vector<pair<string, string>> &device_info)
 {
     unsigned int index = 0;
     string body;
@@ -73,39 +60,13 @@ string insert_row(const string &table, vector<tuple<string, string, any>> &devic
 
     string root = "INSERT INTO " + table + SPACE + "VALUES (NULL" + COMMA + SPACE;
 
-    for (const auto& tuple_elem : device_vector_tuple)
+    for (const auto &elem_pair : device_info)
     {
         ++index;
-        string meta_name = get<0>(tuple_elem);
-        string meta_type = get<1>(tuple_elem);
-        any value_in = get<2>(tuple_elem);
+        string meta_name = elem_pair.first;
+        string value_in = elem_pair.second;
 
-        if(meta_name == "device")
-            continue;
-
-        if (meta_type == "uint8")
-            value = to_string(any_cast<uint8_t>(value_in));
-        else if (meta_type == "uint16")
-            value = to_string(any_cast<uint16_t>(value_in));
-        else if (meta_type == "uint32")
-            value = to_string(any_cast<uint32_t>(value_in));
-        else if (meta_type == "uint64")
-            value = to_string(any_cast<uint64_t>(value_in));
-        else if (meta_type == "int8")
-            value = to_string(any_cast<int8_t>(value_in));
-        else if (meta_type == "int16")
-            value = to_string(any_cast<int16_t>(value_in));
-        else if (meta_type == "int32")
-            value = to_string(any_cast<int32_t>(value_in));
-        else if (meta_type == "int64")
-            value = to_string(any_cast<int64_t>(value_in));
-        else if (meta_type == "float")
-            value = to_string(any_cast<float>(value_in));
-        else if (meta_type == "double")
-            value = to_string(any_cast<double>(value_in));
-        else
-            value = SINGLE_QUOTE + any_cast<string>(value_in) + SINGLE_QUOTE;
-
+        value = SINGLE_QUOTE + value_in + SINGLE_QUOTE;
         value_array.push_back(value);
     }
     
@@ -250,26 +211,20 @@ string delete_row(const string &table, const string &code)
 /*******************************************************************************************************/
 /*                                          UPDATE query                                               */ 
 /*******************************************************************************************************/
-string update_row(const string &table, const string& code, vector<tuple<string, string, any>> &new_data)
+string update_row(const string &table, const string& code, vector<pair<string, string>> &new_data)
 {    
     string root = "UPDATE" + SPACE + table + SPACE + "SET" + SPACE;
     string body;
     string value;
 
-    for(auto &updated_value : new_data)
+    for(auto updated_value = new_data.begin(); updated_value != new_data.end(); ++updated_value)
     {
-        string column_name = get<0>(updated_value);
-        string data_type = get<1>(updated_value);
-        any data_value = get<2>(updated_value);
+        string column_name = updated_value->first;        
+        string data_value = updated_value->second;
 
-        if (data_type == "integer")
-            value = to_string(any_cast<int64_t>(data_value));
-        else if (data_type == "real")
-            value = to_string(any_cast<double>(data_value));
-        else
-            value = SINGLE_QUOTE + any_cast<string>(data_value) + SINGLE_QUOTE;
+        value = SINGLE_QUOTE + data_value + SINGLE_QUOTE;
 
-        if(&updated_value == &new_data.back())        
+        if(next(updated_value) == new_data.end())        
             body += column_name + EQUAL + value + SPACE;
         else            
             body += column_name + EQUAL + value + COMMA + SPACE;  

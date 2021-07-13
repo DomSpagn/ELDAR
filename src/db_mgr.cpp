@@ -44,7 +44,7 @@ sqlite3 *db_mgr::database_connection(const char *device_db)
 /*******************************************************************************************************/
 /*                                          INSERT section                                             */ 
 /*******************************************************************************************************/
-bool db_mgr::insert_device(const char *device_db, const string &table, vector<tuple<string, string, any>>device_vector_tuple)
+bool db_mgr::insert_device(const char *device_db, const string &table, vector<pair<string, string>> &device_info)
 {    
     sqlite3 *db = nullptr;
     char *zErrMsg = 0;
@@ -62,7 +62,7 @@ bool db_mgr::insert_device(const char *device_db, const string &table, vector<tu
     }
   
     //Check if table exists otherwise it is created
-    string sql_cmd = create_table(table, device_vector_tuple);
+    string sql_cmd = create_table(table, device_info);
     int rc = sqlite3_exec(db, sql_cmd.c_str(), NULL, NULL, &zErrMsg);
 
     if(rc != SQLITE_OK)
@@ -73,7 +73,7 @@ bool db_mgr::insert_device(const char *device_db, const string &table, vector<tu
     } 
 
     //Insert
-    sql_cmd = insert_row(table, device_vector_tuple);
+    sql_cmd = insert_row(table, device_info);
     rc = sqlite3_exec(db, sql_cmd.c_str(), NULL, NULL, &zErrMsg);
 
     if(rc != SQLITE_OK)
@@ -252,7 +252,7 @@ bool db_mgr::delete_device(const char *device_db, const string &table)
     cout << endl << white << "in: ";
     cin >> code_in;    
 
-    if(!check_input_validity(code_in, SIMPLE_ALPHA))
+    if(!check_range_validity(code_in, ALPHANUMERIC))
     {
         cerr << endl << red << "Input not allowed..." << white << endl;
         return false; 
@@ -306,10 +306,10 @@ bool db_mgr::delete_device(const char *device_db, const string &table)
 /*******************************************************************************************************/
 /*                                          UPDATE section                                             */ 
 /*******************************************************************************************************/
-bool db_mgr::retrieve_current_device_data(const char *device_db, const string &table, const string& code, vector<tuple<string, string, any>> &current_data)
+bool db_mgr::retrieve_current_device_data(const char *device_db, const string &table, const string& code, vector<pair<string, string>> &current_data)
 {
     vector<string> headers;
-    tuple<string, string, any> aux_tuple;
+    pair<string, string> aux_pair;
     sqlite3 *db = nullptr;
     sqlite3_stmt *stmt;
     char *zErrMsg = 0;
@@ -342,31 +342,19 @@ bool db_mgr::retrieve_current_device_data(const char *device_db, const string &t
     vector<string> string_values;
     int i;
     vector<string>::iterator h;
-    long long temp_int_value;
-    double temp_real_value;
     string temp_string_value;
     for(h = headers.begin(), i = 1; h != headers.end() && i < num_cols; h++, i++)
     {
         sqlite3_value* value = sqlite3_column_value(stmt, i);        
         switch (sqlite3_value_type(value)) 
         {
-            case SQLITE_INTEGER:
-                temp_int_value = sqlite3_value_int64(value);
-                string_values.push_back(to_string(temp_int_value));
-                aux_tuple = make_tuple(*h, "integer", temp_int_value);
-                break;
-            case SQLITE_FLOAT:            
-                temp_real_value = sqlite3_value_double(value);
-                string_values.push_back(to_string(temp_real_value));
-                aux_tuple = make_tuple(*h, "real", temp_real_value);
-                break;
             case SQLITE_TEXT:
                 temp_string_value = string(reinterpret_cast<const char *>(sqlite3_value_text(value)));
                 string_values.push_back(temp_string_value);
-                aux_tuple = make_tuple(*h, "text", temp_string_value);
+                aux_pair = make_pair(*h, temp_string_value);
                 break;
         }
-        current_data.push_back(aux_tuple);
+        current_data.push_back(aux_pair);
     }
 
     //Print current info of stored device
@@ -380,7 +368,7 @@ bool db_mgr::retrieve_current_device_data(const char *device_db, const string &t
 }
 
 
-bool db_mgr::update_device(const char *device_db, const string& table, const string &code, vector<tuple<string, string, any>> &new_data)
+bool db_mgr::update_device(const char *device_db, const string& table, const string &code, vector<pair<string, string>> &new_data)
 {   
     sqlite3 *db = nullptr;
     char *zErrMsg = 0;
