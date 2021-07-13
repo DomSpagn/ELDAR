@@ -2,6 +2,7 @@
 #include "db_mgr.hpp"
 #include <iostream>
 #include <vector>
+#include <tuple>
 
 class device_mgr
 {   
@@ -24,10 +25,10 @@ protected:
     bool add_device(const std::string &device, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map);
 
     //Load new device data starting from the old ones
-    bool load_changes(std::vector<std::tuple<std::string, std::string, std::any>> &current_data, std::vector<std::tuple<std::string, std::string, std::any>> &new_data);
+    bool load_changes(std::vector<std::pair<std::string, std::string>> &current_info, std::vector<std::pair<std::string, std::string>> &new_data);
 
     //Edit a device into related DB starting from its meta info
-    bool edit_device(const std::string &device, const std::string &code);
+    bool edit_device(const std::string &device, std::map<uint16_t, std::pair<std::string, std::string>> &meta_map, const std::string &code);
 
     //Search by device type
     bool search_by_type(void);

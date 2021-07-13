@@ -1,5 +1,6 @@
-Software Description.    
-
+************************
+* Software Description *    
+************************
     ELDAR stands for ELectronic Devices ARchive.
     It is a tool which implements a simplified version of a typical online archive provided by whatever electronic components distributor (e.g. DigiKey, RS-Components, Mouser, and so on...).
     Its intent is to facilitate the management of new and refurbished electronic devices recovered by unused PCBs.
@@ -25,106 +26,110 @@ Software Description.
         - SQLite3    
 
 
--------------------------------------------------------
+*****************
+* Release Notes *
+*****************
 
-Version: 1.0.5
-Release Date: 09/06/2021
-Author: Domenico Spagnuolo (aka Mimmo)
+    Version: 0.0.1
+    Release Date: 02/04/2021
+    Author: Domenico Spagnuolo (aka Mimmo)
 
-INFO:
+    INFO:
+        - Implemented devices addition
 
-    - Implemented MOSFET management
-    - Introduced glossary for supported devices
+------------------------------------------------------------
 
--------------------------------------------------------
+    Version: 0.0.2
+    Release Date: 02/04/2021
+    Author: Domenico Spagnuolo (aka Mimmo)
 
-Version: 1.0.4
-Release Date: 06/06/2021
-Author: Domenico Spagnuolo (aka Mimmo)
+    INFO:
+        - Implemented devices deletion
 
-INFO:
+------------------------------------------------------------
 
-    - Implemented BJTs management
+    Version: 0.0.3
+    Release Date: 11/04/2021
+    Author: Domenico Spagnuolo (aka Mimmo)
 
--------------------------------------------------------
+    INFO:
+        - Implemented devices editing
+        - Added console table formatting
 
-Version: 1.0.3
-Release Date: 05/06/2021
-Author: Domenico Spagnuolo (aka Mimmo)
+------------------------------------------------------------
 
-INFO:
+    Version: 0.0.4
+    Release Date: 31/05/2021
+    Author: Domenico Spagnuolo (aka Mimmo)
 
-    - Implemented LEDs management
+    INFO:
+        - Implemented devices searching
+        - Added SQLITE console formatting
+        - Managed main menu
 
--------------------------------------------------------
+------------------------------------------------------------
 
-Version: 1.0.2
-Release Date: 05/06/2021
-Author: Domenico Spagnuolo (aka Mimmo)
+    Version: 1.0.0
+    Release Date: 01/06/2021
+    Author: Domenico Spagnuolo (aka Mimmo)
 
-INFO:
+    INFO:
+        - Implemented DB files trasfer onto personal cloud 
 
-    - Implemented diodes management
+------------------------------------------------------------
 
--------------------------------------------------------
+    Version: 1.0.1
+    Release Date: 04/06/2021
+    Author: Domenico Spagnuolo (aka Mimmo)
 
-Version: 1.0.1
-Release Date: 04/06/2021
-Author: Domenico Spagnuolo (aka Mimmo)
+    INFO:
+        - Added category info
 
-INFO:
+------------------------------------------------------------
 
-    - Added category info
+    Version: 1.0.2
+    Release Date: 05/06/2021
+    Author: Domenico Spagnuolo (aka Mimmo)
 
--------------------------------------------------------
+    INFO:
+        - Implemented diodes management
 
-Version: 1.0.0
-Release Date: 01/06/2021
-Author: Domenico Spagnuolo (aka Mimmo)
+------------------------------------------------------------
 
-INFO:
+    Version: 1.0.3
+    Release Date: 05/06/2021
+    Author: Domenico Spagnuolo (aka Mimmo)
 
-    - Implemented DB files trasfer onto personal cloud 
+    INFO:
+        - Implemented LEDs management
 
--------------------------------------------------------
+------------------------------------------------------------
 
-Version: 0.0.4
-Release Date: 31/05/2021
-Author: Domenico Spagnuolo (aka Mimmo)
+    Version: 1.0.4
+    Release Date: 06/06/2021
+    Author: Domenico Spagnuolo (aka Mimmo)
 
-INFO:
+    INFO:
+        - Implemented BJTs management
 
-    - Implemented devices searching
-    - Added SQLITE console formatting
-    - Managed main menu
+------------------------------------------------------------
 
--------------------------------------------------------
+    Version: 1.0.5
+    Release Date: 09/06/2021
+    Author: Domenico Spagnuolo (aka Mimmo)
 
-Version: 0.0.3
-Release Date: 11/04/2021
-Author: Domenico Spagnuolo (aka Mimmo)
+    INFO:
+        - Implemented MOSFET management
+        - Introduced glossary for supported devices
 
-INFO:
+------------------------------------------------------------
 
-    - Implemented devices editing
-    - Added console table formatting
+    Version: 1.1.0
+    Release Date: 15/06/2021
+    Author: Domenico Spagnuolo (aka Mimmo)
 
--------------------------------------------------------
-
-Version: 0.0.2
-Release Date: 02/04/2021
-Author: Domenico Spagnuolo (aka Mimmo)
-
-INFO:
-
-    - Implemented devices deletion
-
--------------------------------------------------------
-
-Version: 0.0.1
-Release Date: 02/04/2021
-Author: Domenico Spagnuolo (aka Mimmo)
-
-INFO:
-
-    - Implemented devices addition
+    INFO:
+        - New management of device insertion and update
+        - Measure units representation next to added values
+        
+------------------------------------------------------------

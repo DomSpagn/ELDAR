@@ -12,7 +12,7 @@ public:
     enum SEARCH_RESULT{ SEARCH_ERROR, SEARCH_NOT_FOUND, SEARCH_FOUND };
 
     //Create (if it does not exist) a db and apply an INSERT to add new device record
-    bool insert_device(const char *device_db, const std::string &table, std::vector<std::tuple<std::string, std::string, std::any>>device_vector_tuple);
+    bool insert_device(const char *device_db, const std::string &table, std::vector<std::pair<std::string, std::string>> &device_info);
 
     //Select a device record by code
     SEARCH_RESULT select_device(const char *device_db, const std::string &table, const std::string& code);
@@ -21,10 +21,10 @@ public:
     bool delete_device(const char *device_db, const std::string &table);
 
     //Get current device data starting from its code
-    bool retrieve_current_device_data(const char *device_db, const std::string &table, const std::string& code, std::vector<std::tuple<std::string, std::string, std::any>> &current_data);
+    bool retrieve_current_device_data(const char *device_db, const std::string &table, const std::string& code, std::vector<std::pair<std::string, std::string>> &current_data);
 
     //Update an existing device record
-    bool update_device(const char *device_db, const std::string &table, const std::string &code, std::vector<std::tuple<std::string, std::string, std::any>> &new_data);
+    bool update_device(const char *device_db, const std::string &table, const std::string &code, std::vector<std::pair<std::string, std::string>> &new_data);
 
     //Show all components stored in a table
     bool show_table(const char *device_db, const std::string &table);

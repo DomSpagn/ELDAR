@@ -1,109 +1,116 @@
 [
-    {           
-        "device" : "resistor",
-        "code" : "string",
-        "category" : "string",
-        "manufacturer" : "string",
-        "R" : "double",
-        "PD" : "float",
-        "Tolmin" : "int16",
-        "Tolmax" : "int16",
-        "size" : "string",        
-        "mounting_type" : "string",
-        "quantity" : "uint16",
-        "description" : "string"
-    },
-    {        
-        "device" : "capacitor",
-        "code" : "string",
-        "category" : "string",
-        "manufacturer" : "string",
-        "type" : "string",
-        "C" : "double",
-        "V" : "float",
-        "Tolmin" : "int16",
-        "Tolmax" : "int16",
-        "size" : "string",
-        "mounting_type" : "string",
-        "quantity" : "uint16",
-        "description" : "string"
-    },
-    {        
-        "device" : "inductor",
-        "code" : "string",
-        "category" : "string",
-        "manufacturer" : "string",
-        "L" : "double",
-        "IR" : "float",
-        "ISAT" : "float",
-        "size" : "string",
-        "mounting_type" : "string",
-        "quantity" : "uint16",
-        "description" : "string"
+    {
+        "resistor" : {
+            "code" : "alphanumeric",
+            "category" : "resistors",
+            "R" : "ohm",            
+            "PD" : "watt",
+            "Tolmin" : "percentage",
+            "Tolmax" : "percentage",
+            "size" : "alphanumeric",
+            "mounting_type" : "alphanumeric",
+            "manufacturer" : "alphanumeric",
+            "quantity" : "unsigned_integer",
+            "description" : "alphanumeric"    
+        }
     },
     {
-        "device" : "diode",
-        "code" : "string",
-        "category" : "string",
-        "type" : "string",
-        "manufacturer" : "string",
-        "IFmax" : "float",
-        "VFmax" : "float",
-        "PD" : "float",
-        "Cj" : "double",        
-        "VZ" : "float",
-        "IZ" : "float",
-        "mounting_type" : "string",
-        "quantity" : "uint16",
-        "description" : "string"
+        "capacitor" : {
+            "code" : "alphanumeric",
+            "category" : "capacitors",            
+            "type" : "alphanumeric",
+            "C" : "farad",
+            "V" : "volt",
+            "Tolmin" : "percentage",
+            "Tolmax" : "percentage",
+            "size" : "alphanumeric",
+            "mounting_type" : "alphanumeric",
+            "manufacturer" : "alphanumeric",
+            "quantity" : "unsigned_integer",
+            "description" : "alphanumeric"
+        }
     },
     {
-        "device" : "LED",
-        "code" : "string",
-        "category" : "string",
-        "color" : "string",
-        "manufacturer" : "string",
-        "IFmax" : "float",
-        "VFmax" : "float",
-        "VRmax" : "float",
-        "PD" : "float",
-        "Lp" : "double",
-        "mounting_type" : "string",
-        "quantity" : "uint16",
-        "description" : "string"
+        "inductor" : {
+            "code" : "alphanumeric",
+            "category" : "inductors_coils_transformers",            
+            "L" : "henry",
+            "IR" : "ampere",
+            "ISAT" : "ampere",
+            "size" : "alphanumeric",
+            "mounting_type" : "alphanumeric",
+            "manufacturer" : "alphanumeric",
+            "quantity" : "unsigned_integer",
+            "description" : "alphanumeric"    
+        }
     },
     {
-        "device" : "BJT",
-        "code" : "string",
-        "category" : "string",
-        "type" : "string",
-        "manufacturer" : "string",
-        "VCEOmax" : "float",
-        "VCBOmax" : "float",
-        "VEBOmax" : "float",
-        "ICmax" : "float",
-        "PD" : "float",
-        "hFEmax" : "float",        
-        "mounting_type" : "string",
-        "quantity" : "uint16",
-        "description" : "string"
+        "diode" : {
+            "code" : "alphanumeric",
+            "category" : "diodes",
+            "type" : "alphanumeric",            
+            "IFmax" : "ampere",
+            "VFmax" : "volt",
+            "PD" : "watt",
+            "Cj" : "farad",        
+            "VZ" : "volt",
+            "IZ" : "ampere",
+            "mounting_type" : "alphanumeric",
+            "manufacturer" : "alphanumeric",
+            "quantity" : "unsigned_integer",
+            "description" : "alphanumeric"
+        }
     },
     {
-        "device" : "MOSFET",
-        "code" : "string",
-        "category" : "string",
-        "type" : "string",
-        "manufacturer" : "string",
-        "VDSmax" : "float",
-        "VGSmin" : "float",
-        "VGSmax" : "float",
-        "IDmax" : "float",
-        "PD" : "float",        
-        "VGSth_min" : "float",
-        "VGSth_typ" : "float",
-        "VGSth_max" : "float",
-        "mounting_type" : "string",
-        "quantity" : "uint16",
-        "description" : "string"
-    }    
+        "LED" : {
+            "code" : "alphanumeric",
+            "category" : "optoelectronics",
+            "color" : "alphanumeric",            
+            "IFmax" : "ampere",
+            "VFmax" : "volt",
+            "VRmax" : "volt",
+            "PD" : "watt",
+            "Lp" : "meter",
+            "mounting_type" : "alphanumeric",
+            "manufacturer" : "alphanumeric",
+            "quantity" : "unsigned_integer",
+            "description" : "alphanumeric"
+        }
+    },
+    {
+        "BJT" : {
+            "code" : "alphanumeric",
+            "category" : "transistors",
+            "type" : "alphanumeric",            
+            "VCEOmax" : "volt",
+            "VCBOmax" : "volt",
+            "VEBOmax" : "volt",
+            "ICmax" : "ampere",
+            "PD" : "watt",
+            "hFEmax" : "unsigned_integer",        
+            "mounting_type" : "alphanumeric",
+            "manufacturer" : "alphanumeric",
+            "quantity" : "unsigned_integer",
+            "description" : "alphanumeric"
+        }
+    },
+    {
+        "MOSFET" : {
+            "code" : "alphanumeric",
+            "category" : "transistors",
+            "type" : "alphanumeric",            
+            "VDSmax" : "volt",
+            "VGSmin" : "volt",
+            "VGSmax" : "volt",
+            "IDmax" : "ampere",
+            "PD" : "watt",        
+            "VGSth_min" : "volt",
+            "VGSth_typ" : "volt",
+            "VGSth_max" : "volt",
+            "mounting_type" : "alphanumeric",
+            "manufacturer" : "alphanumeric",
+            "quantity" : "unsigned_integer",
+            "description" : "alphanumeric"
+        }
+    }
 ]

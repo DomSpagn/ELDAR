@@ -66,7 +66,7 @@ bool create_file(string root_path, string filename)
 /***********************************************************************************************************/
 /*                                            Show device list                                             */ 
 /***********************************************************************************************************/
-bool list_types(bool load_example)
+bool list_devices(list<string> &device_list, bool load_example)
 {
     if(!is_file_present(TXT_FILE_PATH, DEVICE_TYPE_FILE))
         return false;
@@ -86,12 +86,18 @@ bool list_types(bool load_example)
     if(load_example)
     {
         while(getline(file, line))
+        {
+            device_list.push_back(line.substr(0, line.find(" ")));
             cout << white << "\t- " << blue << line.substr(0, line.find(" ")) << white << line.substr(line.find(" ")) << white << endl;
+        }
     }
     else
     {
         while(getline(file, line))
+        {
+            device_list.push_back(line.substr(0, line.find(" ")));
             cout << white << "\t- " << blue << line.substr(0, line.find(" ")) << white << endl;
+        }
     }
     file.close();
     return true;
@@ -128,290 +134,14 @@ bool is_float_digits(const string &str)
 }
 
 
-VALIDITY check_uint8_validity(string &input, uint8_t &u8_value)
-{
-    if(input == string())
-        return SKIPPED;
-
-    //uint8_t = char (1 byte)
-    unsigned long value;
-    try
-    {
-        value = stoul(input, nullptr, 10);
-    }
-    catch(...)
-    {
-        cerr << endl << red << "Wrong input..." << white << endl;
-        return NOT_VALID;
-    }
-    
-    if(value > UINT8_MAX)
-        return NOT_VALID;
-
-    u8_value = (uint8_t)value;    
-
-    return VALID;
-}
-
-
-VALIDITY check_uint16_validity(string &input, uint16_t &u16_value)
-{
-    if(input == string())
-        return SKIPPED;
-
-    //uint16_t = unsigned short (2 bytes)
-    unsigned long value;
-    try
-    {
-        value = stoul(input, nullptr, 10);
-    }
-    catch(...)
-    {
-        cerr << endl << red << "Wrong input..." << white << endl;
-        return NOT_VALID;
-    }
-    
-    if(value > UINT16_MAX)
-        return NOT_VALID;
-
-    u16_value = (uint16_t)value;
-
-    return VALID;
-}
-
-
-VALIDITY check_uint32_validity(string &input, uint32_t &u32_value)
-{
-    if(input == string())
-        return SKIPPED;
-
-    //uint32_t = unsigned int (4 bytes)
-    unsigned long value;
-    try
-    {
-        value = stoul(input, nullptr, 10);
-    }
-    catch(...)
-    {
-        cerr << endl << red << "Wrong input..." << white << endl;
-        return NOT_VALID;
-    }
-    
-    if(value > UINT32_MAX)
-        return NOT_VALID;
-
-    u32_value = (uint32_t)value;    
-
-    return VALID;
-}
-
-
-VALIDITY check_uint64_validity(string &input, uint64_t &u64_value)
-{
-    if(input == string())
-        return SKIPPED;
-
-    //uint64_t = unsigned long long (8 bytes)
-    unsigned long long value;
-    try
-    {
-        value = stoull(input, nullptr, 10);
-    }
-    catch(...)
-    {
-        cerr << endl << red << "Wrong input..." << white << endl;
-        return NOT_VALID;
-    }
-    
-    if(value > UINT64_MAX)
-        return NOT_VALID;
-
-    u64_value = (uint64_t)value;    
-
-    return VALID;
-}
-
-
-VALIDITY check_int8_validity(string &input, int8_t &i8_value)
-{
-    if(input == string())
-        return SKIPPED;
-
-    //int8_t = signed char (1 byte)
-    int value;
-    try
-    {
-        value = stoi(input, nullptr, 10);
-    }
-    catch(...)
-    {
-        cerr << endl << red << "Wrong input..." << white << endl;
-        return NOT_VALID;
-    }
-    
-    if(!is_integer_digits(input) || detected_sign_matter(input))
-        return NOT_VALID;
-
-    if(value < INT8_MIN || value > INT8_MAX)
-        return NOT_VALID;
-
-    i8_value = (int8_t)value;    
-
-    return VALID;
-}
-
-
-VALIDITY check_int16_validity(string &input, int16_t &i16_value)
-{
-    if(input == string())
-        return SKIPPED;
-
-    //int16_t = short (2 bytes)
-    int value;
-    try
-    {
-        value = stoi(input, nullptr, 10);
-    }
-    catch(...)
-    {
-        cerr << endl << red << "Wrong input..." << white << endl;
-        return NOT_VALID;
-    }
-
-    if(!is_integer_digits(input) || detected_sign_matter(input))
-        return NOT_VALID;
-
-    if(value < INT16_MIN || value > INT16_MAX)
-        return NOT_VALID;
-
-    i16_value = (int16_t)value;
-
-    return VALID;
-}
-
-
-VALIDITY check_int32_validity(string &input, int32_t &i32_value)
-{
-    if(input == string())
-        return SKIPPED;
-
-    //int32_t = int (4 bytes)
-    int value;
-    try
-    {
-        value = stoi(input, nullptr, 10);
-    }
-    catch(...)
-    {
-        cerr << endl << red << "Wrong input..." << white << endl;
-        return NOT_VALID;
-    }
-
-    if(!is_integer_digits(input) || detected_sign_matter(input))
-        return NOT_VALID;
-
-    if(value < INT32_MIN || value > INT32_MAX)
-        return NOT_VALID;
-
-    i32_value = (int32_t)value;
-
-    return VALID;
-}
-
-
-VALIDITY check_int64_validity(string &input, int64_t &i64_value)
-{
-    if(input == string())
-        return SKIPPED;
-
-    //int64_t = long long (8 bytes)
-    long long value;
-    try
-    {
-        value = stoll(input, nullptr, 10);
-    }
-    catch(...)
-    {
-        cerr << endl << red << "Wrong input..." << white << endl;
-        return NOT_VALID;
-    }
-    
-    if(!is_integer_digits(input) || detected_sign_matter(input))
-        return NOT_VALID;
-
-    if(value < INT64_MIN || value > INT64_MAX)
-        return NOT_VALID;
-
-    i64_value = (int64_t)value;    
-
-    return VALID;
-}
-
-
-VALIDITY check_float_validity(string &input, float &f_value)
-{
-    if(input == string())
-        return SKIPPED;
-
-    float value;
-
-    try
-    {
-        value = stof(input);        
-    }    
-    catch(...)
-    {
-        cerr << endl << red << "Wrong input..." << white << endl;
-        return NOT_VALID;
-    }
-    
-    if(!is_float_digits(input) || detected_sign_matter(input))
-        return NOT_VALID;
-
-    if(value < -FLT_MAX || value > FLT_MAX)
-        return NOT_VALID;
-
-    f_value = value;
-
-    return VALID;    
-}
-
-
-VALIDITY check_double_validity(string &input, double &d_value)
-{
-    if(input == string())
-        return SKIPPED;
-
-    double value;
-
-    try
-    {
-        value = stod(input);
-    }    
-    catch(...)
-    {
-        cerr << endl << red << "Wrong input..." << white << endl;
-        return NOT_VALID;
-    }
-    
-    if(!is_float_digits(input) || detected_sign_matter(input))
-        return NOT_VALID;
-
-    if(value < -DBL_MAX || value > DBL_MAX)
-        return NOT_VALID;
-
-    d_value = value;
-
-    return VALID;    
-}
-
-
-VALIDITY check_string_validity(string &input)
+VALIDITY check_alphanumeric_validity(string &input)
 {   
     VALIDITY ret = NOT_VALID;
 
     if(input == string())
         ret = SKIPPED;
+    else if(!check_range_validity(input, ALPHANUMERIC))
+        ret = NOT_VALID;
     else
         ret = VALID;
 
@@ -419,32 +149,404 @@ VALIDITY check_string_validity(string &input)
 }
 
 
-bool check_input_validity(string &input, input_validity validity_range)
+VALIDITY check_unsigned_integer_validity(string &input)
+{
+    if(input == string())
+        return SKIPPED;
+    else if(!check_range_validity(input, UNSIGNED_INTEGER))
+        return NOT_VALID;
+
+    //Check if multiple '0' are present in front of the input
+    while (input.length() > 1)
+    {
+        if(input.front() != '0')
+            break;
+        else
+            input.erase(0, 1);            
+    }
+
+    return VALID;
+}
+
+
+VALIDITY check_percentage_validity(string &input)
+{
+    string math_symbols = ".-+";    
+
+    if(input == string())
+        return SKIPPED;
+    else if(!check_range_validity(input, PERCENT_VALUE))
+        return NOT_VALID;
+    
+    //Check if input is consistent
+    if(input.length() == 1 && input.find_first_of(math_symbols) != string::npos)
+        return NOT_VALID;
+
+    //Check if elements of math_symbols are repeated inside the input and if they are in the wrong position   
+    for(char &letter : math_symbols)
+    {
+        size_t letter_count = count(input.begin(), input.end(), letter);
+        if(letter_count > 1)
+            return NOT_VALID;
+        else if (letter_count == 1)
+            if((letter == '+' || letter == '-') && letter != input.front())
+                return NOT_VALID;        
+    }
+    if(input.back() == '.')
+        return NOT_VALID;
+    
+    //Check if first char is '.' and add one '0' before it
+    if(input.front() == '.')
+        input.insert(0, "0");
+
+    return VALID;
+}
+
+
+VALIDITY check_electric_value_validity(string &input, input_validity validity_range)
+{
+    string magnitudo_range = "fpnumkMGT";
+    string math_symbols = ".-+";
+    string all_symbols = magnitudo_range + math_symbols;
+
+    if(input == string())
+        return SKIPPED;
+    else if(!check_range_validity(input, validity_range))
+        return NOT_VALID;
+
+    //Check if input is consistent
+    if(input.length() == 1 && input.find_first_of(all_symbols) != string::npos)
+        return NOT_VALID;
+
+    //Check if elements of letters_range are repeated inside the input and if they are in the wrong position   
+    for(char &letter : all_symbols)
+    {
+        size_t letter_count = count(input.begin(), input.end(), letter);
+        if(letter_count > 1)
+            return NOT_VALID;
+        else if (letter_count == 1)
+            if((letter == '+' || letter == '-') && letter != input.front())
+                return NOT_VALID;        
+    }
+    for(char &letter : math_symbols)
+    {
+        if(letter == input.back())
+            return NOT_VALID;
+    }
+
+    //Check if first char is '.' and add one '0' before it
+    if(input.front() == '.')
+        input.insert(0, "0");
+
+    return VALID;
+}
+
+
+bool check_range_validity(string &input, input_validity validity_range)
 {   
-    string range;
+    string value_range;
+    string magnitudo_range = "fpnumkMGT";
 
     switch(validity_range)
     {
-        case NUMERIC:
-            range = "01234567890.-";   
+        case ALPHANUMERIC:
+            value_range = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-";
+            magnitudo_range.clear();
         break;
 
-        case SIMPLE_ALPHA:
-            range = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890_.-";
+        case UNSIGNED_INTEGER:
+            value_range = "0123456789";
+            magnitudo_range.clear();
         break;
 
-        case COMPLEX_ALPHA:            
+        case PERCENT_VALUE:
+            value_range = "0123456789.-+";
+            magnitudo_range.clear();
+        break;
+
+        case RESISTANCE:
+        case POWER:
+        case CAPACITANCE:
+        case VOLTAGE:
+        case INDUCTANCE:
+        case CURRENT:
+        case WAVELENGTH:
+            value_range = "0123456789.-+";
         break;
     }
 
-    return input.find_first_not_of(range) != string::npos ? false : true;        
+    return input.find_first_not_of(value_range + magnitudo_range) != string::npos ? false : true;
+}
+
+
+bool is_input_data_correct(pair<string, string> &validity_pair, string& input, vector<pair<string, string>> &input_data)
+{
+    bool ret = false;
+
+    if(validity_pair.second == "alphanumeric")
+    {
+        switch(check_alphanumeric_validity(input))
+        {
+            case NOT_VALID:
+            {
+                cerr << endl << red << "Wrong alpha-numeric value..." << white << endl;
+            }
+            break;
+
+            case VALID:
+            {
+                input_data.push_back(make_pair(validity_pair.first, input));
+                ret = true;
+            }
+            break;
+
+            case SKIPPED:
+            {
+                if(validity_pair.first == "code")
+                {
+                    cerr << endl << red << "This field cannot be empty..." << white << endl;
+                    return false;
+                }
+                input_data.push_back(make_pair(validity_pair.first, "-"));
+                ret = true;
+            }
+            break;
+        }                
+    }
+    else if(validity_pair.second == "unsigned_integer")
+    {
+        switch(check_unsigned_integer_validity(input))
+        {
+            case NOT_VALID:
+            {
+                cerr << endl << red << "Wrong unsigned integer value..." << white << endl;
+            }
+            break;
+
+            case VALID:
+            {
+                input_data.push_back(make_pair(validity_pair.first, input));
+                ret = true;
+            }
+            break;
+
+            case SKIPPED:
+            {                
+                input_data.push_back(make_pair(validity_pair.first, "-"));
+                ret = true;
+            }
+            break;
+        }
+    }
+    else if(validity_pair.second == "percentage")
+    {
+        switch(check_percentage_validity(input))
+        {
+            case NOT_VALID:
+            {
+                cerr << endl << red << "Wrong percent value..." << white << endl;
+            }
+            break;
+
+            case VALID:
+            {
+                input_data.push_back(make_pair(validity_pair.first, input + PERCENTAGE_SYMBOL));
+                ret = true;
+            }
+            break;
+
+            case SKIPPED:
+            {
+                input_data.push_back(make_pair(validity_pair.first, "-"));
+                ret = true;
+            }
+            break;
+        }
+    }
+    else if(validity_pair.second == "ohm")
+    {
+        switch(check_electric_value_validity(input, RESISTANCE))
+        {
+            case NOT_VALID:
+            {
+                cerr << endl << red << "Wrong resistance value..." << white << endl;
+            }
+            break;
+
+            case VALID:
+            {
+                input_data.push_back(make_pair(validity_pair.first, input + RESISTANCE_UNIT));
+                ret = true;
+            }
+            break;
+
+            case SKIPPED:
+            {
+                input_data.push_back(make_pair(validity_pair.first, "-"));
+                ret = true;
+            }
+            break;
+        }
+    }
+    else if(validity_pair.second == "watt")
+    {
+        switch(check_electric_value_validity(input, POWER))
+        {
+            case NOT_VALID:
+            {
+                cerr << endl << red << "Wrong power value..." << white << endl;
+            }
+            break;
+
+            case VALID:
+            {
+                input_data.push_back(make_pair(validity_pair.first, input + POWER_UNIT));
+                ret = true;
+            }
+            break;
+
+            case SKIPPED:
+            {
+                input_data.push_back(make_pair(validity_pair.first, "-"));
+                ret = true;
+            }
+            break;
+        }
+    }
+    else if(validity_pair.second == "farad")
+    {
+        switch(check_electric_value_validity(input, CAPACITANCE))
+        {
+            case NOT_VALID:
+            {
+                cerr << endl << red << "Wrong capacitance value..." << white << endl;
+            }
+            break;
+
+            case VALID:
+            {
+                input_data.push_back(make_pair(validity_pair.first, input + CAPACITANCE_UNIT));
+                ret = true;
+            }
+            break;
+
+            case SKIPPED:
+            {
+                input_data.push_back(make_pair(validity_pair.first, "-"));
+                ret = true;
+            }
+            break;
+        }
+    }
+    else if(validity_pair.second == "volt")
+    {        
+        switch(check_electric_value_validity(input, VOLTAGE))
+        {
+            case NOT_VALID:
+            {
+                cerr << endl << red << "Wrong voltage value..." << white << endl;
+            }
+            break;
+
+            case VALID:
+            {
+                input_data.push_back(make_pair(validity_pair.first, input + VOLTAGE_UNIT));
+                ret = true;
+            }
+            break;
+
+            case SKIPPED:
+            {
+                input_data.push_back(make_pair(validity_pair.first, "-"));
+                ret = true;
+            }
+            break;
+        }
+    }
+    else if(validity_pair.second == "henry")
+    {
+        switch(check_electric_value_validity(input, INDUCTANCE))
+        {
+            case NOT_VALID:
+            {
+                cerr << endl << red << "Wrong inductance value..." << white << endl;
+            }
+            break;
+
+            case VALID:
+            {
+                input_data.push_back(make_pair(validity_pair.first, input + INDUCTANCE_UNIT));
+                ret = true;
+            }
+            break;
+
+            case SKIPPED:
+            {
+                input_data.push_back(make_pair(validity_pair.first, "-"));
+                ret = true;
+            }
+            break;
+        }
+    }
+    else if(validity_pair.second == "ampere")
+    {
+        switch(check_electric_value_validity(input, CURRENT))
+        {
+            case NOT_VALID:
+            {
+                cerr << endl << red << "Wrong current value..." << white << endl;
+            }
+            break;
+
+            case VALID:
+            {
+                input_data.push_back(make_pair(validity_pair.first, input + CURRENT_UNIT));
+                ret = true;
+            }
+            break;
+
+            case SKIPPED:
+            {
+                input_data.push_back(make_pair(validity_pair.first, "-"));
+                ret = true;
+            }
+            break;
+        }
+    }
+    else if(validity_pair.second == "meter")
+    {
+        switch(check_electric_value_validity(input, WAVELENGTH))
+        {
+            case NOT_VALID:
+            {
+                cerr << endl << red << "Wrong wavelength value..." << white << endl;
+            }
+            break;
+
+            case VALID:
+            {
+                input_data.push_back(make_pair(validity_pair.first, input + WAVELENGTH_UNIT));
+                ret = true;
+            }
+            break;
+
+            case SKIPPED:
+            {
+                input_data.push_back(make_pair(validity_pair.first, "-"));
+                ret = true;
+            }
+            break;
+        }                
+    }
+
+    return ret;
 }
 
 
 /***********************************************************************************************************/
 /*                                             Miscellaneous                                               */ 
 /***********************************************************************************************************/
-void print_device_tuple_vector(vector<tuple<string, string, any>> &device_vector_tuple, tuple_operation operation)
+void print_device_info_to_be_confirmed(vector<pair<string, string>> &device_info, map_operation operation)
 {
     switch(operation)
     {
@@ -456,57 +558,15 @@ void print_device_tuple_vector(vector<tuple<string, string, any>> &device_vector
         break;
     }
 
-    for (const auto& tuple_elem : device_vector_tuple)
+    for (const auto& elem_pair : device_info)
     {
-        string meta_name = get<0>(tuple_elem);
-        string meta_type = get<1>(tuple_elem);
-        any value = get<2>(tuple_elem);
+        string meta_name = elem_pair.first;        
+        string value = elem_pair.second;
 
-        if(meta_name == "device" || meta_name == "category")
+        if(meta_name == "category")
             continue;
 
-        cout << green << meta_name << ": " << white;
-
-        switch(operation)
-        {
-            case INSERT:
-            {
-                if(meta_type == "uint8")            
-                    printf("%d\n", any_cast<uint8_t>(value));
-                if(meta_type == "int8")
-                    printf("%d\n", any_cast<int8_t>(value));
-                if(meta_type == "uint16")
-                    cout << any_cast<uint16_t>(value) << endl;
-                if(meta_type == "int16")
-                    cout << any_cast<int16_t>(value) << endl;
-                if(meta_type == "uint32")
-                    cout << any_cast<uint32_t>(value) << endl;
-                if(meta_type == "int32")
-                    cout << any_cast<int32_t>(value) << endl;
-                if(meta_type == "uint64")
-                    cout << any_cast<uint64_t>(value) << endl;
-                if(meta_type == "int64")
-                    cout << any_cast<int64_t>(value) << endl;
-                if(meta_type == "float")
-                    cout << any_cast<float>(value) << endl;
-                if(meta_type == "double")
-                    cout << any_cast<double>(value) << endl;
-                if(meta_type == "string")
-                    cout << any_cast<string>(value) << endl;
-            }
-            break;
-
-            case UPDATE:
-            {
-                if(meta_type == "integer")            
-                    cout << any_cast<int64_t>(value) << endl;
-                if(meta_type == "real")
-                    cout << any_cast<double>(value) << endl;
-                if(meta_type == "text")
-                    cout << any_cast<string>(value) << endl;
-            }
-            break;
-        }
+        cout << green << meta_name << ": " << white << value << endl;                
     }
 
     cout << white;
